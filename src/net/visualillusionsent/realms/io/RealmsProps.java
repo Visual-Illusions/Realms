@@ -12,7 +12,7 @@ import net.visualillusionsent.viutils.PropsFile;
 
 /**
  * Realms properties handler
- * 
+ * <p>
  * This file is part of Realms
  * 
  * @author darkdiplomat

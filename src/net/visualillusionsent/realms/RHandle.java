@@ -34,6 +34,13 @@ import net.visualillusionsent.viutils.ChatColor;
 import net.visualillusionsent.viutils.Updater;
 import net.visualillusionsent.viutils.VersionCheck;
 
+/**
+ * Realms handler class
+ * <p>
+ * This file is part of Realms
+ * 
+ * @author darkdiplomat
+ */
 public class RHandle {
     private Logger mclog = Logger.getLogger("Minecraft");
     private Logger rlog = Logger.getLogger("Realms");
@@ -54,11 +61,19 @@ public class RHandle {
     private RealmsData datasource;
     private ScheduledThreadPoolExecutor threadhandle;
     
+    /**
+     * class constructor
+     * @param serv
+     */
     public RHandle(ICModServer serv){
         this.serv = serv;
         setUpLogger();
     }
     
+    /**
+     * initializes Realms
+     * @return true if success
+     */
     public boolean initialize(){
         this.rprop = new RealmsProps(this);
         this.zl = new ZoneLists(this);
@@ -78,6 +93,12 @@ public class RHandle {
         return true;
     }
     
+    /**
+     * logger method
+     * 
+     * @param lvl
+     * @param toLog
+     */
     public void log(Level lvl, String toLog){
         if(lvl.getName().startsWith("DEBUG") && RealmsProps.getDebug()){
             rlog.log(lvl, toLog);
@@ -87,28 +108,66 @@ public class RHandle {
         }
     }
     
+    /**
+     * logger method
+     * 
+     * @param lvl
+     * @param toLog
+     * @param exeception
+     */
     public void log(Level lvl, String toLog, Exception e) {
         if(lvl.getName().startsWith("DEBUG") && RealmsProps.getDebug()){
             rlog.log(lvl, toLog, e);
         }
     }
     
+    /**
+     * adds an everywhere zone
+     * @param zone
+     */
     public void addEverywhere(Zone zone){
         everywhere.add(zone);
     }
     
+    /**
+     * gets an everywhere zone
+     * @param player
+     * @return everywhere zone
+     * @see #getEverywhere(String, Integer)
+     */
     public Zone getEverywhere(ICModPlayer player){
         return getEverywhere(player.getWorldName(), player.getDimIndex());
     }
     
+    /**
+     * gets an everywhere zone
+     * 
+     * @param mob
+     * @return everywhere zone
+     * @see #getEverywhere(String, Integer)
+     */
     public Zone getEverywhere(ICModMob mob){
         return getEverywhere(mob.getWorldName(), mob.getDimIndex());
     }
     
+    /**
+     * gets an everywhere zone
+     * 
+     * @param block
+     * @return everywhere zone
+     * @see #getEverywhere(String, Integer)
+     */
     public Zone getEverywhere(ICModBlock block){
         return getEverywhere(block.getWorldName(), block.getDimIndex());
     }
     
+    /**
+     * gets an everywhere zone
+     * 
+     * @param world
+     * @param dim
+     * @return everywhere zone
+     */
     public Zone getEverywhere(String world, int dim){
         synchronized(everywhere){
             for(Zone zone : everywhere){
@@ -122,6 +181,10 @@ public class RHandle {
         return evr;
     }
     
+    /**
+     * creates default permissions for the zone
+     * @param zone
+     */
     private void createDefaultPerms(Zone zone){
         
         
@@ -142,19 +205,39 @@ public class RHandle {
         zone.setPermission("everyone", Permission.PermType.AUTHED, true, false);
     }
     
+    /**
+     * gets Realms data source
+     * @return data source
+     */
     public RealmsData getDataSource(){
         return datasource;
     }
     
+    /**
+     * gets the server wrapper
+     * @return serv
+     */
     public ICModServer getServer(){
         return serv;
     }
     
+    /**
+     * gets the nearest respawn zone to a player
+     * 
+     * @param player
+     * @return zone
+     */
     public Zone getNearestRespawn(ICModPlayer player){
-        
+        //FIXME
         return null;
     }
     
+    /**
+     * gets a player's wand
+     * 
+     * @param player
+     * @return wand
+     */
     public Wand getPlayerWand(ICModPlayer player){
         if(wands.containsKey(player)){
             return wands.get(player);
@@ -364,22 +447,45 @@ public class RHandle {
         return true;
     }
     
+    /**
+     * gets version number
+     * 
+     * @return version
+     */
     public String getVersion(){
         return version;
     }
     
+    /**
+     * gets current release version
+     * 
+     * @return current version
+     */
     public String getCurrent(){
         return vc.getCurrentVersion();
     }
     
+    /**
+     * checks if is latest release
+     * 
+     * @return true if it is
+     */
     public boolean isLatest(){
         return vc.isLatest();
     }
     
+    /**
+     * preforms an update
+     * 
+     * @return return message
+     */
     public String update(){
         return update.performUpdate();
     }
     
+    /**
+     * sets up the debug logger
+     */
     private void setUpLogger(){
         File LogDir = new File("plugins/config/Realms/Log/");
         try {

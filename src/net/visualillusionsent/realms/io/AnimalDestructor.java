@@ -21,7 +21,7 @@ public class AnimalDestructor implements Runnable{
     private RHandle rhandle;
     
     /**
-     * Class Constructor
+     * class constructor
      * 
      * @param RHandle
      */

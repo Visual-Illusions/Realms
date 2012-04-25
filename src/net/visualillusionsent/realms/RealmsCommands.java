@@ -11,9 +11,10 @@ import net.visualillusionsent.viutils.ChatColor;
 
 /**
  * Realms Player Commands
+ * <p>
+ * This file is part of Realms
  * 
  * @author darkdiplomat
- *
  */
 public enum RealmsCommands {
     

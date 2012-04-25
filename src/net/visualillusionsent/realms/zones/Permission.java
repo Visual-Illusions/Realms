@@ -7,6 +7,8 @@ import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
  * Realms Permission Class
+ * <p>
+ * This file is part of Realms
  * 
  * @author darkdiplomat
  */

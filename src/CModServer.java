@@ -9,7 +9,7 @@ import net.visualillusionsent.viutils.ICModPlayer;
 import net.visualillusionsent.viutils.ICModServer;
 
 /**
- * CanaryMod Server Adapter class
+ * CanaryMod Server wrapper class
  * <p>
  * This class is a bridge to send Server data from the default <unnamed package> to
  * packaged classes.
@@ -17,7 +17,7 @@ import net.visualillusionsent.viutils.ICModServer;
  * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
  * 
  * @author darkdiplomat
- *
+ * @see ICModServer
  */
 public class CModServer implements ICModServer{
     private Server server;

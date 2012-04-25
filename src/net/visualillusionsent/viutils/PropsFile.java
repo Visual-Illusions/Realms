@@ -14,6 +14,8 @@ import java.util.logging.Logger;
  * PropsFile class for handling properties with added comments
  * 
  * Example: propsfile.setString("Key", "Value", new String[]{ "Comment1", "Comment2" });
+ * <p>
+ * This file is part of the VI Utilities Package ( net.visualillusionsent.viutils )
  * 
  * @author darkdiplomat
  */

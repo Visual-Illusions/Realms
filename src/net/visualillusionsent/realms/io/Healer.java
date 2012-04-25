@@ -9,6 +9,10 @@ import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
  * Realms Healing
+ * <p>
+ * Heals players in Healing enabled zones
+ * <p>
+ * This file is part of Realms
  * 
  * @author darkdiplomat
  */
@@ -16,16 +20,15 @@ public class Healer implements Runnable{
     private RHandle rhandle;
     
     /**
-     * Class Initializer
+     * class constructor
      * 
-     * @param Realm realm
+     * @param RHandle
      */
     public Healer(RHandle rhandle) {
         this.rhandle = rhandle;
     }
     
     /**
-     * Healing Run
      * Runs the healing of Players
      */
     public void run() {

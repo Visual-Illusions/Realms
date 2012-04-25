@@ -9,9 +9,10 @@ import net.visualillusionsent.realms.zones.ZoneLists;
 
 /**
  * Realms Console Commands
+ * <p>
+ * This file is part of Realms
  * 
  * @author darkdiplomat
- *
  */
 public enum RealmsConsole {
     

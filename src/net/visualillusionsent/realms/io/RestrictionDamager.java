@@ -11,7 +11,10 @@ import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
  * Realms Restricted
- *      - Called for players in a restricted zone and not authed
+ * <p>
+ * Called for players in a restricted zone and not authed
+ * <p>
+ * This file is part of Realms
  * 
  * @author darkdiplomat
  */

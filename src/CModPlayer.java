@@ -1,7 +1,7 @@
 import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
- * CanaryMod Player Adapter class
+ * CanaryMod Player wrapper class
  * <p>
  * This class is a bridge to send Player data from the default <unnamed package> to
  * packaged classes.
@@ -9,7 +9,7 @@ import net.visualillusionsent.viutils.ICModPlayer;
  * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
  * 
  * @author darkdiplomat
- *
+ * @see ICModPlayer
  */
 public class CModPlayer implements ICModPlayer{
     private Player player;

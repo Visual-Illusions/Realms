@@ -2,7 +2,7 @@ package net.visualillusionsent.realms.io;
 
 /**
  * Realms Invaild Flag Exception
- * 
+ * <p>
  * This file is part of Realms
  * 
  * @author darkdiplomat

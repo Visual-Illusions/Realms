@@ -1,7 +1,7 @@
 package net.visualillusionsent.viutils;
 
 /**
- * CanaryMod Block wrapper class
+ * CanaryMod Block wrapper interface
  * <p>
  * Handles methods from Block inside of packages
  * <p>
@@ -66,7 +66,7 @@ public interface ICModBlock {
      */
     public Object getBlock();
     
-    
+    //Overridden Object Methods
     public int hashCode();
     public boolean equals(Object obj);
 

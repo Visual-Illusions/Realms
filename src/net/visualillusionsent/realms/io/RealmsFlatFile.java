@@ -12,6 +12,8 @@ import net.visualillusionsent.viutils.PropsFile;
 
 /**
  * Realms FlatFile Data Handler
+ * <p>
+ * This file is part of Realms
  * 
  * @author darkdiplomat
  */

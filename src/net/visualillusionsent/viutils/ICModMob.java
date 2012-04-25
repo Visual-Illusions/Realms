@@ -1,5 +1,15 @@
 package net.visualillusionsent.viutils;
 
+/**
+ * CanaryMod Mob wrapper interface
+ * <p>
+ * Handles methods from Player inside of packages
+ * <p>
+ * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
+ * 
+ * @author darkdiplomat
+ *
+ */
 public interface ICModMob {
     
     /**
