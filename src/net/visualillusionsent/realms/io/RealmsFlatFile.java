@@ -26,7 +26,7 @@ public class RealmsFlatFile extends RealmsData {
     private RHandle rhandle;
     
     /**
-     * Class Constructor
+     * class constructor
      * 
      * @param realm
      */
@@ -99,52 +99,19 @@ public class RealmsFlatFile extends RealmsData {
         return false;
     }
     
+    /**
+     * saves a zone
+     * @param zone
+     */
     @Override
-    public final void saveZone(final Zone zone) {
-        new Thread(){
-            public void run(){
-                synchronized(zonelock){
-                    PropsFile zonefile = new PropsFile(StoDir+String.format(ZoneFile, zone.getName()));
-                    
-                    zonefile.setString("ZoneName",      zone.getName());
-                    zonefile.setString("WorldName",     zone.getWorld());
-                    zonefile.setString("Dimension",     String.valueOf(zone.getDimension()));
-                    zonefile.setString("ParentZone",    zone.getParent() == null ? "null" : zone.getParent().getName());
-                    zonefile.setString("Greeting",      zone.getGreeting());
-                    zonefile.setString("Farewell",      zone.getFarewell());
-                    zonefile.setString("PVP",           zone.getAbsolutePVP().toString());
-                    zonefile.setString("Sanctuary",     zone.getAbsoluteSanctuary().toString());
-                    zonefile.setString("Creeper",       zone.getAbsoluteCreeper().toString());
-                    zonefile.setString("Ghast",         zone.getAbsoluteGhast().toString());
-                    zonefile.setString("Fall",          zone.getAbsoluteFall().toString());
-                    zonefile.setString("Suffocate",     zone.getAbsoluteSuffocate().toString());
-                    zonefile.setString("Fire",          zone.getAbsoluteFire().toString());
-                    zonefile.setString("Animals",       zone.getAbsoluteAnimals().toString());
-                    zonefile.setString("Physics",       zone.getAbsolutePhysics().toString());
-                    zonefile.setString("Creative",      zone.getAbsoluteCreative().toString());
-                    zonefile.setString("Pistons",       zone.getAbsolutePistons().toString());
-                    zonefile.setString("Healing",       zone.getAbsoluteHealing().toString());
-                    zonefile.setString("Enderman",      zone.getAbsoluteEnderman().toString());
-                    zonefile.setString("Spread",        zone.getAbsoluteSpread().toString());
-                    zonefile.setString("Flow",          zone.getAbsoluteFlow().toString());
-                    zonefile.setString("TNT",           zone.getAbsoluteTNT().toString());
-                    zonefile.setString("Potion",        zone.getAbsolutePotion().toString());
-                    zonefile.setString("Starve",        zone.getAbsoluteStarve().toString());
-                    zonefile.setString("Restricted",    zone.getAbsoluteRestricted().toString());
-                    zonefile.setString("Respawn",       zone.getAbsoluteRespawn().toString());
-                    zonefile.setString("PolygonArea",   zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
-                    
-                    StringBuilder perms = new StringBuilder();
-                    for(Permission perm : zone.getPerms()){
-                        perms.append(perm.toString());
-                        perms.append(',');
-                    }
-                    zonefile.save();
-                }
-            }
-        }.start();
+    public final void saveZone(Zone zone) {
+        new SaveThread(zone, true).start();
     }
 
+    /**
+     * reloads a zone
+     * @param zone
+     */
     @Override
     public final boolean reloadZone(Zone theZone) {
         File file = new File(StoDir+String.format(ZoneFile, theZone.getName()));
@@ -214,6 +181,6 @@ public class RealmsFlatFile extends RealmsData {
 
     @Override
     public void saveAll() {
-        // TODO Auto-generated method stub
+        new SaveThread(null, true).start();
     }
 }

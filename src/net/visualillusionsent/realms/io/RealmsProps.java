@@ -574,7 +574,7 @@ public class RealmsProps {
      * 
      * @return true if it is, false if not
      */
-    public boolean getPED(){
+    public static boolean getPED(){
         return pedallowed;
     }
     

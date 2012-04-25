@@ -668,11 +668,11 @@ public class Zone {
      * Other Methods
      */
     public void farewell(ICModPlayer player) {
-        if(farewell != null) player.sendMessage(farewell.replace("@", "�"));
+        if(farewell != null) player.sendMessage(farewell.replace("@", "\u00A7"));
     }
 
     public void greet(ICModPlayer player) {
-        if(greeting != null) player.sendMessage(greeting.replace("@", "�"));
+        if(greeting != null) player.sendMessage(greeting.replace("@", "\u00A7"));
     }
 
     // Delete the zone

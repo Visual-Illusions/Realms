@@ -12,16 +12,16 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.visualillusionsent.realms.io.AnimalDestructor;
-import net.visualillusionsent.realms.io.Healer;
 import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
 import net.visualillusionsent.realms.io.LogFormat;
-import net.visualillusionsent.realms.io.MobDestructor;
 import net.visualillusionsent.realms.io.RealmsData;
 import net.visualillusionsent.realms.io.RealmsFlatFile;
 import net.visualillusionsent.realms.io.RealmsProps;
-import net.visualillusionsent.realms.io.RestrictionDamager;
 import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.runnables.AnimalDestructor;
+import net.visualillusionsent.realms.runnables.Healer;
+import net.visualillusionsent.realms.runnables.MobDestructor;
+import net.visualillusionsent.realms.runnables.RestrictionDamager;
 import net.visualillusionsent.realms.zones.Permission;
 import net.visualillusionsent.realms.zones.Wand;
 import net.visualillusionsent.realms.zones.Zone;
@@ -245,6 +245,12 @@ public class RHandle {
         Wand wand = new Wand(this, player);
         wands.put(player, wand);
         return wand;
+    }
+    
+    public void removePlayerWand(ICModPlayer player){
+        if(wands.containsKey(player)){
+            wands.remove(player);
+        }
     }
     
     /**
@@ -507,6 +513,30 @@ public class RHandle {
             }
         } catch (IOException e) {
             log(Level.WARNING, "Fail to create Realms DebugLogging File");
+        }
+    }
+    
+    public void playerMessage(ICModPlayer player) {
+        if(ZoneLists.getplayerZones(player) == null){
+            List<Zone> zones = new ArrayList<Zone>();
+            zones.add(getEverywhere(player));
+            ZoneLists.addplayerzones(player, zones);
+            return;
+        }
+        List<Zone> oldZoneList = ZoneLists.getplayerZones(player);
+        List<Zone> newZoneList = ZoneLists.getZonesPlayerIsIn(getEverywhere(player), player);
+        if (oldZoneList.hashCode() != newZoneList.hashCode()) {
+            for(Zone zone : oldZoneList){
+                if(!newZoneList.contains(zone)){
+                    zone.farewell(player);
+                }
+            }
+            for(Zone zone : newZoneList){
+                if(!oldZoneList.contains(zone)){
+                    zone.greet(player);
+                }
+            }
+            ZoneLists.addplayerzones(player, newZoneList);
         }
     }
 }

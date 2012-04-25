@@ -29,8 +29,9 @@ public enum RealmsCommands {
                 zone.setPermission(player.getName(), Permission.PermType.ALL, true, true);
                 player.sendMessage(ChatColor.CYAN+"Granted you "+ChatColor.YELLOW+"'ALL'"+ChatColor.CYAN+" permission to zone "+ChatColor.ORANGE+"'"+zone.getName()+"'");
                 zone.save();
+                return true;
             }
-            return true;
+            return false;
         }
     },
     
@@ -382,7 +383,7 @@ public enum RealmsCommands {
     /**
      * Sets SANCTUARY Zone Flag
      */
-    SANCTUARY ("sanctuary", "<zone> <on|off|inherit>") {        
+    SANCTUARY ("sanctuary", "[zone] <on|off|inherit>") {        
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -426,7 +427,7 @@ public enum RealmsCommands {
     /**
      * Sets CREEPER Zone Flag
      */
-    CREEPER ("creeper", "<zone> <on|off|inherit>") {
+    CREEPER ("creeper", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -469,7 +470,7 @@ public enum RealmsCommands {
     /**
      * Sets POTION Zone Flag
      */
-    POTION ("potion", "<zone> <on|off|inherit>") {
+    POTION ("potion", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -513,7 +514,7 @@ public enum RealmsCommands {
     /**
      * Sets GHAST Zone Flag
      */
-    GHAST ("ghast", "<zone> <on|off|inherit>") {
+    GHAST ("ghast", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -557,7 +558,7 @@ public enum RealmsCommands {
     /**
      * Sets FALL Zone Flag
      */
-    FALL ("fall", "<zone> <on|off|inherit>") {
+    FALL ("fall", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -601,7 +602,7 @@ public enum RealmsCommands {
     /**
      * Sets SUFFOCATE Zone Flag
      */
-    SUFFOCATE ("suffocate", "<zone> <on|off|inherit>") {
+    SUFFOCATE ("suffocate", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -689,7 +690,7 @@ public enum RealmsCommands {
     /**
      * Sets ANIMALS Zone Flag
      */
-    ANIMALS ("animals", "<zone> <on|off|inherit>") {
+    ANIMALS ("animals", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -733,7 +734,7 @@ public enum RealmsCommands {
     /**
      * Sets PHYSICS Zone Flag
      */
-    PHYSICS ("physics", "<zone> <on|off|inherit>") {
+    PHYSICS ("physics", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -777,7 +778,7 @@ public enum RealmsCommands {
     /**
      * Sets CREATIVE Zone Flag
      */
-    CREATIVE ("creative", "<zone> <on|off|inherit>") {
+    CREATIVE ("creative", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -820,7 +821,7 @@ public enum RealmsCommands {
     /**
      * Sets PISTONS Zone Flag
      */
-    PISTONS ("pistons", "<zone> <on|off|inherit>") {
+    PISTONS ("pistons", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -864,7 +865,7 @@ public enum RealmsCommands {
     /**
      * Sets ENDERMAN Zone Flag
      */
-    ENDERMAN ("enderman", "<zone> <on|off|inherit>") {
+    ENDERMAN ("enderman", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -907,7 +908,7 @@ public enum RealmsCommands {
     /**
      * Sets FLOW Zone Flag
      */
-    FLOW ("flow", "<zone> <on|off|inherit>") {
+    FLOW ("flow", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -950,7 +951,7 @@ public enum RealmsCommands {
     /**
      * Sets SPREAD Zone Flag
      */
-    SPREAD ("spread", "<zone> <on|off|inherit>") {
+    SPREAD ("spread", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -994,7 +995,7 @@ public enum RealmsCommands {
     /**
      * Sets HEALING Zone Flag
      */
-    HEALING ("healing", "<zone> <on|off|inherit>") {
+    HEALING ("healing", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -1038,7 +1039,7 @@ public enum RealmsCommands {
     /**
      * Sets TNT Zone Flag
      */
-    TNT ("tnt", "<zone> <on|off|inherit>") {
+    TNT ("tnt", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -1081,7 +1082,7 @@ public enum RealmsCommands {
     /**
      * Sets STARVE Zone Flag
      */
-    STARVE ("starve", "<zone> <on|off|inherit>") {
+    STARVE ("starve", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -1125,7 +1126,7 @@ public enum RealmsCommands {
     /**
      * Sets RESTRICTED Zone Flag
      */
-    RESTRICTED ("restricted", "<zone> <on|off|inherit>") {
+    RESTRICTED ("restricted", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -1169,7 +1170,7 @@ public enum RealmsCommands {
     /**
      * Sets RESPAWN Zone Flag
      */
-    RESPAWN ("respawn", "<zone> <on|off|inherit>") {
+    RESPAWN ("respawn", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             if(!commandargsCheck(3, command)){
@@ -1264,7 +1265,7 @@ public enum RealmsCommands {
     /**
      * Check Realms' Version
      */
-    VERSION ("version", "--checks version #--") {
+    VERSION ("version", "") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
             player.sendMessage("\u00A76----- \u00A77Realms v"+rhandle.getVersion()+" by \u00A7ADarkDiplomat \u00A76-----");
@@ -1322,25 +1323,42 @@ public enum RealmsCommands {
     RELOADZONE ("reloadzone", "<zone>"){
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
-                player.notify(getUsage());
+            if(player.isAdmin()){
+                if(!commandargsCheck(1, command)){
+                    player.notify(getUsage());
+                    return true;
+                }
+                String zoneName = command[1];
+                try{
+                    Zone zone = ZoneLists.getZoneByName(zoneName);
+                    if(rhandle.getDataSource().reloadZone(zone)){
+                        player.sendMessage(ChatColor.CYAN+"Zone reloaded successfully");
+                    }
+                    else{
+                        player.notify("An error occurred durring reload...");
+                    }
+                }
+                catch (ZoneNotFoundException ZNFE) {
+                    player.notify(String.format(NFE, zoneName));
+                }
                 return true;
             }
-            String zoneName = command[2];
-            try{
-                Zone zone = ZoneLists.getZoneByName(zoneName);
-                if(rhandle.getDataSource().reloadZone(zone)){
-                    player.sendMessage(ChatColor.CYAN+"Zone reloaded successfully");
-                }
-                else{
-                    player.notify("An error occurred durring reload...");
-                }
-            }
-            catch (ZoneNotFoundException ZNFE) {
-                player.notify(String.format(NFE, zoneName));
+            return false;
+        }
+    },
+    
+    /**
+     * ReloadAll command
+     */
+    RELOADALL ("reloadall", ""){
+        @Override
+        public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
+            if(player.isAdmin()){
+                rhandle.getDataSource().reloadAll();
+                player.sendMessage(ChatColor.CYAN+"Zones reloaded!");
                 return true;
             }
-            return true;
+            return false;
         }
     },
     
