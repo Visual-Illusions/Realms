@@ -66,8 +66,9 @@ public interface ICModBlock {
      */
     public Object getBlock();
     
-    //Overridden Object Methods
-    public int hashCode();
+    //Overriden Object Methods
+    public String toString();
     public boolean equals(Object obj);
+    public int hashCode();
 
 }

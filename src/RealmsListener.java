@@ -103,7 +103,7 @@ public class RealmsListener extends PluginListener{
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             if ((block.getType() == 12) || (block.getType() == 13)){
                 deny = !zone.getPhysics();
-                rhand.log(RLevel.DEBUGINFO, "onBlockPhysics: Block: '"+block.toString()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+                //rhand.log(RLevel.DEBUGINFO, "onBlockPhysics: Block: '"+block.toString()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
             }
         }
         catch(Exception e){
@@ -522,7 +522,7 @@ public class RealmsListener extends PluginListener{
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             if ((bs == 1) || (bs == 3) || (bs == 4) || (bs == 5)){
                 boolean allow = zone.getSpread();
-                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'SPREAD' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+                //rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'SPREAD' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
                 return !allow;
             }
             else if (bs == 2 || bs == 6){
@@ -533,7 +533,7 @@ public class RealmsListener extends PluginListener{
             }
         }
         catch(Exception e){
-            rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onIgnite... (enable debuging for stacktraces)");
+            //rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onIgnite... (enable debuging for stacktraces)");
             rhand.log(RLevel.DEBUGSEVERE, "An unhandled exception has occured @ onIgnite: ", e);
         }
         return false;
@@ -688,7 +688,7 @@ public class RealmsListener extends PluginListener{
             else if (mob.isAnimal() && !zone.getAnimals()){
                 deny = true;
             }
-            rhand.log(RLevel.DEBUGINFO, "RealmsListener.onMobSpawn: Mob: '"+mob.getName()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            //rhand.log(RLevel.DEBUGINFO, "RealmsListener.onMobSpawn: Mob: '"+mob.getName()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
             return deny;
         }
         catch(Exception e){

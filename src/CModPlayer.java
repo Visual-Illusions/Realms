@@ -131,12 +131,26 @@ public class CModPlayer implements ICModPlayer{
     }
     
     @Override
-    public int hashCode(){
-        return player.hashCode();
+    public Object getPlayer(){
+        return player;
+    }
+    
+    @Override
+    public String toString(){
+        return player.toString();
     }
     
     @Override
     public boolean equals(Object obj){
-        return player.equals(obj);
+        if(obj instanceof CModPlayer){
+            CModPlayer cPlayer = (CModPlayer) obj;
+            return player.equals(cPlayer.getPlayer());
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode(){
+        return player.hashCode();
     }
 }

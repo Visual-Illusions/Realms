@@ -28,6 +28,7 @@ public class Zone {
     private PolygonArea polygon;
     private RHandle rhandle;
     private List<Permission> zoneperms = new ArrayList<Permission>();
+    private List<Zone> children = new ArrayList<Zone>();
     private String flagform = "\u00A76%s\u00A7B= %s %s";
     
     private ZoneFlag pvp; // OFF = pvp disabled, ON = pvp enabled
@@ -73,7 +74,6 @@ public class Zone {
         }
     }
     
-    private List<Zone> children = new ArrayList<Zone>();
 
     // Regular Constructor
     public Zone(RHandle rhandle, String name, Zone parent, String world, int dimension){
@@ -81,7 +81,6 @@ public class Zone {
         this.name = name;
         this.parent = parent;
         this.polygon = null;
-        this.children = new ArrayList<Zone>();
         this.greeting = null;
         this.farewell = null;
         
@@ -120,7 +119,9 @@ public class Zone {
                 this.parent = rhandle.getEverywhere(world, dimension);
             }
         }
-        
+        if(parent != null && !parent.getChildren().contains(this)){
+            parent.children.add(this);
+        }
         if(args.length < 5 || args[4] == null || args[4].equalsIgnoreCase("null")){
             this.greeting = null;
         }
@@ -704,8 +705,11 @@ public class Zone {
     }
 
     public boolean contains(ICModBlock block) {
-        if(name.equalsIgnoreCase("everywhere")){
+        if(name.equals("EVERYWHERE-"+block.getWorldName().toUpperCase()+"-DIM"+block.getDimIndex())){
             return true;
+        }
+        if(polygon == null){
+            return false;
         }
         if(world.equals(block.getWorldName()) && dimension == block.getDimension()){
             return polygon.contains(block);
@@ -714,8 +718,11 @@ public class Zone {
     }
 
     public boolean contains(ICModPlayer player) {
-        if(name.equalsIgnoreCase("everywhere")){
+        if(name.equals("EVERYWHERE-"+player.getWorldName().toUpperCase()+"-DIM"+player.getDimIndex())){
             return true;
+        }
+        if(polygon == null){
+            return false;
         }
         if(world.equals(player.getWorldName()) && dimension == player.getDimension()){
             return polygon.contains(player);
@@ -724,8 +731,11 @@ public class Zone {
     }
     
     public boolean contains(ICModMob mob) {
-        if(name.equalsIgnoreCase("everywhere")){
+        if(name.equals("EVERYWHERE-"+mob.getWorldName().toUpperCase()+"-DIM"+mob.getDimIndex())){
             return true;
+        }
+        if(polygon == null){
+            return false;
         }
         if(world.equals(mob.getWorldName()) && dimension == mob.getDimension()){
             return polygon.contains(mob);
@@ -1045,10 +1055,10 @@ public class Zone {
         if(this == obj){
             return true;
         }
-        if((obj == null) || (obj.getClass() != this.getClass())){
+        if((obj == null) || !(obj instanceof Zone)){
             return false;
         }
         Zone zone = (Zone)obj;
-        return dimension == zone.getDimension() && world.equals(zone.getWorld()) && name.equals(zone.getName());
+        return this.name.equals(zone.getName());
     }
 }

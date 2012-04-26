@@ -70,13 +70,23 @@ public class CModBlock implements ICModBlock{
         return block;
     }
     
+    
     @Override
-    public int hashCode(){
-        return block.hashCode();
+    public String toString(){
+        return block.toString();
     }
     
     @Override
     public boolean equals(Object obj){
-        return block.equals(obj);
+        if(obj instanceof CModBlock){
+            CModBlock cBlock = (CModBlock) obj;
+            return block.equals(cBlock.getBlock());
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode(){
+        return block.hashCode();
     }
 }

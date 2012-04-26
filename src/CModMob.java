@@ -58,13 +58,27 @@ public class CModMob implements ICModMob{
         return mob.getWorld().getType().toIndex();
     }
     
+    @Override
+    public Object getMob(){
+        return mob;
+    }
     
+    @Override
+    public String toString(){
+        return mob.toString();
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof CModMob){
+            CModMob cMob = (CModMob) obj;
+            return mob.equals(cMob.getMob());
+        }
+        return false;
+    }
+    
+    @Override
     public int hashCode(){
         return mob.hashCode();
     }
-    
-    public boolean equals(Object obj){
-        return mob.equals(obj);
-    }
-
 }

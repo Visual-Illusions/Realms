@@ -321,15 +321,17 @@ public class Wand {
             // Get zone
             try {
                 Zone zone = ZoneLists.getZoneByName(command[2]);
-            
+                
+                if(zone.getParent() == null){
+                    player.notify("The zone §6'" + command[2] + "'§c does not have a parent zone!");
+                    return true;
+                }
+                if(zone.getPolygon() == null){
+                    zone.setPolygon(new PolygonArea(rhandle, zone));
+                }
                 // Zone must be in "saved" mode
                 if(!zone.getPolygon().getMode().equalsIgnoreCase("saved")){
                     player.notify("That zone is already being edited!");
-                    return true;
-                }
-
-                if(zone.getParent() == null){
-                    player.notify("The zone §6'" + command[2] + "'§c does not have a parent zone!");
                     return true;
                 }
 
@@ -426,9 +428,9 @@ public class Wand {
                 StringBuilder points = new StringBuilder();
                 String[] poin = zone.whichChildContains(block).getPolygon().toString().split(",");
                 int i = 0;
-                for(i = 4; i < poin.length; i++, i++, i++){
+                for(i = 2; i < poin.length; i += 3){
                     points.append("("+poin[i]+","+poin[i+2]+") ");
-                    if(i+5 > 23 && i+5 < poin.length){
+                    if(i+3 > 23 && i+3 < poin.length){
                         points.append("...");
                         break;
                     }

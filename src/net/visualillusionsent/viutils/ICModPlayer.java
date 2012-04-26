@@ -162,6 +162,12 @@ public interface ICModPlayer {
      */
     public boolean isAdmin();
     
+    /**
+     * Gets the player Object
+     * @return player
+     */
+    public Object getPlayer();
+    
     //Overriden Object Methods
     public String toString();
     public boolean equals(Object obj);

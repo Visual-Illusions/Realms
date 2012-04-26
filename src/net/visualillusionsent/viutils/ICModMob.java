@@ -60,4 +60,14 @@ public interface ICModMob {
      */
     public int getDimIndex();
 
+    /**
+     * Gets the player Object
+     * @return player
+     */
+    public Object getMob();
+    
+    //Overriden Object Methods
+    public String toString();
+    public boolean equals(Object obj);
+    public int hashCode();
 }

@@ -3,7 +3,6 @@ package net.visualillusionsent.realms.zones.polygons;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Iterator;
-import java.util.logging.Level;
 import java.lang.Math;
 
 import net.visualillusionsent.realms.RHandle;
@@ -19,7 +18,6 @@ import net.visualillusionsent.viutils.ICModPlayer;
  * @author darkdiplomat
  */
 public class PolygonArea {
-    private RHandle rhandle;
     private Zone zone;
     private LinkedList<Point> vertices = new LinkedList<Point>();
     private LinkedList<Point> workingVertices = new LinkedList<Point>();
@@ -39,7 +37,6 @@ public class PolygonArea {
     * @param zone
     */
     public PolygonArea(RHandle rhandle, Zone zone) {
-        this.rhandle = rhandle;
         this.zone = zone;
         this.ceiling = 1000;
         this.floor = 0;
@@ -138,6 +135,7 @@ public class PolygonArea {
             centroid = calculateCentroid(vertices);
             radius = calculateRadius(vertices, centroid);
         }
+        zone.save();
     }
 
     /**
@@ -261,13 +259,19 @@ public class PolygonArea {
      *                                       craig@cse.fau.edu                 *
      ***************************************************************************/
     public static boolean contains (List<Point> points, Point p, int floor, int ceiling) {
+        if (points == null){
+            return false;
+        }
+        if(points.isEmpty()){
+            return false;
+        }
         Point oldPoint;
         int x1,z1;
         int x2,z2;
         boolean inside = false;
 
         if (p.y > ceiling || p.y < floor) return false;
-        if (points == null) return false;
+        
         if (points.size() < 3) return false;
 
         oldPoint = points.get(points.size() - 1);
@@ -305,8 +309,8 @@ public class PolygonArea {
     public boolean contains(Point p, boolean checkRadius) {
         if (this.centroid == null) return false;
         
-        if (checkRadius) {
-            if (this.centroid.distance2D(p) > this.radius) return false;
+        if (checkRadius && this.centroid.distance2D(p) > this.radius){
+            return false;
         }
         return contains(vertices, p, this.floor, this.ceiling);
     }
@@ -395,18 +399,18 @@ public class PolygonArea {
      * @return whether the vertex is valid
      */
     public boolean validVertex(ICModPlayer player, ICModBlock block) {
-        // The vertex must be contained by the parent zone  ORLY?
+        // The vertex must be contained by the parent zone
         if(!zone.getParent().contains(block)){
             player.notify("Block not contained within " + zone.getParent().getName());
             return false;
         }
-        // The vertex must not be contained by sibling zones
-        for(Zone sibling : zone.getParent().getChildren()){
-            if(sibling != zone && sibling.contains(block)){
-                player.notify("Block already claimed by a sibling zone: " + sibling.getName());
-                return false;
-            }
-        }
+        // The vertex must not be contained by sibling zones    NOTE: Testing Purposes Remove intersection
+      //  for(Zone sibling : zone.getParent().getChildren()){
+      //      if(sibling != zone && sibling.contains(block)){
+      //          player.notify("Block already claimed by a sibling zone: " + sibling.getName());
+      //          return false;
+      //      }
+      //  }
         // The vertex must not already be in the vertex list
         if(containsWorkingVertex(block)){
             player.notify("This column of blocks is already in the vertex list.");
@@ -428,19 +432,19 @@ public class PolygonArea {
             player.notify("A polygon must have a least three vertices");
             return false;
         }
-        // The polygon must not intersect any other sibling zones
-        for(Zone sibling : zone.getParent().getChildren()) {
-            if(sibling != zone && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
-                if (sibling.getPolygon().getFloor() <= workingCeiling && sibling.getPolygon().getCeiling() >= workingFloor) {
-                    rhandle.log(Level.INFO, "Floor/Ceiling Overlap. Sibling (" + sibling.getName() + ") C/F:" +
-                            sibling.getPolygon().getCeiling() + "," + sibling.getPolygon().getFloor() +
-                            " NewZone (" + zone.getName() + ") C/F: " + workingCeiling + "," + workingFloor);
-                    player.notify("A block enclosed by this polygon is already claimed by " + sibling.getName() + ".");
-                    return false;
-                }
-                    
-            }
-        }
+        // The polygon must not intersect any other sibling zones     NOTE: Testing Purposes Remove intersection
+   //     for(Zone sibling : zone.getParent().getChildren()) {
+   //         if(sibling != zone && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
+   //             if (sibling.getPolygon().getFloor() <= workingCeiling && sibling.getPolygon().getCeiling() >= workingFloor) {
+   //                 rhandle.log(Level.INFO, "Floor/Ceiling Overlap. Sibling (" + sibling.getName() + ") C/F:" +
+   //                         sibling.getPolygon().getCeiling() + "," + sibling.getPolygon().getFloor() +
+   //                         " NewZone (" + zone.getName() + ") C/F: " + workingCeiling + "," + workingFloor);
+   //                 player.notify("A block enclosed by this polygon is already claimed by " + sibling.getName() + ".");
+   //                 return false;
+   //             }
+   //                 
+   //         }
+   //     }
         // The polygon must contain all zone children
         for(Zone child : zone.getChildren()) {
             if(!workingVerticesContain(child.getPolygon())) {
