@@ -1,6 +1,7 @@
 package net.visualillusionsent.realms.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import net.visualillusionsent.realms.RHandle;
@@ -46,50 +47,57 @@ public class RealmsFlatFile extends RealmsData {
                 rhandle.log(Level.INFO, "Loading Zones...");
                 String[] zones = Directory.list();
                 for(String zonename : zones){
-                    if(!zonename.endsWith("zone")){
-                        continue;
-                    }
-                    PropsFile zone = new PropsFile(StoDir+zonename);
-                    String[] zoned = new String[]{ zone.getString("ZoneName" ),
-                                                   zone.getString("WorldName"),
-                                                   zone.getString("Dimension"),
-                                                   zone.getString("ParentZone"),
-                                                   zone.getString("Greeting"),
-                                                   zone.getString("Farewell"),
-                                                   zone.getString("PVP"),
-                                                   zone.getString("Sanctuary"),
-                                                   zone.getString("Creeper"),
-                                                   zone.getString("Ghast"),
-                                                   zone.getString("Fall"),
-                                                   zone.getString("Suffocate"),
-                                                   zone.getString("Fire"),
-                                                   zone.getString("Animals"),
-                                                   zone.getString("Physics"),
-                                                   zone.getString("Creative"),
-                                                   zone.getString("Pistons"),
-                                                   zone.getString("Healing"),
-                                                   zone.getString("Enderman"),
-                                                   zone.getString("Spread"),
-                                                   zone.getString("Flow"),
-                                                   zone.getString("TNT"),
-                                                   zone.getString("Potion"),
-                                                   zone.getString("Starve"),
-                                                   zone.getString("Restricted"),
-                                                   zone.getString("Respawn")
-                                                 };
-                    Zone theZone = new Zone(rhandle, zoned);
-                    String Polygon = zone.getString("PolygonArea");
-                    if(Polygon != null && !Polygon.equalsIgnoreCase("null")){
-                        String[] polyed = zone.getString("PolygonArea").split(",");
-                        new PolygonArea(rhandle, theZone, polyed);
-                    }
-                    String perms = zone.getString("Permissions");
-                    if(perms != null && !perms.equalsIgnoreCase("null")){
-                        String[] permed = zone.getString("Permissions").split(",");
-                        for(String permission : permed){
-                            String[] permsplit = permission.split(":");
-                            theZone.setPermission(new Permission(permsplit[0], permsplit[1], (permsplit[2].equals("YES") ? true : false), (permsplit[3].equals("YES") ? true : false)));
+                    try {
+                        if(!zonename.endsWith("zone")){
+                            continue;
                         }
+                        PropsFile zone = new PropsFile(StoDir+zonename);
+                    
+                        String[] zoned = new String[]{ zone.getString("ZoneName" ),
+                                                       zone.getString("WorldName"),
+                                                       zone.getString("Dimension"),
+                                                       zone.getString("ParentZone"),
+                                                       zone.getString("Greeting"),
+                                                       zone.getString("Farewell"),
+                                                       zone.getString("PVP"),
+                                                       zone.getString("Sanctuary"),
+                                                       zone.getString("Creeper"),
+                                                       zone.getString("Ghast"),
+                                                       zone.getString("Fall"),
+                                                       zone.getString("Suffocate"),
+                                                       zone.getString("Fire"),
+                                                       zone.getString("Animals"),
+                                                       zone.getString("Physics"),
+                                                       zone.getString("Creative"),
+                                                       zone.getString("Pistons"),
+                                                       zone.getString("Healing"),
+                                                       zone.getString("Enderman"),
+                                                       zone.getString("Spread"),
+                                                       zone.getString("Flow"),
+                                                       zone.getString("TNT"),
+                                                       zone.getString("Potion"),
+                                                       zone.getString("Starve"),
+                                                       zone.getString("Restricted"),
+                                                       zone.getString("Respawn")
+                                                     };
+                        Zone theZone = new Zone(rhandle, zoned);
+                        String Polygon = zone.getString("PolygonArea");
+                        if(Polygon != null && !Polygon.equalsIgnoreCase("null")){
+                            String[] polyed = zone.getString("PolygonArea").split(",");
+                            new PolygonArea(rhandle, theZone, polyed);
+                        }
+                        String perms = zone.getString("Permissions");
+                        if(perms != null && !perms.equalsIgnoreCase("null")){
+                            String[] permed = zone.getString("Permissions").split(",");
+                            for(String permission : permed){
+                                String[] permsplit = permission.split(":");
+                                theZone.setPermission(new Permission(permsplit[0], permsplit[1], (permsplit[2].equals("YES") ? true : false), (permsplit[3].equals("YES") ? true : false)));
+                            }
+                        }
+                    } catch (Exception e) {
+                        rhandle.log(Level.WARNING, "[Realms] Failed to load Zone: "+zonename);
+                        rhandle.log(RLevel.DEBUGSEVERE, "Failed to load Zone: "+zonename+" :", e);
+                        continue;
                     }
                 }
             }
@@ -105,7 +113,7 @@ public class RealmsFlatFile extends RealmsData {
      */
     @Override
     public final void saveZone(Zone zone) {
-        new SaveThread(zone, true).start();
+        new SaveThread(rhandle, zone, true).start();
     }
 
     /**
@@ -119,8 +127,8 @@ public class RealmsFlatFile extends RealmsData {
             return false;
         }
         synchronized(zonelock){
-            PropsFile zone = new PropsFile(StoDir+String.format(ZoneFile, theZone.getName()));
             try{
+                PropsFile zone = new PropsFile(StoDir+String.format(ZoneFile, theZone.getName()));
                 theZone.setWorld(zone.getString("WorldName"));
                 theZone.setDimension(zone.getInt("Dimension"));
                 theZone.setParent(zone.getString("ParentZone").equals("null") ? null : ZoneLists.getZoneByName(zone.getString("ParentZone")));
@@ -160,10 +168,14 @@ public class RealmsFlatFile extends RealmsData {
                     }
                 }
             }
+            //TODO Log error
             catch(InvaildZoneFlagException izfe){
                 return false;
             } 
             catch (ZoneNotFoundException znfe) {
+                return false;
+            }
+            catch (IOException e){
                 return false;
             }
         }
@@ -181,6 +193,6 @@ public class RealmsFlatFile extends RealmsData {
 
     @Override
     public void saveAll() {
-        new SaveThread(null, true).start();
+        new SaveThread(rhandle, null, true).start();
     }
 }

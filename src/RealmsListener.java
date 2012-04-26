@@ -13,7 +13,7 @@ import net.visualillusionsent.realms.zones.ZoneLists;
 
 /**
  * Realms listener class
- * 
+ * <p>
  * This file is part of Realms
  * 
  * @author darkdiplomat
@@ -522,13 +522,13 @@ public class RealmsListener extends PluginListener{
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             if ((bs == 1) || (bs == 3) || (bs == 4) || (bs == 5)){
                 boolean allow = zone.getSpread();
-                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'Spread' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'SPREAD' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
                 return !allow;
             }
             else if (bs == 2 || bs == 6){
                 CModPlayer cPlayer = new CModPlayer(player);
-                boolean allow = zone.permissionCheck(cPlayer, Permission.PermType.DESTROY);
-                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'DESTROY' Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+                boolean allow = zone.permissionCheck(cPlayer, Permission.PermType.IGNITE);
+                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'IGNITE' Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
                 return !allow;
             }
         }

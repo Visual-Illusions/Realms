@@ -27,7 +27,7 @@ public class RealmsPlayerExplosionDamage extends Thread{
         
     /**
      * class constructor
-     * 
+     *  
      * @param Realm
      * @param RLocation
      */
@@ -81,6 +81,9 @@ public class RealmsPlayerExplosionDamage extends Thread{
                                                 //If explosion kills player drop their inventory
                                                 player.dropInventory();
                                             }
+                                            rhandle.log(RLevel.DEBUGINFO, "ExplosionPlayerDamage - Player: '" + player.getName()+ 
+                                                                          "' at Location - X: '"+Math.floor(player.getX())+"' Y: '"+Math.floor(player.getY())+"' Z: '"+Math.floor(player.getZ())+
+                                                                          "' World: '"+player.getWorldName()+"' Dimension: '"+ player.getDimension()+"'");//Debugging
                                         }
                                     }
                                 }

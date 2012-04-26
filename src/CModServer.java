@@ -1,3 +1,5 @@
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -125,7 +127,13 @@ public class CModServer implements ICModServer{
         return -1;
     }
     
+    @Override
     public String getDefaultGroup(){
         return etc.getDataSource().getDefaultGroup().Name;
+    }
+    
+    @Override
+    public Connection getCanarySQLConnection() throws SQLException{
+        return etc.getConnection().getConnection();
     }
 }

@@ -27,21 +27,19 @@ public class RealmsProps {
     private RHandle rhandle;
     
     private PropsFile Properties;
-    private PropsFile BckNums;
     
     private static int wandItem, pylontype, pylonheight;
     private static long sanctuarytimeout, healingtimeout, animalstimeout, savetimeout, restricttimeout;
     private static boolean grantbyDefault, grantOverrules, debug, useMySQL, useCModMySQL, 
                            creepersallowed, ghastsallowed, sancmobsallowed, pedallowed, t2t, restrictcausedeath;
-    private String sqlUser, sqlPassword, sqlDatabase, sqlDriver;
+    private static String sqlUser, sqlPassword, sqlDatabase, sqlDriver;
     
     private final String defOpBlocks = "23,25,54,61,62,64,69,77,84,93,96,107,117,118", defOpItems = "383", defCommandOverride = "/home,/spawn,/help";
     
     private static ArrayList<Integer> OpBlock = new ArrayList<Integer>();
     private static ArrayList<Integer> OpItem = new ArrayList<Integer>();
     private static ArrayList<String> CommandOverride = new ArrayList<String>();
-    
-    private int polybcknum = 0, zonebcknum = 0, permbcknum = 0, invbcknum = 0;
+    private boolean isInitialized = false;
     
     /**
      * class constructor
@@ -50,10 +48,12 @@ public class RealmsProps {
      */
     public RealmsProps(RHandle rhandle){
         this.rhandle = rhandle;
-        initialize();
     }
     
-    private void initialize(){
+    public boolean initialize(){
+        if(isInitialized){
+            return false;
+        }
         /*Check Storage Directory*/
         if(!Storage.exists()){
             Storage.mkdirs();
@@ -65,23 +65,45 @@ public class RealmsProps {
         }
         /*Check Properties File*/
         if(!Props.exists()){ //Create a new one if non-existent
+            InputStream in = null;
+            FileWriter out = null;
             try{
                 File outputFile = new File(StoDir+PropsFile);
-                InputStream in = getClass().getClassLoader().getResourceAsStream("DefaultProp.ini");
-                FileWriter out = new FileWriter(outputFile);
+                in = getClass().getClassLoader().getResourceAsStream("DefaultProp.ini");
+                out = new FileWriter(outputFile);
                 int c;
                 while ((c = in.read()) != -1){
                     out.write(c);
                 }
-                in.close();
-                out.close();
             } 
             catch (IOException e){
                 rhandle.log(Level.SEVERE, "Unable to create properties file!");
+                try{
+                    if(in != null){
+                        in.close();
+                    }
+                    if(out != null){
+                        out.close();
+                    }
+                }
+                catch(IOException e2){ }
+                return false;
+            }
+            finally{
+                try{
+                    in.close();
+                    out.close();
+                }
+                catch(IOException ioe){ }
             }
         }
         
-        Properties = new PropsFile(StoDir+PropsFile); //Initialize Properties
+        try {
+            Properties = new PropsFile(StoDir+PropsFile); //Initialize Properties
+        } catch (IOException e) {
+            rhandle.log(Level.SEVERE, "[Realms] Failed to load Properties...");
+            return false;
+        } 
         
         wandItem = parseInteger(283, "Wand-Item");
         pylontype = parseInteger(85, "Pylon-Type");
@@ -119,32 +141,7 @@ public class RealmsProps {
         String WC = parseString(defCommandOverride, "CommandOverride");
         addWhiteCommands(WC.split(","));
         
-        
-        BckNums = new PropsFile(BckStoDir+"BackUpNums.bak");
-        if(!BckNums.containsKey("PolyNum")){
-            BckNums.setInt("PolyNum", 0);
-        }
-        else{
-            polybcknum = BckNums.getInt("PolyNum");
-        }
-        if(!BckNums.containsKey("ZoneNum")){
-            BckNums.setInt("ZoneNum", 0);
-        }
-        else{
-            zonebcknum = BckNums.getInt("ZoneNum");
-        }
-        if(!BckNums.containsKey("PermNum")){
-            BckNums.setInt("PermNum", 0);
-        }
-        else{
-            permbcknum = BckNums.getInt("PermNum");
-        }
-        if(!BckNums.containsKey("InvNum")){
-            BckNums.setInt("InvNum", 0);
-        }
-        else{
-            invbcknum = BckNums.getInt("InvNum");
-        }
+        return true;
     }
     
     /**
@@ -444,7 +441,7 @@ public class RealmsProps {
      * 
      * @return SQLDatabase
      */
-    public String getDataBase(){
+    public static String getDataBase(){
         return sqlDatabase;
     }
     
@@ -453,7 +450,7 @@ public class RealmsProps {
      * 
      * @return SQLUser
      */
-    public String getUsername() {
+    public static String getUsername() {
         return sqlUser;
     }
     
@@ -462,7 +459,7 @@ public class RealmsProps {
      * 
      * @return SQLPassword  (maybe I should think about encryptions?)
      */
-    public String getPassword() {
+    public static String getPassword(RHandle rhandle) {
         return sqlPassword;
     }
     
@@ -471,7 +468,7 @@ public class RealmsProps {
      * 
      * @return SQLDriver
      */
-    public String getDriver() {
+    public static String getDriver() {
         return sqlDriver;
     }
     
@@ -511,62 +508,6 @@ public class RealmsProps {
      */
     public static boolean isCO(String cmd){
         return CommandOverride.contains(cmd);
-    }
-    
-    /**
-     * Gets and Sets BackUp Number for Polygons
-     */
-    public int getPolyNum(){
-        if(polybcknum > 10){
-            polybcknum = 1;
-        }
-        else{
-            polybcknum++;
-        }
-        BckNums.setInt("PolyNum", polybcknum);
-        return polybcknum;
-    }
-    
-    /**
-     * Gets and Sets BackUp Number for Zones
-     */
-    public int getZoneNum(){
-        if(zonebcknum > 10){
-            zonebcknum = 1;
-        }
-        else{
-            zonebcknum++;
-        }
-        BckNums.setInt("ZoneNum", zonebcknum);
-        return zonebcknum;
-    }
-    
-    /**
-     * Gets and Sets BackUp Number for Permissions
-     */
-    public int getPermNum(){
-        if(permbcknum > 10){
-            permbcknum = 1;
-        }
-        else{
-            permbcknum++;
-        }
-        BckNums.setInt("PermNum", permbcknum);
-        return permbcknum;
-    }
-    
-    /**
-     * Gets and Sets BackUp Number for Inventories
-     */
-    public int getInvNum(){
-        if(invbcknum > 10){
-            invbcknum = 1;
-        }
-        else{
-            invbcknum++;
-        }
-        BckNums.setInt("InvNum", invbcknum);
-        return invbcknum;
     }
     
     /**

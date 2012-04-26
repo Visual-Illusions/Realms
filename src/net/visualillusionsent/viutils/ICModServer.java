@@ -1,5 +1,7 @@
 package net.visualillusionsent.viutils;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -88,4 +90,10 @@ public interface ICModServer {
      * @return default group name
      */
     public String getDefaultGroup();
+    
+    /**
+     * gets Canary's MySQL Connection
+     * @return connection
+     */
+    public Connection getCanarySQLConnection() throws SQLException;
 }

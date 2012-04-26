@@ -34,6 +34,7 @@ public class Permission {
         ENVIRONMENT ("environment"),
         EAT ("eat"),
         AUTHED("authed"),
+        IGNITE("ignite"),
         NULL ("");
         
         private String type;

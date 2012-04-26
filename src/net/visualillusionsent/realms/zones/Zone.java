@@ -985,7 +985,7 @@ public class Zone {
         toRet.append(',');
         toRet.append(dimension);
         toRet.append(',');
-        toRet.append(parent.getName());
+        toRet.append(parent == null ? "null" : parent.getName());
         toRet.append(',');
         toRet.append(greeting);
         toRet.append(',');

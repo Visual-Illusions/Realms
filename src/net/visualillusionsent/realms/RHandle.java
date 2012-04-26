@@ -2,6 +2,9 @@ package net.visualillusionsent.realms;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +19,7 @@ import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
 import net.visualillusionsent.realms.io.LogFormat;
 import net.visualillusionsent.realms.io.RealmsData;
 import net.visualillusionsent.realms.io.RealmsFlatFile;
+import net.visualillusionsent.realms.io.RealmsMySQL;
 import net.visualillusionsent.realms.io.RealmsProps;
 import net.visualillusionsent.realms.io.ZoneNotFoundException;
 import net.visualillusionsent.realms.runnables.AnimalDestructor;
@@ -76,20 +80,34 @@ public class RHandle {
      */
     public boolean initialize(){
         this.rprop = new RealmsProps(this);
+        if(!rprop.initialize()){
+            return false;
+        }
         this.zl = new ZoneLists(this);
-        this.datasource = new RealmsFlatFile(this);
+        if(RealmsProps.getMySQL()){
+            this.datasource = new RealmsMySQL(this);
+        }
+        else{
+            this.datasource = new RealmsFlatFile(this);
+        }
         if(!this.datasource.loadZones()){
             return false;
         }
         threadhandle = new ScheduledThreadPoolExecutor(3);
         threadhandle.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         threadhandle.setKeepAliveTime(1, TimeUnit.MINUTES);
-        if(!RealmsProps.getAC() && !RealmsProps.getAG() && !RealmsProps.getSM()){ //If allowing all mobs into Sanctuary area don't bother scheduling
+        if(!RealmsProps.getAC() && !RealmsProps.getAG() && !RealmsProps.getSM() && (RealmsProps.getSanctuaryTimeOut() > 0)){ //If allowing all mobs into Sanctuary area don't bother scheduling
             threadhandle.scheduleAtFixedRate(new MobDestructor(this), RealmsProps.getSanctuaryTimeOut(), RealmsProps.getSanctuaryTimeOut(), TimeUnit.MILLISECONDS); //Sanctuary Runnable
         }
-        threadhandle.scheduleAtFixedRate(new AnimalDestructor(this), RealmsProps.getAnimalsTimeOut(), RealmsProps.getAnimalsTimeOut(), TimeUnit.MILLISECONDS); //Animals Runnable
-        threadhandle.scheduleAtFixedRate(new Healer(this), RealmsProps.getHealingTimeOut(), RealmsProps.getHealingTimeOut(), TimeUnit.MILLISECONDS); //Healing Runnable
-        threadhandle.scheduleAtFixedRate(new RestrictionDamager(this), RealmsProps.getRestrictTimeOut(), RealmsProps.getRestrictTimeOut(), TimeUnit.MILLISECONDS);
+        if(RealmsProps.getAnimalsTimeOut() > 0){
+            threadhandle.scheduleAtFixedRate(new AnimalDestructor(this), RealmsProps.getAnimalsTimeOut(), RealmsProps.getAnimalsTimeOut(), TimeUnit.MILLISECONDS); //Animals Runnable
+        }
+        if(RealmsProps.getHealingTimeOut() > 0){
+            threadhandle.scheduleAtFixedRate(new Healer(this), RealmsProps.getHealingTimeOut(), RealmsProps.getHealingTimeOut(), TimeUnit.MILLISECONDS); //Healing Runnable
+        }
+        if(RealmsProps.getRestrictTimeOut() > 0){
+            threadhandle.scheduleAtFixedRate(new RestrictionDamager(this), RealmsProps.getRestrictTimeOut(), RealmsProps.getRestrictTimeOut(), TimeUnit.MILLISECONDS);
+        }
         return true;
     }
     
@@ -100,8 +118,10 @@ public class RHandle {
      * @param toLog
      */
     public void log(Level lvl, String toLog){
-        if(lvl.getName().startsWith("DEBUG") && RealmsProps.getDebug()){
-            rlog.log(lvl, toLog);
+        if(lvl.getName().startsWith("DEBUG")){
+            if(RealmsProps.getDebug()){
+                rlog.log(lvl, toLog);
+            }
         }
         else{
             mclog.log(lvl, toLog);
@@ -516,6 +536,11 @@ public class RHandle {
         }
     }
     
+    /**
+     * sends welcome/farewell messages to a player
+     * 
+     * @param player
+     */
     public void playerMessage(ICModPlayer player) {
         if(ZoneLists.getplayerZones(player) == null){
             List<Zone> zones = new ArrayList<Zone>();
@@ -537,6 +562,15 @@ public class RHandle {
                 }
             }
             ZoneLists.addplayerzones(player, newZoneList);
+        }
+    }
+    
+    public Connection getSQLConnection() throws SQLException{
+        if(RealmsProps.getCMySQL()){
+            return serv.getCanarySQLConnection();
+        }
+        else{
+            return DriverManager.getConnection(RealmsProps.getDataBase(), RealmsProps.getUsername(), RealmsProps.getPassword(this));
         }
     }
 }

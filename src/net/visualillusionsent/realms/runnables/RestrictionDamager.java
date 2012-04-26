@@ -59,6 +59,9 @@ public class RestrictionDamager implements Runnable{
                                 //Yep, drop their inventory
                                 thePlayer.dropInventory();
                             }
+                            rhandle.log(RLevel.DEBUGINFO, "RestrictedZoneDamage - Player: '" + thePlayer.getName()+ 
+                                    "' at Location - X: '"+Math.floor(thePlayer.getX())+"' Y: '"+Math.floor(thePlayer.getY())+"' Z: '"+Math.floor(thePlayer.getZ())+
+                                    "' World: '"+thePlayer.getWorldName()+"' Dimension: '"+ thePlayer.getDimension()+"'");//Debugging
                         }
                     }
                 }

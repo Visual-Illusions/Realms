@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * PropsFile class for handling properties with added comments
- * 
+ * <p>
  * Example: propsfile.setString("Key", "Value", new String[]{ "Comment1", "Comment2" });
  * <p>
  * This file is part of the VI Utilities Package ( net.visualillusionsent.viutils )
@@ -33,7 +33,7 @@ public final class PropsFile {
      * 
      * @param filepath  File path of the properties file
      */
-    public PropsFile(String filepath) {
+    public PropsFile(String filepath) throws IOException {
         this.filepath = filepath; //Sets the path
         propsFile = new File(filepath);
         if (propsFile.exists()) {
@@ -47,9 +47,11 @@ public final class PropsFile {
     /**
      * Loads the properties
      */
-    public void load(){
+    public void load() throws IOException{
+        BufferedReader in = null;
+        IOException toThrow = null;
         try{
-            BufferedReader in = new BufferedReader(new FileReader(propsFile)); //Reader of the properties file
+            in = new BufferedReader(new FileReader(propsFile)); //Reader of the properties file
             String inLine;
             ArrayList<String> inComments = new ArrayList<String>(); //Temporary comment storage
             while((inLine = in.readLine()) != null){
@@ -75,18 +77,26 @@ public final class PropsFile {
                     }
                 }
             }
-            in.close();
-        } 
-        catch (IOException IOE){ //ERROR
-            log.warning("A IOException occurred in File: '"+filepath+"'");
-        } 
+        }
+        catch(IOException ioe){
+            //will rethrow later
+            toThrow = ioe;
+        }
+        finally{
+            if(in != null){
+                in.close();
+            }
+            if(toThrow != null){
+                throw toThrow;
+            }
+        }
     }
 
     /**
      * Saves the properties to the file
      */
-    public void save() {
-        if(filepath.lastIndexOf("/") > 0){
+    public void save() throws IOException{ //FIXME
+        if(filepath.lastIndexOf("/") > 0){ 
             new File(filepath.substring(0, filepath.lastIndexOf("/")+1)).mkdirs(); //Make directories
         }
         try{

@@ -290,7 +290,7 @@ public enum RealmsCommands {
                 return true;
             }
             String zoneName = command[2];
-            String parentZoneName = "EVERYWHERE-"+player.getWorldName();
+            String parentZoneName = "EVERYWHERE-"+player.getWorldName()+"-DIM"+player.getDimIndex();
             
             if(zoneName.toUpperCase().startsWith("EVERYWHERE")){
                 player.notify("A new zone cannot start with 'EVERYWHERE'!");
@@ -314,12 +314,12 @@ public enum RealmsCommands {
                     player.notify("You do not have "+ChatColor.YELLOW+"ZONING"+ChatColor.LIGHT_RED+" permission within "+ChatColor.ORANGE+parentZone.getName());
                     return true;
                 }
-                if (zoneName.contains(",")){
-                    player.notify(ChatColor.ORANGE+"ZONE NAMES"+ChatColor.LIGHT_RED+" cannot contain "+ChatColor.YELLOW+"COMMAS"+ChatColor.LIGHT_RED+"!");
+                else if (zoneName.equalsIgnoreCase("null")){
+                    player.notify("Zones cannot be named "+ChatColor.ORANGE+"NULL"+ChatColor.LIGHT_RED+"!");
                     return true;
                 }
-                if (zoneName.equalsIgnoreCase("null")){
-                    player.notify("Zones cannot be named "+ChatColor.ORANGE+"NULL"+ChatColor.LIGHT_RED+"!");
+                else if(!zoneName.matches("[_a-zA-Z0-9\\-\\.]+")){
+                    player.notify(ChatColor.ORANGE+"ZONE NAMES"+ChatColor.LIGHT_RED+" cannot contain "+ChatColor.YELLOW+"SPECIAL CHARACTERS"+ChatColor.LIGHT_RED+"!");
                     return true;
                 }
                 // Made it past all the checks!
@@ -386,36 +386,36 @@ public enum RealmsCommands {
     SANCTUARY ("sanctuary", "[zone] <on|off|inherit>") {        
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.COMBAT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "SANCTUARY", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setSanctuary(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getSanctuary() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteSanctuary().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "SANCTUARY", (zone.getSanctuary() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteSanctuary().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "SANCTUARY"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
