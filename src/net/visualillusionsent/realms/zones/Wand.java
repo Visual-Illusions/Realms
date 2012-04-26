@@ -97,6 +97,8 @@ public class Wand {
     public boolean wandCommand(ICModPlayer player, String[] command) {
         if(command.length < 2) {
             player.notify("No /wand subcommand provided!");
+            player.notify("Please specify one of:");
+            player.notify("cancel, reset, save, show, edit, setfloor, setceiling");
             return true;
         }
 
@@ -131,6 +133,10 @@ public class Wand {
                         return true;
                     }
                     workingPolygon.save();
+                    workingPolygon.getZone().getParent().save();
+                    for(Zone child : workingPolygon.getZone().getChildren()){
+                        child.save();
+                    }
                     reset();
                     player.sendMessage(ChatColor.ORANGE+"Zone complete!"+ChatColor.CYAN+" Wand back in "+ChatColor.YELLOW+"'getInfo'"+ChatColor.CYAN+" mode.");
                     return true;

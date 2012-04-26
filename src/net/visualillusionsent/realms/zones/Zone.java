@@ -575,6 +575,7 @@ public class Zone {
 
     public void setParent(Zone newParent) {
         parent = newParent;
+        newParent.getChildren().add(this);
     }
 
     public void setGreeting(String greeting) {

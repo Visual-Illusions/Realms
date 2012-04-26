@@ -207,7 +207,7 @@ public class PolygonArea {
         Iterator<Point> itr = workingVertices.iterator(); 
         while(itr.hasNext()) {
             Point p = itr.next(); 
-            if(p.x == block.getX() && p.z == block.getY()){
+            if(p.x == block.getX() && p.z == block.getZ()){
                 itr.remove();
             }
         }
@@ -404,17 +404,17 @@ public class PolygonArea {
             player.notify("Block not contained within " + zone.getParent().getName());
             return false;
         }
-        // The vertex must not be contained by sibling zones    NOTE: Testing Purposes Remove intersection
-      //  for(Zone sibling : zone.getParent().getChildren()){
-      //      if(sibling != zone && sibling.contains(block)){
-      //          player.notify("Block already claimed by a sibling zone: " + sibling.getName());
-      //          return false;
-      //      }
-      //  }
+        // The vertex must not be contained by sibling zones
+        for(Zone sibling : zone.getParent().getChildren()){
+            if(sibling != zone && sibling.contains(block)){
+                player.notify("Block already claimed by a sibling zone: " + sibling.getName());
+                return false;
+            }
+        }
         // The vertex must not already be in the vertex list
         if(containsWorkingVertex(block)){
-            player.notify("This column of blocks is already in the vertex list.");
-            return true;
+            player.notify("Warning: This column of blocks is already in the vertex list.");
+            //return false;
         }
         // All checks passed: test vertex is valid
         return true;
@@ -432,19 +432,23 @@ public class PolygonArea {
             player.notify("A polygon must have a least three vertices");
             return false;
         }
-        // The polygon must not intersect any other sibling zones     NOTE: Testing Purposes Remove intersection
-   //     for(Zone sibling : zone.getParent().getChildren()) {
-   //         if(sibling != zone && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
-   //             if (sibling.getPolygon().getFloor() <= workingCeiling && sibling.getPolygon().getCeiling() >= workingFloor) {
-   //                 rhandle.log(Level.INFO, "Floor/Ceiling Overlap. Sibling (" + sibling.getName() + ") C/F:" +
-   //                         sibling.getPolygon().getCeiling() + "," + sibling.getPolygon().getFloor() +
-   //                         " NewZone (" + zone.getName() + ") C/F: " + workingCeiling + "," + workingFloor);
-   //                 player.notify("A block enclosed by this polygon is already claimed by " + sibling.getName() + ".");
-   //                 return false;
-   //             }
-   //                 
-   //         }
-   //     }
+        // The polygon must not intersect any other sibling zones unless completely containing them
+        for(Zone sibling : zone.getParent().getChildren()) {
+            if(sibling != zone && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
+                if (sibling.getPolygon().getFloor() < workingCeiling && sibling.getPolygon().getCeiling() > workingFloor) {
+                    //rhandle.log(Level.INFO, "Floor/Ceiling Overlap. Sibling (" + sibling.getName() + ") C/F:" +
+                    //       sibling.getPolygon().getCeiling() + "," + sibling.getPolygon().getFloor() +
+                    //        " NewZone (" + zone.getName() + ") C/F: " + workingCeiling + "," + workingFloor);
+                    player.notify("A block enclosed by this polygon is already claimed by " + sibling.getName() + ".");
+                    return false;
+                }    
+            }
+            else if(workingVerticesContain(sibling.getPolygon())) {
+                player.notify("Moving " + sibling.getName() + " into child list of current working zone.");
+                zone.getParent().removeChild(sibling);
+                sibling.setParent(zone);
+            }
+        }
         // The polygon must contain all zone children
         for(Zone child : zone.getChildren()) {
             if(!workingVerticesContain(child.getPolygon())) {
@@ -455,8 +459,10 @@ public class PolygonArea {
 
         // The polygon must not contain intersecting lines
         if (intersects(workingVertices, workingVertices)){
-            player.notify("Polygon line intersection!!");
-            return false;
+            player.notify("Warning: Polygon line intersection!");
+            //TODO reorder points
+            
+            //return false; NOTE: Testing by-pass
         }
 
         // All checks passed: vertex is valid
