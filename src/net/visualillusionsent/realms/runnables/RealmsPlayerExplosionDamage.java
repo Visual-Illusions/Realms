@@ -24,6 +24,7 @@ public class RealmsPlayerExplosionDamage extends Thread{
     private RHandle rhandle;
     private List<ICModPlayer> scanList;
     private ICModBlock block;
+    private String debug = "Player - Name: '%s' @ Location: X: '%d' Y: '%d' Z: '%d' World: '%s' Dimension: '%d'";
         
     /**
      * class constructor
@@ -49,41 +50,38 @@ public class RealmsPlayerExplosionDamage extends Thread{
             /*Check Player List*/
             if (!scanList.isEmpty()){
                 synchronized(scanList){
-                    for(ICModPlayer player : scanList){
-                        Zone myZone = ZoneLists.getZone(rhandle.getEverywhere(player), player);
+                    for(ICModPlayer thePlayer : scanList){
+                        Zone myZone = ZoneLists.getZone(rhandle.getEverywhere(thePlayer), thePlayer);
                         //Checks for Player can be hurt by the Explosion
-                        if(player.getWorldName().equals(block.getWorldName()) && !player.getMode() && !myZone.getSanctuary() && !player.isDamageDisabled()){
+                        if(thePlayer.getWorldName().equals(block.getWorldName()) && !thePlayer.getMode() && !myZone.getSanctuary() && !thePlayer.isDamageDisabled()){
                             int bx = block.getX(), by = block.getY(), bz = block.getZ();
                             for(int x = (bx-5); x < (bx+6); x++){
                                 for(int y = (by-5); y < (by+6); y++){
                                     for(int z = (bz-5); z < (bz+6); z++){
-                                        if(player.getX() == x && player.getY() == y && player.getZ() == z){
+                                        if(thePlayer.getX() == x && thePlayer.getY() == y && thePlayer.getZ() == z){
                                             //Hurt Player based on proximity
                                             if(x == (bx-5) || y == (by-5) || z == (bz-5) || x == (bx+5) || y == (by+5) || z == (bz+5)){
-                                                player.doDamage(2);
+                                                thePlayer.doDamage(1, 2);
                                             }
-                                            if(x == (bx-4) || y == (by-4) || z == (bz-4) || x == (bx+4) || y == (by+4) || z == (bz+4)){
-                                                player.doDamage(4);
+                                            else if(x == (bx-4) || y == (by-4) || z == (bz-4) || x == (bx+4) || y == (by+4) || z == (bz+4)){
+                                                thePlayer.doDamage(1, 4);
                                             }
-                                            if(x == (bx-3) || y == (by-3) || z == (bz-3) || x == (bx+3) || y == (by+3) || z == (bz+3)){
-                                                player.doDamage(6);
+                                            else if(x == (bx-3) || y == (by-3) || z == (bz-3) || x == (bx+3) || y == (by+3) || z == (bz+3)){
+                                                thePlayer.doDamage(1, 6);
                                             }
-                                            if(x == (bx-2) || y == (by-2) || z == (bz-2) || x == (bx+2) || y == (by+2) || z == (bz+2)){
-                                                player.doDamage(8);
+                                            else if(x == (bx-2) || y == (by-2) || z == (bz-2) || x == (bx+2) || y == (by+2) || z == (bz+2)){
+                                                thePlayer.doDamage(1, 8);
                                             }
-                                            if(x == (bx-1) || y == (by-1) || z == (bz-1) || x == (bx+1) || y == (by+1) || z == (bz+1)){
-                                                player.doDamage(10);
+                                            else if(x == (bx-1) || y == (by-1) || z == (bz-1) || x == (bx+1) || y == (by+1) || z == (bz+1)){
+                                                thePlayer.doDamage(1, 10);
                                             }
-                                            if(x == bx || y == by || z == bz){
-                                                player.doDamage(12);
+                                            else if(x == bx || y == by || z == bz){
+                                                thePlayer.doDamage(1, 12);
                                             }
-                                            if(player.getHealth() <= 0){
-                                                //If explosion kills player drop their inventory
-                                                player.dropInventory();
-                                            }
-                                            rhandle.log(RLevel.DEBUGINFO, "ExplosionPlayerDamage - Player: '" + player.getName()+ 
-                                                                          "' at Location - X: '"+Math.floor(player.getX())+"' Y: '"+Math.floor(player.getY())+"' Z: '"+Math.floor(player.getZ())+
-                                                                          "' World: '"+player.getWorldName()+"' Dimension: '"+ player.getDimension()+"'");//Debugging
+                                            
+                                            //Debugging Message
+                                            rhandle.log(RLevel.PLAYER_EXPLODE, String.format(debug, thePlayer.getName(), Math.floor(thePlayer.getX()), Math.floor(thePlayer.getY()),
+                                                    Math.floor(thePlayer.getZ()), thePlayer.getWorldName(), thePlayer.getDimension()));
                                         }
                                     }
                                 }

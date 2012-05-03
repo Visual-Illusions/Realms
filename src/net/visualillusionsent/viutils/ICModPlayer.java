@@ -69,7 +69,7 @@ public interface ICModPlayer {
      * does damage to the player
      * @param val
      */
-    public void doDamage(int val);
+    public void doDamage(int type, int amount);
     
     /**
      * heals the player
@@ -161,6 +161,23 @@ public interface ICModPlayer {
      * @return true if the player is
      */
     public boolean isAdmin();
+    
+    /**
+     * gets this player's inventory contents
+     * @return ICModItem array
+     */
+    public ICModItem[] getInvContents();
+    
+    /**
+     * sets this player's inventory's contents
+     * @param cItems
+     */
+    public void setInvContents(ICModItem[] cItems);
+    
+    /**
+     * clears this player's inventory
+     */
+    public void clearInventory();
     
     /**
      * Gets the player Object

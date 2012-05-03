@@ -1,3 +1,4 @@
+import net.visualillusionsent.viutils.ICModItem;
 import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
@@ -65,9 +66,18 @@ public class CModPlayer implements ICModPlayer{
     }
     
     @Override
-    public void doDamage(int newVal) {
-        int newHealth = player.getHealth() - newVal;
-        player.setHealth(newHealth);
+    public void doDamage(int type, int amount) {
+        try{
+            switch(type){
+            case 1: player.getUser().a(ODamageSource.l, amount); //EXPLOSION
+            case 2: player.getUser().a(ODamageSource.h, amount); //RESTRICT(Cactus)
+            }
+        }
+        catch(Exception e){
+            //Possible change to the Notchian so revert to old methods
+            int newHealth = player.getHealth() - amount;
+            player.setHealth(newHealth); 
+        }
     }
 
     @Override
@@ -128,6 +138,35 @@ public class CModPlayer implements ICModPlayer{
     @Override
     public boolean isAdmin(){
         return player.isAdmin();
+    }
+    
+    @Override
+    public ICModItem[] getInvContents(){
+        ICModItem[] inv = new ICModItem[40];
+        Item[] items = player.getInventory().getContents();
+        for(int i = 0; i < 40; i++){
+            if(items[i] != null){
+                inv[i] = new CModItem(items[i]);
+            }
+        }
+        return inv;
+    }
+    
+    @Override
+    public void setInvContents(ICModItem[] cItems){
+        Item[] items = new Item[40];
+        for(ICModItem theItem : cItems){
+            if(theItem != null){
+                items[theItem.getSlot()] = (Item)theItem.getItem();
+            }
+        }
+        player.getInventory().setContents(items);
+        player.getInventory().update();
+    }
+    
+    @Override
+    public void clearInventory(){
+        player.getInventory().setContents(new Item[40]);
     }
     
     @Override

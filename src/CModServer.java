@@ -133,6 +133,18 @@ public class CModServer implements ICModServer{
     }
     
     @Override
+    @SuppressWarnings("unchecked")
+    public List<String> getAdminGroups(){
+        List<String> admins = new ArrayList<String>();
+        for(Group group : (List<Group>)etc.getDataSource().getGroupList()){
+            if(group.Administrator){
+                admins.add(group.Name);
+            }
+        }
+        return admins;
+    }
+    
+    @Override
     public Connection getCanarySQLConnection() throws SQLException{
         return etc.getConnection().getConnection();
     }

@@ -22,6 +22,7 @@ import net.visualillusionsent.viutils.ICModPlayer;
  */
 public class RestrictionDamager implements Runnable{
     private RHandle rhandle;
+    private String debug = "Player - Name: '%s' @ Location: X: '%d' Y: '%d' Z: '%d' World: '%s' Dimension: '%d'";
         
     /**
      * Class Constructor
@@ -52,16 +53,11 @@ public class RestrictionDamager implements Runnable{
                                 continue;
                             }
                             //Hurt Player
-                            thePlayer.doDamage(1);
+                            thePlayer.doDamage(2, 1);
                             
-                            //Did we kill the player?
-                            if(thePlayer.getHealth() <= 0){
-                                //Yep, drop their inventory
-                                thePlayer.dropInventory();
-                            }
-                            rhandle.log(RLevel.DEBUGINFO, "RestrictedZoneDamage - Player: '" + thePlayer.getName()+ 
-                                    "' at Location - X: '"+Math.floor(thePlayer.getX())+"' Y: '"+Math.floor(thePlayer.getY())+"' Z: '"+Math.floor(thePlayer.getZ())+
-                                    "' World: '"+thePlayer.getWorldName()+"' Dimension: '"+ thePlayer.getDimension()+"'");//Debugging
+                            //Debugging message
+                            rhandle.log(RLevel.PLAYER_EXPLODE, String.format(debug, thePlayer.getName(), Math.floor(thePlayer.getX()), Math.floor(thePlayer.getY()),
+                                    Math.floor(thePlayer.getZ()), thePlayer.getWorldName(), thePlayer.getDimension()));
                         }
                     }
                 }

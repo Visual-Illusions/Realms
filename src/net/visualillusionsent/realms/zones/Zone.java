@@ -890,6 +890,7 @@ public class Zone {
             zoneperms.remove(previous);
         }
         zoneperms.add(new Permission(ownerName, type, allowed, override));
+        save();
     }
     
     public void setPermission(Permission perm){
@@ -926,6 +927,7 @@ public class Zone {
         if(permission != null){
             zoneperms.remove(permission);
         }
+        save();
     }
     
     /**

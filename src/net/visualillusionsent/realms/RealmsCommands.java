@@ -18,8 +18,6 @@ import net.visualillusionsent.viutils.ChatColor;
  */
 public enum RealmsCommands {
     
-    //TODO  Fix commands
-    
     /**
      * Gives Admins permission over a zone
      */
@@ -260,11 +258,11 @@ public enum RealmsCommands {
     GRANT ("grant", "<playername> <permissiontype> <zone> [override]") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(5, command)){
+            if(!commandargsCheck(3, command)){
                 player.notify(getUsage());
                 return true;
             }
-            return rhandle.doGrantDeny(player, command);
+            return rhandle.doGrantDeny(player, command, true);
         }
     },
     /**
@@ -273,11 +271,11 @@ public enum RealmsCommands {
     DENY ("deny", "<playername> <permissiontype> <zone> [override]") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(5, command)){
+            if(!commandargsCheck(3, command)){
                 player.notify(getUsage());
                 return true;
             }
-            return rhandle.doGrantDeny(player, command);
+            return rhandle.doGrantDeny(player, command, false);
         }
     },
     
@@ -691,41 +689,41 @@ public enum RealmsCommands {
     },
     
     /**
-     * Sets ANIMALS Zone Flag  FIXME
+     * Sets ANIMALS Zone Flag
      */
     ANIMALS ("animals", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "ANIMALS", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setAnimals(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getAnimals() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteAnimals().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "ANIMALS", (zone.getAnimals() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteAnimals().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "ANIMALS"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -740,36 +738,36 @@ public enum RealmsCommands {
     PHYSICS ("physics", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "PHYSICS", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setPhysics(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getPhysics() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsolutePhysics().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "PHYSICS", (zone.getPhysics() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsolutePhysics().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "PHYSICS"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -784,36 +782,36 @@ public enum RealmsCommands {
     CREATIVE ("creative", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "CREATIVE", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setCreative(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getCreative() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteCreative().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "CREATIVE", (zone.getCreative() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteCreative().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "CREATIVE"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -827,36 +825,36 @@ public enum RealmsCommands {
     PISTONS ("pistons", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "PISTONS", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setPistons(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getPistons() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsolutePistons().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "PISTONS", (zone.getPistons() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsolutePistons().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "PISTONS"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -871,36 +869,36 @@ public enum RealmsCommands {
     ENDERMAN ("enderman", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "ENDERMAN", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setEnderman(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getEnderman() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteEnderman().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "ENDERMAN", (zone.getEnderman() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteEnderman().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "ENDERMAN"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -914,36 +912,36 @@ public enum RealmsCommands {
     FLOW ("flow", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "FLOW", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setFlow(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getFlow() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteFlow().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "FLOW", (zone.getFlow() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteFlow().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "FLOW"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -957,36 +955,36 @@ public enum RealmsCommands {
     SPREAD ("spread", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "SPREAD", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setSpread(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getSpread() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteSpread().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "SPREAD", (zone.getSpread() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteSpread().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "SPREAD"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -1001,36 +999,36 @@ public enum RealmsCommands {
     HEALING ("healing", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "HEALING", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setHealing(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getHealing() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteHealing().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "HEALING", (zone.getHealing() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteHealing().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "HEALING"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -1045,36 +1043,36 @@ public enum RealmsCommands {
     TNT ("tnt", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "TNT", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setTNT(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getTNT() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteTNT().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "TNT", (zone.getTNT() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteTNT().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "TNT"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -1088,36 +1086,36 @@ public enum RealmsCommands {
     STARVE ("starve", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "STARVE", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setStarve(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getStarve() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteStarve().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "STARVE", (zone.getStarve() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteStarve().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "STARVE"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -1132,36 +1130,36 @@ public enum RealmsCommands {
     RESTRICTED ("restricted", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "RESTRICTED", zoneName));
                     return true;
                 }
                 
                 if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) {
-                    player.notify(String.format(NOSET, command[1].toUpperCase()));
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setRestricted(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getRestricted() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteRestricted().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "RESTRICTED", (zone.getRestricted() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteRestricted().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "RESTRICTED"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -1176,36 +1174,36 @@ public enum RealmsCommands {
     RESPAWN ("respawn", "[zone] <on|off|inherit>") {
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(3, command)){
+            if(!commandargsCheck(1, command)){
                 player.notify(getUsage());
                 return true;
             }
             String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
             try{
                 Zone.ZoneFlag theFlag;
-                if(command.length > 3){
-                    zoneName = command[2];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[3].toUpperCase());
+                if(command.length > 1){
+                    zoneName = command[0];
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
                 }
                 else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[2].toUpperCase());
+                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
                 }
                 Zone zone = ZoneLists.getZoneByName(zoneName);
                 if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, command[1].toUpperCase(), zone.getName()));
+                    player.notify(String.format(NOPERMWITHIN, "RESPAWN", zoneName));
                     return true;
                 }
                 
-                if (zone.getName().toUpperCase().startsWith("EVERYWHERE")) {
-                    player.notify("You can not set \u00A7E'RESPAWN'\u00A7C in the \u00A6'EVERYWHERE'\u00A7C zone!");
+                if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) { //FIXME
+                    player.notify(String.format(NOSET, zoneName));
                     return true;
                 }
                 zone.setRespawn(theFlag);
-                player.sendMessage(String.format(FLAGSET, command[1].toUpperCase(), (zone.getRespawn() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteRespawn().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zone.getName() ));
+                player.sendMessage(String.format(FLAGSET, "RESPAWN", (zone.getRespawn() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteRespawn().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
                 zone.save();
             } 
             catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, command[1].toUpperCase()));
+                player.notify(String.format(INVALIDFLAG, "RESPAWN"));
             } 
             catch (ZoneNotFoundException ZNFE) {
                 player.notify(String.format(NFE, zoneName));
@@ -1331,7 +1329,7 @@ public enum RealmsCommands {
                     player.notify(getUsage());
                     return true;
                 }
-                String zoneName = command[1];
+                String zoneName = command[0];
                 try{
                     Zone zone = ZoneLists.getZoneByName(zoneName);
                     if(rhandle.getDataSource().reloadZone(zone)){
@@ -1359,6 +1357,45 @@ public enum RealmsCommands {
             if(player.isAdmin()){
                 rhandle.getDataSource().reloadAll();
                 player.sendMessage(ChatColor.CYAN+"Zones reloaded!");
+                return true;
+            }
+            return false;
+        }
+    },
+    
+    SAVEZONE ("savezone", "<zone>"){
+        @Override
+        public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
+            if(player.isAdmin()){
+                if(!commandargsCheck(1, command)){
+                    player.notify(getUsage());
+                    return true;
+                }
+                String zoneName = command[0];
+                try{
+                    Zone zone = ZoneLists.getZoneByName(zoneName);
+                    zone.save();
+                    player.sendMessage("Zone: "+zoneName+" has been saved!");
+                }
+                catch (ZoneNotFoundException ZNFE) {
+                    player.notify(String.format(NFE, zoneName));
+                }
+                return true;
+            }
+            return false;
+        }
+    },
+    
+    SAVEALL ("saveall", ""){
+        @Override
+        public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
+            if(player.isAdmin()){
+                synchronized(ZoneLists.getZones()){
+                    for(Zone zone : ZoneLists.getZones()){
+                        zone.save();
+                    }
+                }
+                player.sendMessage("All Zones have been saved!");
                 return true;
             }
             return false;

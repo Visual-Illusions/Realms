@@ -20,6 +20,7 @@ import net.visualillusionsent.viutils.ICModMob;
  */
 public class AnimalDestructor implements Runnable{
     private RHandle rhandle;
+    private String debug = "Killed Animal - Name: '%s' @ Location: X: '%d' Y: '%d' Z: '%d' World: '%s' Dimension: '%d'";
     
     /**
      * class constructor
@@ -47,10 +48,11 @@ public class AnimalDestructor implements Runnable{
                         //Check if Animal is in a Animal Disabled Zone
                         if (!myZone.getAnimals()) {
                             //Animal is in Animal Disable Zone and needs Destroyed
-                            theAnimal.destroy(); //Kill Animal
-                            rhandle.log(RLevel.DEBUGINFO, "Killed Animal - Name: '" + theAnimal.getName()+ 
-                                                          "' at Location - X: '"+Math.floor(theAnimal.getX())+"' Y: '"+Math.floor(theAnimal.getY())+"' Z: '"+Math.floor(theAnimal.getZ())+
-                                                          "' World: '"+theAnimal.getWorldName()+"' Dimension: '"+ theAnimal.getDimension()+"'");//Debugging
+                            theAnimal.destroy();
+                            
+                            //Debugging
+                            rhandle.log(RLevel.ANIMAL_DESTROY, String.format(debug, theAnimal.getName(), Math.floor(theAnimal.getX()), Math.floor(theAnimal.getY()),
+                                    Math.floor(theAnimal.getZ()), theAnimal.getWorldName(), theAnimal.getDimension()));
                         }
                     }
                 }

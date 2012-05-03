@@ -20,12 +20,11 @@ public final class LogFormat extends SimpleFormatter {
 
         message.append(dateform.format(Long.valueOf(rec.getMillis())));
         Level lvl = rec.getLevel();
-
-        switch(lvl.intValue()){
-        case 6000: message.append(" [DEBUG INFO] ");    break;
-        case 6010: message.append(" [DEBUG WARNING] "); break;
-        case 6020: message.append(" [DEBUG SEVERE] ");  break;
-        }
+        
+        message.append(" [DEBUG] ");
+        message.append("[");
+        message.append(lvl.getName());
+        message.append("] ");
 
         message.append(rec.getMessage());
         message.append(linesep);

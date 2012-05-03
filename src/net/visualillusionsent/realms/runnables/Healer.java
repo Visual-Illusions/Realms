@@ -44,7 +44,7 @@ public class Healer implements Runnable{
                         int health = thePlayer.getHealth();
                         if(health < 20){ //Need Healing
                             thePlayer.heal(1); //Heal
-                            rhandle.log(RLevel.DEBUGINFO, "Trying to heal Player: " + thePlayer.getName() + " at location " + Math.floor(thePlayer.getX()) + "," + Math.floor(thePlayer.getY()) + "," + Math.floor(thePlayer.getZ())); //Debugging
+                            rhandle.log(RLevel.PLAYER_HEAL, "Trying to heal Player: " + thePlayer.getName() + " at location " + Math.floor(thePlayer.getX()) + "," + Math.floor(thePlayer.getY()) + "," + Math.floor(thePlayer.getZ())); //Debugging
                         }
                     }
                 }

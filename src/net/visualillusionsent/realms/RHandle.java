@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
 import net.visualillusionsent.realms.io.LogFormat;
+import net.visualillusionsent.realms.io.RLevel;
 import net.visualillusionsent.realms.io.RealmsData;
 import net.visualillusionsent.realms.io.RealmsFlatFile;
 import net.visualillusionsent.realms.io.RealmsMySQL;
@@ -31,6 +32,7 @@ import net.visualillusionsent.realms.zones.Wand;
 import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.realms.zones.ZoneLists;
 import net.visualillusionsent.viutils.ICModBlock;
+import net.visualillusionsent.viutils.ICModItem;
 import net.visualillusionsent.viutils.ICModMob;
 import net.visualillusionsent.viutils.ICModPlayer;
 import net.visualillusionsent.viutils.ICModServer;
@@ -59,6 +61,7 @@ public class RHandle {
     
     private List<Zone> everywhere = new ArrayList<Zone>();
     private HashMap<ICModPlayer, Wand> wands = new HashMap<ICModPlayer, Wand>();
+    private HashMap<ICModPlayer, ICModItem[]> inventories = new HashMap<ICModPlayer, ICModItem[]>();
     private ICModServer serv;
     protected ZoneLists zl;
     protected RealmsProps rprop;
@@ -118,10 +121,43 @@ public class RHandle {
      * @param toLog
      */
     public void log(Level lvl, String toLog){
-        if(lvl.getName().startsWith("DEBUG")){
-            if(RealmsProps.getDebug()){
-                rlog.log(lvl, toLog);
+        if(lvl instanceof RLevel){
+            boolean log = false;
+            switch(lvl.intValue()){
+            case 6001: if(RealmsProps.getDebugCanPlayerUseCommand()) log = true; break;
+            case 6002: if(RealmsProps.getDebugOnBlockBreak())        log = true; break;
+            case 6003: if(RealmsProps.getDebugOnBlockDestroy())      log = true; break;
+            case 6004: if(RealmsProps.getDebugOnBlockPhysics())      log = true; break;
+            case 6005: if(RealmsProps.getDebugOnBlockPlace())        log = true; break;
+            case 6006: if(RealmsProps.getDebugOnBlockRightClick())   log = true; break;
+            case 6007: if(RealmsProps.getDebugOnCommand())           log = true; break;
+            case 6008: if(RealmsProps.getDebugOnDamage())            log = true; break;
+            case 6009: if(RealmsProps.getDebugOnEat())               log = true; break;
+            case 6010: if(RealmsProps.getDebugOnEndermanDrop())      log = true; break;
+            case 6011: if(RealmsProps.getDebugOnEndermanPickUp())    log = true; break;
+            case 6012: if(RealmsProps.getDebugOnEntityRightClick())  log = true; break;
+            case 6013: if(RealmsProps.getDebugOnExplosion())         log = true; break;
+            case 6014: if(RealmsProps.getDebugOnFlow())              log = true; break;
+            case 6015: if(RealmsProps.getDebugOnIgnite())            log = true; break;
+            case 6016: if(RealmsProps.getDebugOnItemDrop())          log = true; break;
+            case 6017: if(RealmsProps.getDebugOnItemPickUp())        log = true; break;
+            case 6018: if(RealmsProps.getDebugOnItemUse())           log = true; break;
+            case 6019: if(RealmsProps.getDebugOnMobDestroy())        log = true; break;
+            case 6020: if(RealmsProps.getDebugOnMobSpawn())          log = true; break;
+            case 6021: if(RealmsProps.getDebugOnMobTarget())         log = true; break;
+            case 6022: if(RealmsProps.getDebugOnPistonExtend())      log = true; break;
+            case 6023: if(RealmsProps.getDebugOnPistonRetract())     log = true; break;
+            case 6024: if(RealmsProps.getDebugOnPortalUse())         log = true; break;
+            case 6025: if(RealmsProps.getDebugOnPlayerExpode())      log = true; break;
+            case 6026: if(RealmsProps.getDebugOnPlayerHeal())        log = true; break;
+            case 6027: if(RealmsProps.getDebugOnPlayerRestict())     log = true; break;
+            case 6028: if(RealmsProps.getDebugOnAnimalDestroy())     log = true; break;
+            case 6030:
+            case 6040:
+            case 6041:
+                if(RealmsProps.getDebugOther()) log = true; break;
             }
+            if(log) rlog.log(lvl, toLog);
         }
         else{
             mclog.log(lvl, toLog);
@@ -136,7 +172,7 @@ public class RHandle {
      * @param exeception
      */
     public void log(Level lvl, String toLog, Exception e) {
-        if(lvl.getName().startsWith("DEBUG") && RealmsProps.getDebug()){
+        if(RealmsProps.getDebugOther()){
             rlog.log(lvl, toLog, e);
         }
     }
@@ -207,6 +243,22 @@ public class RHandle {
      */
     private void createDefaultPerms(Zone zone){
         
+        //Grant admins all access
+        for(String admin : serv.getAdminGroups()){
+            zone.setPermission("g:"+admin, Permission.PermType.DELEGATE, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.ZONING, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.MESSAGE, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.COMBAT, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.ENVIRONMENT, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.ENTER, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.EAT, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.CREATE, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.DESTROY, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.INTERACT, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.COMMAND, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.TELEPORT, true, true);
+            zone.setPermission("g:"+admin, Permission.PermType.AUTHED, true, true);
+        }
         
         //Deny everyone else DELEGATE, ZONING, MESSAGE, COMBAT, ENVIRONMENT
         zone.setPermission("everyone", Permission.PermType.DELEGATE, false, false);
@@ -214,6 +266,7 @@ public class RHandle {
         zone.setPermission("everyone", Permission.PermType.MESSAGE, false, false);
         zone.setPermission("everyone", Permission.PermType.COMBAT, false, false);
         zone.setPermission("everyone", Permission.PermType.ENVIRONMENT, false, false);
+        
         //Grant everyone else ENTER, EAT, CREATE, DESTROY, INTERACT, COMMAND, TELEPORT, and AUTHED
         zone.setPermission("everyone", Permission.PermType.ENTER, true, false);
         zone.setPermission("everyone", Permission.PermType.EAT, true, false);
@@ -223,6 +276,8 @@ public class RHandle {
         zone.setPermission("everyone", Permission.PermType.COMMAND, true, false);
         zone.setPermission("everyone", Permission.PermType.TELEPORT, true, false);
         zone.setPermission("everyone", Permission.PermType.AUTHED, true, false);
+        
+        zone.save();
     }
     
     /**
@@ -360,14 +415,13 @@ public class RHandle {
      * @param Usage
      * @return
      */
-    public boolean doGrantDeny(ICModPlayer player, String[] command) {
+    public boolean doGrantDeny(ICModPlayer player, String[] command, boolean allowed) {
         
-        boolean allowed = command[1].equalsIgnoreCase("grant");
-        String playerName = command[2];
-        String zoneName = command[4];
+        String playerName = command[0];
+        String zoneName = command[2];
         
         try {
-            Permission.PermType type = Permission.PermType.getTypeFromString(command[3]);
+            Permission.PermType type = Permission.PermType.getTypeFromString(command[1]);
             Zone zone = ZoneLists.getZoneByName(zoneName);
             
             if(!zone.delegateCheck(player, type)){
@@ -375,7 +429,7 @@ public class RHandle {
                 return true;
             }
             
-            boolean override = (command.length == 6 && command[5].equalsIgnoreCase("override"));
+            boolean override = (command.length == 4 && command[3].equalsIgnoreCase("override"));
             if (playerName.contains(",")){
                 player.notify("Player names cannot contain commas!");
                 return true;
@@ -391,7 +445,7 @@ public class RHandle {
                 player.sendMessage("§4WARNING! §eEVERYBODY (including admins) §cis in the default group.");
                 player.sendMessage("§cDid you really want to do this?");
                 player.sendMessage("§cFor exceptions, you probably want to use the OVERRIDE keyword. Example:");
-                player.sendMessage("§6/realms " + command[1] + " <player/group name> " + command[3] + " " + command[4] + " OVERRIDE");
+                player.sendMessage("§6/realms deny <player/group name> " + command[1] + " " + command[2] + " OVERRIDE");
             }
         
             // Made it past all the checks!
@@ -403,14 +457,14 @@ public class RHandle {
             else{
                 p = "§5Denied ";
             }
-            player.sendMessage(p + "§6" + playerName + " §e" + type + "§a permission within zone §6" + command[4]);
+            player.sendMessage(p + "§6" + playerName + " §e" + type + "§a permission within zone §6" + command[2]);
         }
         catch (ZoneNotFoundException e) {
                 player.notify("The zone §6'" + zoneName + "'§c could not be found!");
                 return true;
         }
         catch (InvaildPermissionTypeException IPTE) {
-            player.notify("The PermType §6'" + command[3] + "'§c is not valid!");
+            player.notify("The PermType §6'" + command[1] + "'§c is not valid!");
             return true;
         }
         return true;
@@ -533,6 +587,20 @@ public class RHandle {
             }
         } catch (IOException e) {
             log(Level.WARNING, "Fail to create Realms DebugLogging File");
+        }
+    }
+    
+    public void handleInventory(ICModPlayer player, boolean store){
+        if(store){
+            if(!inventories.containsKey(player)){
+               inventories.put(player, player.getInvContents());
+               player.clearInventory();
+            }
+        }
+        else{
+            if(inventories.containsKey(player)){
+                player.setInvContents(inventories.get(player));
+            }
         }
     }
     

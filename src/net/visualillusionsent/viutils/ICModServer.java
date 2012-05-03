@@ -91,6 +91,8 @@ public interface ICModServer {
      */
     public String getDefaultGroup();
     
+    public List<String> getAdminGroups();
+    
     /**
      * gets Canary's MySQL Connection
      * @return connection

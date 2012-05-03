@@ -45,7 +45,7 @@ public class RealmsListener extends PluginListener{
                     }
                 }
             }
-            rhand.log(RLevel.DEBUGINFO, "canPlayerUseCommand: Player: '"+player.getName()+"' Command: '"+(cmd != null ? cmd[0] : "NULL")+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+            rhand.log(RLevel.CANUSECOMMAND, "Player: '"+player.getName()+"' Command: '"+(cmd != null ? cmd[0] : "NULL")+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ canPlayerUseCommand... (enable debuging for stacktraces)");
@@ -65,7 +65,7 @@ public class RealmsListener extends PluginListener{
             if(block != null){
                 deny = !zone.permissionCheck(cPlayer, Permission.PermType.DESTROY);
             }
-            rhand.log(RLevel.DEBUGINFO, "onBlockBreak: Player: '"+player.getName()+"' Block: '"+(block != null ? block.toString() : "NULL")+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            rhand.log(RLevel.BLOCK_BREAK, "Player: '"+player.getName()+"' Block: '"+(block != null ? block.toString() : "NULL")+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onBlockBreak... (enable debuging for stacktraces)");
@@ -86,7 +86,7 @@ public class RealmsListener extends PluginListener{
                     deny = !zone.permissionCheck(cPlayer, Permission.PermType.INTERACT);
                 }
             }
-            rhand.log(RLevel.DEBUGINFO, "onBlockDestroy: Player: '"+player.getName()+"' Block: '"+(block != null ? block.toString() : "NULL")+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            rhand.log(RLevel.BLOCK_DESTROY, "Player: '"+player.getName()+"' Block: '"+(block != null ? block.toString() : "NULL")+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onBlockDestroy... (enable debuging for stacktraces)");
@@ -103,7 +103,7 @@ public class RealmsListener extends PluginListener{
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             if ((block.getType() == 12) || (block.getType() == 13)){
                 deny = !zone.getPhysics();
-                //rhand.log(RLevel.DEBUGINFO, "onBlockPhysics: Block: '"+block.toString()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+                rhand.log(RLevel.BLOCK_PHYSICS, "Block: '"+block.toString()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
             }
         }
         catch(Exception e){
@@ -130,7 +130,7 @@ public class RealmsListener extends PluginListener{
                 zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cBlock);
                 deny = !zone.permissionCheck(cPlayer, Permission.PermType.CREATE);
             }
-            rhand.log(RLevel.DEBUGINFO, "onBlockDestroy: Player: '"+player.getName()+"'" +
+            rhand.log(RLevel.BLOCK_PLACE, "Player: '"+player.getName()+"'" +
                                         " BlockPlaced: '"+(blockPlaced != null ? blockPlaced.toString() : "NULL")+"'" +
                                         " BlockClicked: '"+(blockClicked != null ? blockClicked.toString() : "NULL")+"'"+
                                         " ItemInHand: '"+(itemInHand != null ? itemInHand.toString() : "NULL")+"'"+
@@ -156,7 +156,7 @@ public class RealmsListener extends PluginListener{
             else if (isOpBlock){
                 deny = !zone.permissionCheck(cPlayer, Permission.PermType.INTERACT);
             }
-            rhand.log(RLevel.DEBUGINFO, "onBlockRightClick: Player: '"+player.getName()+"'" +
+            rhand.log(RLevel.BLOCK_RIGHTCLICK, "Player: '"+player.getName()+"'" +
                     " BlockClicked: '"+(blockClicked != null ? blockClicked.toString() : "NULL")+"'"+
                     " ItemInHand: '"+(itemInHand != null ? itemInHand.toString() : "NULL")+"'"+
                     " Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
@@ -274,7 +274,7 @@ public class RealmsListener extends PluginListener{
                 }
             }
             String cmd = etc.combineSplit(0, args, " ");
-            rhand.log(RLevel.DEBUGINFO, "canPlayerUseCommand: Player: '"+player.getName()+"' Command: '"+cmd+"' Zone: '"+(zone != null ? zone.getName() : "NULL")+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            rhand.log(RLevel.COMMAND, "Player: '"+player.getName()+"' Command: '"+cmd+"' Zone: '"+(zone != null ? zone.getName() : "NULL")+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onCommand... (enable debuging for stacktraces)");
@@ -300,31 +300,31 @@ public class RealmsListener extends PluginListener{
                 if (attacker != null && type.equals(PluginLoader.DamageType.ENTITY)) {
                     if (attacker.isPlayer()){
                         deny = !zone.getPVP();
-                        rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+attacker.getName()+"' tried to attack '"+defender.getName()+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
+                        rhand.log(RLevel.DAMAGE, "'"+attacker.getName()+"' tried to attack '"+defender.getName()+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
                     }else if (attacker.isMob()){
                         deny = zone.getSanctuary();
-                        rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+attacker.getName()+"' tried to attack '"+defender.getName()+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
+                        rhand.log(RLevel.DAMAGE, "'"+attacker.getName()+"' tried to attack '"+defender.getName()+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
                         return deny;
                     }
                 }
                 else if (type.equals(PluginLoader.DamageType.FALL)){
                     deny = !zone.getFall();
-                    rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+defender.getName()+"' attempted to take 'Fall Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
+                    rhand.log(RLevel.DAMAGE, "'"+defender.getName()+"' attempted to take 'Fall Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
                     return deny;
                 }
                 else if (type.equals(PluginLoader.DamageType.SUFFOCATION) || type.equals(PluginLoader.DamageType.WATER)){
                     deny = !zone.getSuffocate();
-                    rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+defender.getName()+"' attempted to take 'Suffocation Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
+                    rhand.log(RLevel.DAMAGE, "'"+defender.getName()+"' attempted to take 'Suffocation Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
                     return deny;
                 }
                 else if (type.equals(PluginLoader.DamageType.FIRE) || type.equals(PluginLoader.DamageType.LAVA) || type.equals(PluginLoader.DamageType.FIRE_TICK)){
                     deny = !zone.getFire();
-                    rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+defender.getName()+"' attempted to take 'Fire Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
+                    rhand.log(RLevel.DAMAGE, "'"+defender.getName()+"' attempted to take 'Fire Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
                     return deny;
                 }
                 else if(type.equals(PluginLoader.DamageType.POTION)){
                     deny = !zone.getPotion();
-                    rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+defender.getName()+"' attempted to take 'Potion Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
+                    rhand.log(RLevel.DAMAGE, "'"+defender.getName()+"' attempted to take 'Potion Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
                     return deny;
                 }
                 else if(type.equals(PluginLoader.DamageType.EXPLOSION)){
@@ -336,7 +336,7 @@ public class RealmsListener extends PluginListener{
                     else if(zone.getSanctuary()){
                         deny = true;
                     }
-                    rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+defender.getName()+"' attempted to take 'Explosion Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
+                    rhand.log(RLevel.DAMAGE, "'"+defender.getName()+"' attempted to take 'Explosion Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
                     return deny;
                 }
                 else if(type.equals(PluginLoader.DamageType.CREEPER_EXPLOSION)){
@@ -348,7 +348,7 @@ public class RealmsListener extends PluginListener{
                     else{
                         deny = true;
                     }
-                    rhand.log(RLevel.DEBUGINFO, "Realms.onDamage: '"+defender.getName()+"' attempted to take 'Creeper_Explosion Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
+                    rhand.log(RLevel.DAMAGE, "'"+defender.getName()+"' attempted to take 'Creeper_Explosion Damage' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Took Damage'" : "Didn't Take Damage'"));
                     return deny;
                 }     
             }
@@ -381,7 +381,7 @@ public class RealmsListener extends PluginListener{
             CModPlayer cPlayer = new CModPlayer(player);
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
             allow = zone.permissionCheck(cPlayer, Permission.PermType.EAT);
-            rhand.log(RLevel.DEBUGINFO, "Realms.onEat: '"+player.getName()+"' attempted to 'EAT' in Zone: '"+zone.getName()+"' Result: '"+(allow ? "Allowed'" : "Denied'"));
+            rhand.log(RLevel.EAT, "Realms.onEat: '"+player.getName()+"' attempted to 'EAT' in Zone: '"+zone.getName()+"' Result: '"+(allow ? "Allowed'" : "Denied'"));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onEat... (enable debuging for stacktraces)");
@@ -403,7 +403,7 @@ public class RealmsListener extends PluginListener{
             }
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             deny = !zone.getEnderman();
-            rhand.log(RLevel.DEBUGINFO, "Realms.onEndermanDrop: 'Enderman' attempted to place Block: '"+(block != null ? block.toString() : "NULL")+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
+            rhand.log(RLevel.ENDERMAN_DROP, "Realms.onEndermanDrop: 'Enderman' attempted to place Block: '"+(block != null ? block.toString() : "NULL")+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onEndermanDrop... (enable debuging for stacktraces)");
@@ -425,7 +425,7 @@ public class RealmsListener extends PluginListener{
             }
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             deny = !zone.getEnderman();
-            rhand.log(RLevel.DEBUGINFO, "Realms.onEndermanPickup: 'Enderman' attempted to pickup Block: '"+(block != null ? block.toString() : "NULL")+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
+            rhand.log(RLevel.ENDERMAN_PICKUP, "Realms.onEndermanPickup: 'Enderman' attempted to pickup Block: '"+(block != null ? block.toString() : "NULL")+"' in Zone: '"+zone.getName()+"' Result: '"+(deny ? "Denied'" : "Allowed'"));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onEndermanPickup... (enable debuging for stacktraces)");
@@ -442,7 +442,7 @@ public class RealmsListener extends PluginListener{
                 CModPlayer cPlayer = new CModPlayer(player);
                 Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
                 allow = zone.permissionCheck(cPlayer, Permission.PermType.INTERACT);
-                rhand.log(RLevel.DEBUGINFO, "Realms.onEntityRightClick: '"+player.getName()+"' attempted to RightClick Entity: '"+entityClicked.getName()+"' in Zone: '"+zone.getName()+"' Result: "+(allow ? "Allowed" : "Denied"));
+                rhand.log(RLevel.ENTITY_RIGHTCLICK, "Realms.onEntityRightClick: '"+player.getName()+"' attempted to RightClick Entity: '"+entityClicked.getName()+"' in Zone: '"+zone.getName()+"' Result: "+(allow ? "Allowed" : "Denied"));
             }
         }
         catch(Exception e){
@@ -490,7 +490,7 @@ public class RealmsListener extends PluginListener{
             else if (!zone2.getFlow()){
                 deny = true;
             }
-            rhand.log(RLevel.DEBUGINFO, "Realms.onFlow: Zone1: "+zone1.getName()+" Result: '"+(!zone1.getFlow() ? "Denied'" : "Allowed' Zone2: "+zone2.getName()+" Result: '"+(zone2.getFlow() ? "Allowed'" : "Denied'")));
+            rhand.log(RLevel.FLOW, "Realms.onFlow: Zone1: "+zone1.getName()+" Result: '"+(!zone1.getFlow() ? "Denied'" : "Allowed' Zone2: "+zone2.getName()+" Result: '"+(zone2.getFlow() ? "Allowed'" : "Denied'")));
         }
         catch(Exception e){
             rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onFlow... (enable debuging for stacktraces)");
@@ -501,17 +501,19 @@ public class RealmsListener extends PluginListener{
   
     @Override
     public Float onFoodExhaustionChange(Player player, Float oldLevel, Float newLevel){
-        try{
-            CModPlayer cPlayer = new CModPlayer(player);
-            Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
-            rhand.log(RLevel.DEBUGINFO, "RealmsListener.onFoodExhaustionChange: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Starve Result: "+(zone.getStarve() ? "'Allowed'" : "'Denied'"));
-            return (zone.getStarve() ? newLevel : oldLevel);
+        if(oldLevel > newLevel){
+            try{
+                CModPlayer cPlayer = new CModPlayer(player);
+                Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
+                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onFoodExhaustionChange: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Starve Result: "+(zone.getStarve() ? "'Allowed'" : "'Denied'"));
+                return (zone.getStarve() ? newLevel : oldLevel);
+            }
+            catch(Exception e){
+                rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onFoodExhaustionChange... (enable debuging for stacktraces)");
+                rhand.log(RLevel.DEBUGSEVERE, "An unhandled exception has occured @ onFoodExhaustionChange: ", e);
+            }
         }
-        catch(Exception e){
-            rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onFoodExhaustionChange... (enable debuging for stacktraces)");
-            rhand.log(RLevel.DEBUGSEVERE, "An unhandled exception has occured @ onFoodExhaustionChange: ", e);
-        }
-        return oldLevel;
+        return newLevel;
     }
   
     @Override
@@ -522,20 +524,24 @@ public class RealmsListener extends PluginListener{
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             if ((bs == 1) || (bs == 3) || (bs == 4) || (bs == 5)){
                 boolean allow = zone.getSpread();
-                //rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'SPREAD' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+                rhand.log(RLevel.IGNITE, "RealmsListener.onIgnite: Type: 'SPREAD' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
                 return !allow;
             }
             else if (bs == 2 || bs == 6){
                 CModPlayer cPlayer = new CModPlayer(player);
                 boolean allow = zone.permissionCheck(cPlayer, Permission.PermType.IGNITE);
-                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onIgnite: Type: 'IGNITE' Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+                rhand.log(RLevel.IGNITE, "RealmsListener.onIgnite: Type: 'IGNITE' Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
                 return !allow;
             }
         }
         catch(Exception e){
-            //rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onIgnite... (enable debuging for stacktraces)");
+            rhand.log(Level.SEVERE, "[Realms] An unhandled exception occured @ onIgnite... (enable debuging for stacktraces)");
             rhand.log(RLevel.DEBUGSEVERE, "An unhandled exception has occured @ onIgnite: ", e);
         }
+        return false;
+    }
+    
+    public boolean onInventoryOpen(HookParametersOpenInventory openinventory){ //FIXME for in/out Creative zone stuffs
         return false;
     }
   
@@ -545,7 +551,7 @@ public class RealmsListener extends PluginListener{
             CModPlayer cPlayer = new CModPlayer(player);
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
             boolean deny = (zone.getCreative() && player.getMode());
-            rhand.log(RLevel.DEBUGINFO, "RealmsListener.onItemDrop: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Drop Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            rhand.log(RLevel.ITEM_DROP, "RealmsListener.onItemDrop: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Drop Result: "+(deny ? "'Denied'" : "'Allowed'"));
             return deny;
         }
         catch(Exception e){
@@ -561,7 +567,7 @@ public class RealmsListener extends PluginListener{
             CModPlayer cPlayer = new CModPlayer(player);
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
             boolean deny = (zone.getCreative() && player.getMode());
-            rhand.log(RLevel.DEBUGINFO, "RealmsListener.onItemPickUp: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Drop Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            rhand.log(RLevel.ITEM_PICKUP, "RealmsListener.onItemPickUp: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Drop Result: "+(deny ? "'Denied'" : "'Allowed'"));
             return deny;
         }
         catch(Exception e){
@@ -602,8 +608,7 @@ public class RealmsListener extends PluginListener{
                         }
                         zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
                         deny = !zone.permissionCheck(cPlayer, Permission.PermType.CREATE);
-                        zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
-                        rhand.log(RLevel.DEBUGINFO, "RealmsListener.onItemUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' PermType: 'CREATE' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+                        rhand.log(RLevel.ITEM_USE, "RealmsListener.onItemUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' PermType: 'CREATE' Result: "+(deny ? "'Denied'" : "'Allowed'"));
                         break;
                     case Bucket:
                     case WoodHoe:
@@ -623,7 +628,7 @@ public class RealmsListener extends PluginListener{
                         }
                         zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
                         deny = !zone.permissionCheck(cPlayer, Permission.PermType.DESTROY);
-                        rhand.log(RLevel.DEBUGINFO, "RealmsListener.onItemUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' PermType: 'DESTROY' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+                        rhand.log(RLevel.ITEM_USE, "RealmsListener.onItemUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' PermType: 'DESTROY' Result: "+(deny ? "'Denied'" : "'Allowed'"));
                         break;
                     case Minecart:
                     case StorageMinecart:
@@ -657,7 +662,7 @@ public class RealmsListener extends PluginListener{
                         }
                         zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
                         deny = !zone.permissionCheck(cPlayer, Permission.PermType.INTERACT);
-                        rhand.log(RLevel.DEBUGINFO, "RealmsListener.onItemUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' PermType: 'INTERACT' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+                        rhand.log(RLevel.ITEM_USE, "RealmsListener.onItemUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' PermType: 'INTERACT' Result: "+(deny ? "'Denied'" : "'Allowed'"));
                         break;
                     }
                 }
@@ -688,7 +693,7 @@ public class RealmsListener extends PluginListener{
             else if (mob.isAnimal() && !zone.getAnimals()){
                 deny = true;
             }
-            //rhand.log(RLevel.DEBUGINFO, "RealmsListener.onMobSpawn: Mob: '"+mob.getName()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+            rhand.log(RLevel.MOB_SPAWN, "RealmsListener.onMobSpawn: Mob: '"+mob.getName()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
             return deny;
         }
         catch(Exception e){
@@ -704,7 +709,7 @@ public class RealmsListener extends PluginListener{
                 CModPlayer cPlayer = new CModPlayer(player);
                 Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
                 boolean deny = zone.getSanctuary();
-                rhand.log(RLevel.DEBUGINFO, "RealmsListener.onMobTarget: Mob: '"+mob.getName()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
+                rhand.log(RLevel.MOB_TARGET, "RealmsListener.onMobTarget: Mob: '"+mob.getName()+"' Zone: '"+zone.getName()+"' Result: "+(deny ? "'Denied'" : "'Allowed'"));
                 return deny;
             }
         }
@@ -721,7 +726,7 @@ public class RealmsListener extends PluginListener{
             CModBlock cBlock = new CModBlock(block);
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             boolean allow = pistonallowedcheck(block);
-            rhand.log(RLevel.DEBUGINFO, "RealmsListener.onPistonExtend: Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+            rhand.log(RLevel.PISTON_EXTEND, "RealmsListener.onPistonExtend: Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
             return !allow;
         }
         catch(Exception e){
@@ -737,7 +742,7 @@ public class RealmsListener extends PluginListener{
             CModBlock cBlock = new CModBlock(block);
             Zone zone = ZoneLists.getZone(rhand.getEverywhere(cBlock), cBlock);
             boolean allow = pistonallowedcheck(block);
-            rhand.log(RLevel.DEBUGINFO, "RealmsListener.onPistonRetract: Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+            rhand.log(RLevel.PISTON_RETRACT, "RealmsListener.onPistonRetract: Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
             return !allow;
         }
         catch(Exception e){
@@ -764,25 +769,12 @@ public class RealmsListener extends PluginListener{
         if (zone.getCreative()){
             if ((player.getCreativeMode() != 1) && (!player.canUseCommand("/mode") && (!Creative.contains(player)))){
                 player.setCreativeMode(1);
-                // if(!realm.invlist.hasInv(player.getName())){
-                //     Item[] contents = player.getInventory().getContents();
-                //     RItem[] ritems = convertItem(contents);
-                //     realm.invlist.addInv(player.getName(), ritems);
-                //      player.getInventory().clearContents();
-                //      player.getInventory().update();
-                // }
+                rhand.handleInventory(cPlayer, true);
             }
         }
         else if((player.getCreativeMode() != 0) && (!player.canUseCommand("/mode") && (Creative.contains(player)))){
             player.setCreativeMode(0);
-            //if(realm.invlist.hasInv(player.getName())){
-            //    Creative.remove(player);
-            //    player.getInventory().clearContents();
-            //    RItem[] ritems = realm.invlist.getInv(player.getName());
-            //    Item[] items = convertRItem(ritems);
-            //    player.getInventory().setContents(items);
-            //    player.getInventory().update();
-            //}
+            rhand.handleInventory(cPlayer, false);
         }
         //End Creative Zone Checks
         //Start Healing Zone Checks
@@ -816,7 +808,7 @@ public class RealmsListener extends PluginListener{
         CModPlayer cPlayer = new CModPlayer(player);
         Zone zone = ZoneLists.getZone(rhand.getEverywhere(cPlayer), cPlayer);
         boolean allow = zone.permissionCheck(cPlayer, Permission.PermType.TELEPORT);
-        rhand.log(RLevel.DEBUGINFO, "RealmsListener.onPortalUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
+        rhand.log(RLevel.PORTAL_USE, "RealmsListener.onPortalUse: Player: '"+player.getName()+"' Zone: '"+zone.getName()+"' Result: "+(allow ? "'Allowed'" : "'Denied'"));
         return !allow;
     }
   
@@ -917,32 +909,4 @@ public class RealmsListener extends PluginListener{
         }
         return allow;
     }
-    
-//    private RItem[] convertItem(Item[] items){
-//        RItem[] ritems = new RItem[40];
-//        int i = 0;
-//        for(Item item : items){
-//            RItem rit = null;
-//            if(item != null){
-//                rit = new RItem(item.getItemId(), item.getAmount(), item.getSlot(), item.getDamage());
-//            }
-//            ritems[i] = rit;
-//            i++;
-//       }
-//        return ritems;
-//    }
-      
-//    private Item[] convertRItem(RItem[] ritems){
-//        Item[] items = new Item[40];
-//        int i = 0;
-//        for(RItem ritem : ritems){
-//            Item it = null;
-//            if(ritem != null){
-//                it = new Item(ritem.ID, ritem.amount, ritem.slot, ritem.damage);
-//            }
-//            items[i] = it;
-//            i++;
-//       }
-//      return items;
-//    }
 }

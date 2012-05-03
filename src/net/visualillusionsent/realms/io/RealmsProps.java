@@ -30,8 +30,16 @@ public class RealmsProps {
     
     private static int wandItem, pylontype, pylonheight;
     private static long sanctuarytimeout, healingtimeout, animalstimeout, savetimeout, restricttimeout;
-    private static boolean grantbyDefault, grantOverrules, debug, useMySQL, useCModMySQL, 
-                           creepersallowed, ghastsallowed, sancmobsallowed, pedallowed, t2t, restrictcausedeath;
+    private static boolean grantbyDefault, grantOverrules, useMySQL, useCModMySQL, 
+                           creepersallowed, ghastsallowed, sancmobsallowed, pedallowed, t2t, restrictcausedeath,
+                           
+                           //DEBUG CHECKS
+                           CanPlayerUseCommand, onAnimalDestroy, onBlockBreak, onBlockDestroy, onBlockPhysics,
+                           onBlockPlace, onBlockRightClick, onCommand, onDamage, onEat, onEndermanDrop,
+                           onEndermanPickUp, onEntityRightClick, onExplosion, onFlow, onIgnite, onItemDrop,
+                           onItemPickUp, onItemUse, onMobDestroy, onMobSpawn, onMobTarget, onPistonExtend, 
+                           onPistonRetract, onPortalUse, onPlayerExpode, onPlayerHeal, onPlayerRestict, debugother;
+    
     private static String sqlUser, sqlPassword, sqlDatabase, sqlDriver;
     
     private final String defOpBlocks = "23,25,54,61,62,64,69,77,84,93,96,107,117,118", defOpItems = "383", defCommandOverride = "/home,/spawn,/help";
@@ -117,7 +125,39 @@ public class RealmsProps {
         
         grantbyDefault = parseBoolean(true, "GrantByDefault");
         grantOverrules = parseBoolean(true, "GrantOverrulesDeny");
-        debug = parseBoolean(false, "Debug");
+        
+        //Start DEBUGGING Checks
+        debugother          = parseBoolean(false, "DebugOther");
+        CanPlayerUseCommand = parseBoolean(false, "CanPlayerUseCommand");
+        onAnimalDestroy     = parseBoolean(false, "onAnimalDestroy");
+        onBlockBreak        = parseBoolean(false, "onBlockBreak");
+        onBlockDestroy      = parseBoolean(false, "onBlockDestroy");
+        onBlockPhysics      = parseBoolean(false, "onBlockPhysics");
+        onBlockPlace        = parseBoolean(false, "onBlockPlace");
+        onBlockRightClick   = parseBoolean(false, "onBlockRightClick");
+        onCommand           = parseBoolean(false, "onCommand");
+        onDamage            = parseBoolean(false, "onDamage");
+        onEat               = parseBoolean(false, "onEat");
+        onEndermanDrop      = parseBoolean(false, "onEndermanDrop");
+        onEndermanPickUp    = parseBoolean(false, "onEndermanPickUp");
+        onEntityRightClick  = parseBoolean(false, "onEntityRightClick");
+        onExplosion         = parseBoolean(false, "onExplosion");
+        onFlow              = parseBoolean(false, "onFlow");
+        onIgnite            = parseBoolean(false, "onIgnite");
+        onItemDrop          = parseBoolean(false, "onItemDrop");
+        onItemPickUp        = parseBoolean(false, "onItemPickUp");
+        onItemUse           = parseBoolean(false, "onItemUse");
+        onMobDestroy        = parseBoolean(false, "onMobDestroy");
+        onMobSpawn          = parseBoolean(false, "onMobSpawn");
+        onMobTarget         = parseBoolean(false, "onMobTarget");
+        onPistonExtend      = parseBoolean(false, "onPistonExtend");
+        onPistonRetract     = parseBoolean(false, "onPistonRetract");
+        onPortalUse         = parseBoolean(false, "onPortalUse");
+        onPlayerExpode      = parseBoolean(false, "onPlayerExpode");
+        onPlayerHeal        = parseBoolean(false, "onPlayerHeal");
+        onPlayerRestict     = parseBoolean(false, "onPlayerRestict");
+        //End DEBUGGING Checks
+        
         useMySQL = parseBoolean(false, "Use-MySQL");
         useCModMySQL = parseBoolean(false, "Use-CanaryMySQL");
         creepersallowed = parseBoolean(false, "CreepersAllowed");
@@ -383,13 +423,196 @@ public class RealmsProps {
     }
     
     /**
-     * Gets Debug setting
+     * Gets DebugOther Debug setting
      * 
-     * @return grantOverrules
+     * @return debugother
      */
-    public static boolean getDebug(){
-        return debug;
+    public static boolean getDebugOther(){
+        return debugother;
     }
+    
+    /**
+     * Gets canPlayerUseCommand Debug setting
+     * 
+     * @return canPlayerUseCommand
+     */
+    public static boolean getDebugCanPlayerUseCommand(){
+        return CanPlayerUseCommand;
+    }
+    
+    /**
+     * Gets onAnimalDestroy Debug setting
+     * 
+     * @return onAnimalDestroy
+     */
+    public static boolean getDebugOnAnimalDestroy(){
+        return onAnimalDestroy;
+    }
+    
+    /**
+     * Gets onBlockBreak Debug setting
+     * 
+     * @return onBlockBreak
+     */
+    public static boolean getDebugOnBlockBreak(){
+        return onBlockBreak;
+    }
+    
+    /**
+     * Gets onBlockDestroy Debug setting
+     * 
+     * @return onBlockDestroy
+     */
+    public static boolean getDebugOnBlockDestroy(){
+        return onBlockDestroy;
+    }
+    
+    /**
+     * Gets onBlockPhysics Debug setting
+     * 
+     * @return onBlockPhysics
+     */
+    public static boolean getDebugOnBlockPhysics(){
+        return onBlockPhysics;
+    }
+    
+    /**
+     * Gets onBlockPlace Debug setting
+     * 
+     * @return onBlockPlace
+     */
+    public static boolean getDebugOnBlockPlace(){
+        return onBlockPlace;
+    }
+    
+    /**
+     * Gets onBlockRightClick Debug setting
+     * 
+     * @return onBlockRightClick
+     */
+    public static boolean getDebugOnBlockRightClick(){
+        return onBlockRightClick;
+    }
+    
+    /**
+     * Gets onCommand Debug setting
+     * 
+     * @return onCommand
+     */
+    public static boolean getDebugOnCommand(){
+        return onCommand;
+    }
+    
+    /**
+     * Gets onDamage Debug setting
+     * 
+     * @return onDamage
+     */
+    public static boolean getDebugOnDamage(){
+        return onDamage;
+    }
+    
+    /**
+     * Gets onEat Debug setting
+     * 
+     * @return onEat
+     */
+    public static boolean getDebugOnEat(){
+         return onEat;
+    }
+    
+    /**
+     * Gets onEndermanDrop Debug setting
+     * 
+     * @return onEndermanDrop
+     */
+    public static boolean getDebugOnEndermanDrop(){
+        return onEndermanDrop;
+    }
+    
+    /**
+     * Gets onEndermanPickUp Debug setting
+     * 
+     * @return onEndermanPickUp
+     */
+    public static boolean getDebugOnEndermanPickUp(){
+        return onEndermanPickUp;
+    }
+    
+    /**
+     * Gets onEntityRightClick Debug setting
+     * 
+     * @return onEntityRightClick
+     */
+    public static boolean getDebugOnEntityRightClick(){
+        return onEntityRightClick;
+    }
+    
+    /**
+     * Gets onExplosion Debug setting
+     * 
+     * @return onExplosion
+     */
+    public static boolean getDebugOnExplosion(){
+        return onExplosion;
+    }
+    
+    /**
+     * Gets onFlow Debug setting
+     * 
+     * @return onFlow
+     */
+    public static boolean getDebugOnFlow(){
+        return onFlow;
+    }
+    
+    /**
+     * Gets onIgnite Debug setting
+     * 
+     * @return onIgnite
+     */
+    public static boolean getDebugOnIgnite(){
+        return onIgnite;
+    }
+    
+    //TODO: Fix docs below
+    public static boolean getDebugOnItemDrop(){
+        return onItemDrop;
+    }
+    public static boolean getDebugOnItemPickUp(){
+        return onItemPickUp;
+    }
+    public static boolean getDebugOnItemUse(){
+        return onItemUse;
+    }
+    public static boolean getDebugOnMobDestroy(){
+        return onMobDestroy;
+    }
+    public static boolean getDebugOnMobSpawn(){
+        return onMobSpawn;
+    }
+    public static boolean getDebugOnMobTarget(){
+        return onMobTarget;
+    }
+    public static boolean getDebugOnPistonExtend(){
+        return onPistonExtend;
+    }
+    public static boolean getDebugOnPistonRetract(){
+        return onPistonRetract;
+    }
+    public static boolean getDebugOnPortalUse(){
+        return onPortalUse;
+    }
+    public static boolean getDebugOnPlayerExpode(){
+        return onPlayerExpode;
+    }
+    public static boolean getDebugOnPlayerHeal(){
+        return onPlayerHeal;
+    }
+    public static boolean getDebugOnPlayerRestict(){
+        return onPlayerRestict;
+    }
+    
     
     /**
      * Gets Use MySQL setting

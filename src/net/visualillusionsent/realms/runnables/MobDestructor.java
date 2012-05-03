@@ -20,6 +20,7 @@ import net.visualillusionsent.viutils.ICModMob;
  */
 public class MobDestructor implements Runnable{
     private RHandle rhandle;
+    private String debug = "Killed Mob - Name: '%s' @ Location: X: '%d' Y: '%d' Z: '%d' World: '%s' Dimension: '%d'";
     
     /**
      * class constructor
@@ -44,18 +45,35 @@ public class MobDestructor implements Runnable{
                     for(ICModMob theMob: mobList){
                         //Get Zone Mob is in
                         Zone myZone = ZoneLists.getZone(rhandle.getEverywhere(theMob.getWorldName(), theMob.getDimIndex()), theMob);
+                        
+                        boolean destroyed = false;
+                        //Check if Mob is a Creeper in a Creeper Disabled Zone
+                        if(theMob.getName().equals("Creeper") && !myZone.getCreeper()){
+                            theMob.destroy();
+                            destroyed = true;
+                        }
+                        //Check if Mob is a Ghast in a Ghast Disabled Zone
+                        else if(theMob.getName().equals("Ghast") && !myZone.getGhast()){
+                            theMob.destroy();
+                            destroyed = true;
+                        }
                         //Check if Mob is in a Mob Disabled Zone
-                        if (myZone.getSanctuary()) {
+                        else if (myZone.getSanctuary()) {
                             //Mob is in Mob Disable Zone and needs Destroyed
-                            theMob.destroy(); //Kill Animal
-                            rhandle.log(RLevel.DEBUGINFO, "Killed Mob - Name: '" + theMob.getName()+ 
-                                                          "' at Location - X: '"+Math.floor(theMob.getX())+"' Y: '"+Math.floor(theMob.getY())+"' Z: '"+Math.floor(theMob.getZ())+
-                                                          "' World: '"+theMob.getWorldName()+"' Dimension: '"+ theMob.getDimension()+"'");//Debugging
+                            theMob.destroy();
+                            destroyed = true;
+                        }
+                        
+                        if(destroyed){
+                            //Debugging
+                            rhandle.log(RLevel.MOB_DESTROY, String.format(debug, theMob.getName(), Math.floor(theMob.getX()), Math.floor(theMob.getY()),
+                                                            Math.floor(theMob.getZ()), theMob.getWorldName(), theMob.getDimension()));
                         }
                     }
                 }
             }
-        }catch(ConcurrentModificationException CME){
+        }
+        catch(ConcurrentModificationException CME){
             rhandle.log(RLevel.DEBUGWARNING, "Concurrent Modification Exception in MobDestructor. (Don't worry Not a major issue)");
         }
     }
