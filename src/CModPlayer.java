@@ -69,8 +69,8 @@ public class CModPlayer implements ICModPlayer{
     public void doDamage(int type, int amount) {
         try{
             switch(type){
-            case 1: player.getUser().a(ODamageSource.l, amount); //EXPLOSION
-            case 2: player.getUser().a(ODamageSource.h, amount); //RESTRICT(Cactus)
+            case 1: player.getUser().a(ODamageSource.l, amount); break; //EXPLOSION
+            case 2: player.getUser().a(ODamageSource.h, amount); break; //RESTRICT(Cactus)
             }
         }
         catch(Exception e){
@@ -117,7 +117,7 @@ public class CModPlayer implements ICModPlayer{
 
     @Override
     public String getWorldName() {
-        return player.getWorld().getName();
+        return player.getWorld() != null ? player.getWorld().getName() : "null";
     }
 
     @Override

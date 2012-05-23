@@ -45,7 +45,7 @@ public class CModMob implements ICModMob{
 
     @Override
     public String getWorldName() {
-        return mob.getWorld().getName();
+        return mob.getWorld() != null ? mob.getWorld().getName() : "null";
     }
 
     @Override

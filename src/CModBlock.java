@@ -62,7 +62,7 @@ public class CModBlock implements ICModBlock{
 
     @Override
     public String getWorldName() {
-        return block.getWorld().getName();
+        return block.getWorld() != null ? block.getWorld().getName() : "null";
     }
 
     @Override

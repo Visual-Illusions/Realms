@@ -318,8 +318,8 @@ public enum RealmsCommands {
                     player.notify("Zones cannot be named "+ChatColor.ORANGE+"NULL"+ChatColor.LIGHT_RED+"!");
                     return true;
                 }
-                else if(!zoneName.matches("[_a-zA-Z0-9\\-\\.]+")){
-                    player.notify(ChatColor.ORANGE+"ZONE NAMES"+ChatColor.LIGHT_RED+" cannot contain "+ChatColor.YELLOW+"SPECIAL CHARACTERS"+ChatColor.LIGHT_RED+"!");
+                else if(!zoneName.matches("[_a-zA-Z0-9\\-]+")){
+                    player.notify(ChatColor.ORANGE+"ZONE NAMES"+ChatColor.LIGHT_RED+" cannot contain "+ChatColor.YELLOW+"'SPECIAL CHARACTERS'"+ChatColor.LIGHT_RED+"!");
                     return true;
                 }
                 // Made it past all the checks!
@@ -1169,50 +1169,6 @@ public enum RealmsCommands {
     },
     
     /**
-     * Sets RESPAWN Zone Flag
-     */
-    RESPAWN ("respawn", "[zone] <on|off|inherit>") {
-        @Override
-        public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(!commandargsCheck(1, command)){
-                player.notify(getUsage());
-                return true;
-            }
-            String zoneName = ZoneLists.getZone(rhandle.getEverywhere(player.getWorldName(), player.getDimIndex()), player).getName();
-            try{
-                Zone.ZoneFlag theFlag;
-                if(command.length > 1){
-                    zoneName = command[0];
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[1].toUpperCase());
-                }
-                else{
-                    theFlag = Zone.ZoneFlag.getZoneFlag(command[0].toUpperCase());
-                }
-                Zone zone = ZoneLists.getZoneByName(zoneName);
-                if(!zone.permissionCheck(player, Permission.PermType.ENVIRONMENT)){
-                    player.notify(String.format(NOPERMWITHIN, "RESPAWN", zoneName));
-                    return true;
-                }
-                
-                if (zone.getName().toUpperCase().startsWith("EVERYWHERE") && theFlag.equals(Zone.ZoneFlag.INHERIT)) { //FIXME
-                    player.notify(String.format(NOSET, zoneName));
-                    return true;
-                }
-                zone.setRespawn(theFlag);
-                player.sendMessage(String.format(FLAGSET, "RESPAWN", (zone.getRespawn() ? "\u00A72ON " : "\u00A74OFF ")+(zone.getAbsoluteRespawn().equals(Zone.ZoneFlag.INHERIT) ? "\u00A7D(INHERITED)" : ""), zoneName ));
-                zone.save();
-            } 
-            catch (InvaildZoneFlagException ife) {
-                player.notify(String.format(INVALIDFLAG, "RESPAWN"));
-            } 
-            catch (ZoneNotFoundException ZNFE) {
-                player.notify(String.format(NFE, zoneName));
-            }
-            return true;
-        }
-    },
-    
-    /**
      * Displays Zone's COMBAT Settings
      */
     COMBAT ("combat", "<zone>") {
@@ -1310,9 +1266,9 @@ public enum RealmsCommands {
             }
             int page = 9 * show;
             int start = 9 * show - 9;
-            player.sendMessage("�aList all �6ZONES �a Page �e" + show + "�a of �e" + total);
+            player.sendMessage("\u00A7AList all \u00A76ZONES \u00A7A Page \u00A7E" + show + "\u00A7A of \u00A7E" + total);
             for (int i = start; i < page && i < zonesplit.length; i++){
-                player.sendMessage("�6"+zonesplit[i]);
+                player.sendMessage(ChatColor.ORANGE+zonesplit[i]);
             }
             return true;
         }

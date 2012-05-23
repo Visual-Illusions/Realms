@@ -50,7 +50,6 @@ public class Zone {
     private ZoneFlag potion; //OFF = no potion damage, ON = potions can damage
     private ZoneFlag starve; //OFF = no Starvation, ON = Starvation
     private ZoneFlag restricted; //OFF = Allow All, ON = Those without Authed permission take damage
-    private ZoneFlag respawn; //OFF = not a respawn zone, ON = is a respawn zone
     
     public enum ZoneFlag {
         ON (true), OFF (false), INHERIT (false), NULL (false);
@@ -113,10 +112,10 @@ public class Zone {
         }
         else{
             try {
-                this.parent = ZoneLists.getZoneByName(args[3]);
+                this.parent = args[3] != null ? ZoneLists.getZoneByName(args[3]) : null;
             }
             catch (ZoneNotFoundException ZNFE) {
-                this.parent = rhandle.getEverywhere(world, dimension);
+                //this.parent = rhandle.getEverywhere(world, dimension);
             }
         }
         if(parent != null && !parent.getChildren().contains(this)){
@@ -291,16 +290,6 @@ public class Zone {
                     this.restricted = ZoneFlag.ON;
                 }
             }
-            if(name.toUpperCase().startsWith("EVERYWHERE")){
-                this.respawn = ZoneFlag.OFF; //SHOULD ALWAYS BE OFF FOR EVERYWHERE
-            }
-            else{
-                try{
-                    this.respawn = ZoneFlag.getZoneFlag(args[25]);
-                }catch (Exception e) {
-                    this.respawn = ZoneFlag.INHERIT;
-                }
-            }
         }
         this.children = new ArrayList<Zone>();
         if(parent != null && !parent.getChildren().contains(this)){
@@ -333,7 +322,6 @@ public class Zone {
             this.potion = ZoneFlag.ON;
             this.starve = ZoneFlag.ON;
             this.restricted = ZoneFlag.OFF;
-            this.respawn = ZoneFlag.OFF;
         } 
         else {
             this.pvp = ZoneFlag.INHERIT;
@@ -355,7 +343,6 @@ public class Zone {
             this.potion = ZoneFlag.INHERIT;
             this.starve = ZoneFlag.INHERIT;
             this.restricted = ZoneFlag.INHERIT;
-            this.respawn = ZoneFlag.INHERIT;
         }
     }
     
@@ -391,7 +378,6 @@ public class Zone {
     public ZoneFlag getAbsolutePotion() { return potion;}
     public ZoneFlag getAbsoluteStarve(){ return starve; }
     public ZoneFlag getAbsoluteRestricted(){ return restricted; }
-    public ZoneFlag getAbsoluteRespawn(){ return respawn; }
 
     public boolean getPVP() {
         if (this.pvp.equals(ZoneFlag.INHERIT) && this.parent != null) {
@@ -545,14 +531,6 @@ public class Zone {
         }
     }
     
-    public boolean getRespawn() {
-        if (this.respawn.equals(ZoneFlag.INHERIT) && this.parent != null){
-            return parent.getRespawn();
-        }else{
-            return this.respawn.getValue();
-        }
-    }
-    
     /*
      * Mutator Methods
      */
@@ -662,9 +640,6 @@ public class Zone {
         this.restricted = restricted;
     }
     
-    public void setRespawn(ZoneFlag respawn){
-        this.respawn = respawn;
-    }
 
     /*
      * Other Methods
@@ -712,7 +687,11 @@ public class Zone {
         if(polygon == null){
             return false;
         }
-        if(world.equals(block.getWorldName()) && dimension == block.getDimension()){
+        if(block.getWorldName() == null){
+            System.out.println("Null world");
+            return false;
+        }
+        if(world.equals(block.getWorldName()) && dimension == block.getDimIndex()){
             return polygon.contains(block);
         }
         return false;
@@ -725,7 +704,11 @@ public class Zone {
         if(polygon == null){
             return false;
         }
-        if(world.equals(player.getWorldName()) && dimension == player.getDimension()){
+        if(player.getWorldName() == null){
+            System.out.println("Null world");
+            return false;
+        }
+        if(world.equals(player.getWorldName()) && dimension == player.getDimIndex()){
             return polygon.contains(player);
         }
         return false;
@@ -738,7 +721,11 @@ public class Zone {
         if(polygon == null){
             return false;
         }
-        if(world.equals(mob.getWorldName()) && dimension == mob.getDimension()){
+        if(mob.getWorldName() == null || this.world == null){
+            System.out.println("Null world");
+            return false;
+        }
+        if(world.equals(mob.getWorldName()) && dimension == mob.getDimIndex()){
             return polygon.contains(mob);
         }
         return false;
@@ -772,7 +759,7 @@ public class Zone {
     }
     
     public boolean isInWorld(String world, int dim){
-        return this.world.equals(world) && this.dimension == dim;
+        return world != null && this.world != null ? this.world.equals(world) && this.dimension == dim : false;
     }
     
     /**
@@ -810,7 +797,6 @@ public class Zone {
             environ[3] = flags.toString();
             flags.delete(0, flags.length());
             flags.append(padAlign(String.format(flagform, "RESTRICTED", (getRestricted() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteRestricted().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "RESPAWN", (getRespawn() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteRespawn().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
             environ[4] = flags.toString();
             flags.delete(0, flags.length());
         }
@@ -1041,8 +1027,6 @@ public class Zone {
         toRet.append(starve.toString());
         toRet.append(',');
         toRet.append(restricted.toString());
-        toRet.append(',');
-        toRet.append(respawn.toString());
         return toRet.toString();
     }
     

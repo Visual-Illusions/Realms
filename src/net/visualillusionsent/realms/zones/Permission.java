@@ -215,11 +215,11 @@ public class Permission {
     public String toString() {
         StringBuffer builder = new StringBuffer();
         builder.append(owner);
-        builder.append(':');
+        builder.append(',');
         builder.append(type.toString());
-        builder.append(':');
+        builder.append(',');
         builder.append(allowed ? "YES" : "NO"); 
-        builder.append(':');
+        builder.append(',');
         builder.append(override ? "YES" : "NO");
         return builder.toString();
     }

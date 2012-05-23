@@ -364,13 +364,18 @@ public class RealmsListener extends PluginListener{
     public void onDisconnect(Player player) {
         try{
             CModPlayer cPlayer = new CModPlayer(player);
+            
+            //Restore inventory if exists
+            rhand.handleInventory(cPlayer, false);
+            
             //Reset the player's wand onDisconnect
             Wand wand = rhand.getPlayerWand(cPlayer);
             wand.reset();
             rhand.removePlayerWand(cPlayer);
+            
         }
         catch(Exception e){ 
-            //Wand wasn't existent...
+            
         }
     }
   

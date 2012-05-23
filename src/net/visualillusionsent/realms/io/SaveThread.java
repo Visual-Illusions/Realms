@@ -25,12 +25,12 @@ public class SaveThread extends Thread{
             "Sanctuary,Creeper,Ghast,Fall,Suffocate," +
             "Fire,Animals,Physics,Creative,Pistons," +
             "Healing,Enderman,Spread,Flow,TNT," +
-            "Potion,Starve,Restricted,Respawn,PolygonArea,Permissions) " +
-            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "Potion,Starve,Restricted,PolygonArea,Permissions) " +
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     
     private final String Zone_Update = "UPDATE RealmsZones SET World = ?, Dimension = ?, Parent = ?, Greeting = ?, Farewell = ?, PVP = ?, Sanctuary = ?, " +
     		                          "Creeper = ?, Ghast = ?, Fall = ?, Suffocate = ?, Fire = ?, Animals = ?, Physics = ?, Creative = ?, Pistons = ?, " +
-    		                          "Healing = ?, Enderman = ?, Spread = ?, Flow = ?, TNT = ?, Potion = ?, Starve = ?, Restricted = ?, Respawn = ?, " +
+    		                          "Healing = ?, Enderman = ?, Spread = ?, Flow = ?, TNT = ?, Potion = ?, Starve = ?, Restricted = ?, " +
     		                          "PolygonArea = ?, Permissions = ? WHERE Name = ?";
     
     public SaveThread(RHandle rhandle, Zone zone, boolean flatfile){
@@ -77,7 +77,6 @@ public class SaveThread extends Thread{
                         zonefile.setString("Potion",        zone.getAbsolutePotion().toString());
                         zonefile.setString("Starve",        zone.getAbsoluteStarve().toString());
                         zonefile.setString("Restricted",    zone.getAbsoluteRestricted().toString());
-                        zonefile.setString("Respawn",       zone.getAbsoluteRespawn().toString());
                         zonefile.setString("PolygonArea",   zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
                         zonefile.setString("Permissions",   perms.toString());
                         
@@ -98,7 +97,7 @@ public class SaveThread extends Thread{
                             synchronized(zone.getPerms()){
                                 for(Permission perm : zone.getPerms()){
                                     perms.append(perm.toString());
-                                    perms.append(',');
+                                    perms.append('~');
                                 }
                             }
                             
@@ -127,7 +126,6 @@ public class SaveThread extends Thread{
                             zonefile.setString("Potion",        zone.getAbsolutePotion().toString());
                             zonefile.setString("Starve",        zone.getAbsoluteStarve().toString());
                             zonefile.setString("Restricted",    zone.getAbsoluteRestricted().toString());
-                            zonefile.setString("Respawn",       zone.getAbsoluteRespawn().toString());
                             zonefile.setString("PolygonArea",   zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
                             zonefile.setString("Permissions", perms.toString());
                             
@@ -177,19 +175,19 @@ public class SaveThread extends Thread{
                             }
                             
                             int incro = inc ? 1 : 0;
-                            for(int index = 0; index < 25; index++){
+                            for(int index = 0; index < 24; index++){
                                 ps.setString(index+1, lines[index+incro]);
                             }
                            
                             if(inc){
-                                ps.setString(26, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
-                                ps.setString(27, perms.toString());
-                                ps.setString(28, lines[0]);
+                                ps.setString(25, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
+                                ps.setString(26, perms.toString());
+                                ps.setString(27, lines[0]);
                             }
                             else{
-                                ps.setString(26, lines[25]);
-                                ps.setString(27, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
-                                ps.setString(28, perms.toString());
+                                ps.setString(25, lines[25]);
+                                ps.setString(26, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
+                                ps.setString(27, perms.toString());
                             }
                             
                             ps.execute();
@@ -257,20 +255,20 @@ public class SaveThread extends Thread{
                                 }
                                 
                                 if(inc){
-                                    for(int index = 1; index < 25; index++){
+                                    for(int index = 1; index < 24; index++){
                                         update.setString(index, lines[index]);
                                     }
-                                    update.setString(26, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
-                                    update.setString(27, perms.toString());
-                                    update.setString(28, lines[0]);
+                                    update.setString(25, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
+                                    update.setString(26, perms.toString());
+                                    update.setString(27, lines[0]);
                                     update.addBatch();
                                 }
                                 else{
-                                    for(int index = 0; index < 26; index++){
+                                    for(int index = 0; index < 25; index++){
                                         insert.setString(index+1, lines[index]);
                                     }
-                                    insert.setString(27, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
-                                    insert.setString(28, perms.toString());
+                                    insert.setString(26, zone.getPolygon() == null ? "null" : zone.getPolygon().toString());
+                                    insert.setString(27, perms.toString());
                                     insert.addBatch();
                                 }
                             }

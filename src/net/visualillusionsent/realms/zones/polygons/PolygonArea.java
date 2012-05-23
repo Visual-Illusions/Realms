@@ -443,7 +443,7 @@ public class PolygonArea {
                     return false;
                 }    
             }
-            else if(workingVerticesContain(sibling.getPolygon())) {
+            else if(workingVerticesContain(sibling.getPolygon()) && sibling.getName() != zone.getName()) {
                 player.notify("Moving " + sibling.getName() + " into child list of current working zone.");
                 zone.getParent().removeChild(sibling);
                 sibling.setParent(zone);

@@ -225,6 +225,9 @@ public class RHandle {
      * @return everywhere zone
      */
     public Zone getEverywhere(String world, int dim){
+        if(world == null){
+            return getEverywhere(serv.getDefaultWorldName(), 0);
+        }
         synchronized(everywhere){
             for(Zone zone : everywhere){
                 if(zone.isInWorld(world, dim)){
@@ -232,7 +235,7 @@ public class RHandle {
                 }
             }
         }
-        Zone evr = new Zone(this, "EVERYWHERE-"+world.toUpperCase()+"-DIM"+String.valueOf(dim), null, world, dim);
+        Zone evr = new Zone(this, "EVERYWHERE-"+world.toUpperCase().replace("/", "+")+"-DIM"+String.valueOf(dim), null, world, dim);
         createDefaultPerms(evr);
         return evr;
     }
@@ -294,17 +297,6 @@ public class RHandle {
      */
     public ICModServer getServer(){
         return serv;
-    }
-    
-    /**
-     * gets the nearest respawn zone to a player
-     * 
-     * @param player
-     * @return zone
-     */
-    public Zone getNearestRespawn(ICModPlayer player){
-        //FIXME
-        return null;
     }
     
     /**
@@ -600,6 +592,7 @@ public class RHandle {
         else{
             if(inventories.containsKey(player)){
                 player.setInvContents(inventories.get(player));
+                inventories.remove(player);
             }
         }
     }

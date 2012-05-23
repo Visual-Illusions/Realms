@@ -102,7 +102,7 @@ public final class PropsFile {
         try{
             propsFile.delete();
             propsFile = new File(filepath);
-            BufferedWriter out = new BufferedWriter(new FileWriter(propsFile, true));
+            BufferedWriter out = new BufferedWriter(new FileWriter(propsFile));
             for(String prop : props.keySet()){
                 if(comments.containsKey(prop)){
                     for(String comment : comments.get(prop)){

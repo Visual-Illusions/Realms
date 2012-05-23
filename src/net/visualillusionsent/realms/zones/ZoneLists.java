@@ -16,16 +16,18 @@ import net.visualillusionsent.viutils.ICModPlayer;
  * @author darkdiplomat
  */
 public class ZoneLists {
-    private static List<Zone> zones;
-    private static Hashtable<ICModPlayer, List<Zone>> playerZoneList;
-    private static List<ICModPlayer> inRestricted;
-    private static List<ICModPlayer> inHealing;
+    private List<Zone> zones;
+    private Hashtable<ICModPlayer, List<Zone>> playerZoneList;
+    private List<ICModPlayer> inRestricted;
+    private List<ICModPlayer> inHealing;
+    private static ZoneLists inst;
     
     public ZoneLists(RHandle rhand){
         zones = new ArrayList<Zone>();
         playerZoneList = new Hashtable<ICModPlayer, List<Zone>>();
         inRestricted = new ArrayList<ICModPlayer>();
         inHealing = new ArrayList<ICModPlayer>();
+        inst = this;
      }
     
     /**
@@ -34,7 +36,7 @@ public class ZoneLists {
      * @param zone
      */
     public static void addZone(Zone zone){
-        zones.add(zone);
+        inst.zones.add(zone);
     }
     
     /**
@@ -43,7 +45,7 @@ public class ZoneLists {
      * @param zone
      */
     public static void removeZone(Zone zone){
-        zones.remove(zone);
+        inst.zones.remove(zone);
     }
     
     /**
@@ -52,7 +54,7 @@ public class ZoneLists {
      * @return List<Zone> zones
      */
     public static List<Zone> getZones(){
-        return zones;
+        return inst.zones;
     }
     
     /**
@@ -73,7 +75,7 @@ public class ZoneLists {
      * @throws ZoneNotFoundException
      */
     public static Zone getZoneByName(String name) throws ZoneNotFoundException {
-        for(Zone zone : zones){
+        for(Zone zone : inst.zones){
             if(zone.getName().equalsIgnoreCase(name)){
                 return zone;
             }
@@ -147,9 +149,9 @@ public class ZoneLists {
      * @return List<Zone> Zones Player is In
      */
     public static List<Zone> getplayerZones(ICModPlayer player){
-        if(playerZoneList.containsKey(player.getName())){
+        if(inst.playerZoneList.containsKey(player.getName())){
             List<Zone> pzone = new ArrayList<Zone>();
-            pzone.addAll(playerZoneList.get(player.getName()));
+            pzone.addAll(inst.playerZoneList.get(player.getName()));
             return pzone;
         }
         return null;
@@ -161,9 +163,9 @@ public class ZoneLists {
      * @param zone
      */
     public static void removeZonefromPlayerZoneList(Zone zone){
-        for(ICModPlayer key : playerZoneList.keySet()){
-            if(playerZoneList.get(key).contains(zone)){
-                playerZoneList.get(key).remove(zone);
+        for(ICModPlayer key : inst.playerZoneList.keySet()){
+            if(inst.playerZoneList.get(key).contains(zone)){
+                inst.playerZoneList.get(key).remove(zone);
             }
         }
     }
@@ -175,38 +177,38 @@ public class ZoneLists {
      * @param zones
      */
     public static void addplayerzones(ICModPlayer player, List<Zone> zones){
-        playerZoneList.put(player, zones);
+        inst.playerZoneList.put(player, zones);
     }
     
     public static boolean isInRestricted(ICModPlayer cPlayer){
-        return inRestricted.contains(cPlayer);
+        return inst.inRestricted.contains(cPlayer);
     }
     
     public static void addInRestricted(ICModPlayer player){
-        inRestricted.add(player);
+        inst.inRestricted.add(player);
     }
     
     public static void removeInRestricted(ICModPlayer player){
-        if(inRestricted.contains(player)){
-            inRestricted.remove(player);
+        if(inst.inRestricted.contains(player)){
+            inst.inRestricted.remove(player);
         }
     }
     
     public static List<ICModPlayer> getInRestricted(){
-        return inRestricted;
+        return inst.inRestricted;
     }
     
     public static void addInHealing(ICModPlayer player){
-        inHealing.add(player);
+        inst.inHealing.add(player);
     }
     
     public static void removeInHealing(ICModPlayer player){
-        if(inHealing.contains(player)){
-            inHealing.remove(player);
+        if(inst.inHealing.contains(player)){
+            inst.inHealing.remove(player);
         }
     }
     
     public static List<ICModPlayer> getInHealing(){
-        return inHealing;
+        return inst.inHealing;
     }
 }
