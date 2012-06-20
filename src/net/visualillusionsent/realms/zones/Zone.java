@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.logging.Level;
 
 import net.visualillusionsent.realms.RHandle;
-import net.visualillusionsent.realms.io.InvaildZoneFlagException;
 import net.visualillusionsent.realms.io.RealmsProps;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.InvaildZoneFlagException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.realms.zones.polygons.PolygonArea;
 import net.visualillusionsent.viutils.ICModBlock;
 import net.visualillusionsent.viutils.ICModMob;
@@ -98,7 +98,6 @@ public class Zone {
             rhandle.addEverywhere(this);
         }
         this.rhandle.log(Level.INFO, "Zone created: " + name);
-        rhandle.getDataSource().saveZone(this);
     }
 
     // CSV File Constructor
@@ -107,10 +106,17 @@ public class Zone {
         this.name = args[0];
         this.world = args[1];
         this.dimension = Integer.valueOf(args[2]);
+        
+        if(name.equals("everywhere")){
+            name = "EVERYWHERE-"+rhandle.getServer().getDefaultWorldName().toUpperCase().replaceAll("worlds/", "")+"-DIM"+args[2];
+        }
         if(name.startsWith("EVERYWHERE")){
             this.parent = null;
         }
         else{
+            if(args[3].equals("everywhere")){
+                args[3] = "EVERYWHERE-"+rhandle.getServer().getDefaultWorldName().toUpperCase().replaceAll("worlds/", "")+"-DIM"+args[2];
+            }
             try {
                 this.parent = args[3] != null ? ZoneLists.getZoneByName(args[3]) : null;
             }
@@ -558,86 +564,107 @@ public class Zone {
 
     public void setGreeting(String greeting) {
         this.greeting = greeting;
+        save();
     }
 
     public void setFarewell(String farewell) {
         this.farewell = farewell;
+        save();
     }
     
     public void setPVP(ZoneFlag pvp) {
         this.pvp = pvp;
+        save();
     }
     
     public void setSanctuary(ZoneFlag sanctuary) {
         this.sanctuary = sanctuary;
+        save();
     }
     
     public void setCreeper(ZoneFlag creeper) {
         this.creeper = creeper;
+        save();
     }
     
     public void setGhast(ZoneFlag ghast) {
         this.ghast = ghast;
+        save();
     }
     
     public void setFall(ZoneFlag fall){
         this.fall = fall;
+        save();
     }
     
     public void setSuffocate(ZoneFlag suffocate){
         this.suffocate = suffocate;
+        save();
     }
     
     public void setFire(ZoneFlag fire){
         this.fire = fire;
+        save();
     }
     
     public void setAnimals(ZoneFlag animals){
         this.animals = animals;
+        save();
     }
     
     public void setPhysics(ZoneFlag physics){
         this.physics = physics;
+        save();
     }
     
     public void setCreative(ZoneFlag creative){
         this.creative = creative;
+        save();
     }
     
     public void setPistons(ZoneFlag pistons){
         this.pistons = pistons;
+        save();
     }
     
     public void setHealing(ZoneFlag healing) {
         this.healing = healing;
+        save();
     }
     
     public void setEnderman(ZoneFlag enderman){
         this.enderman = enderman;
+        save();
     }
     
     public void setSpread(ZoneFlag spread){
         this.spread = spread;
+        save();
     }
     
     public void setFlow(ZoneFlag flow){
         this.flow = flow;
+        save();
     }
     
     public void setTNT(ZoneFlag TNT){
         this.TNT = TNT;
+        save();
     }
     
     public void setPotion(ZoneFlag potion){
         this.potion = potion;
+        save();
     }
     
     public void setStarve(ZoneFlag starve){
         this.starve = starve;
+        save();
     }
     
     public void setRestricted(ZoneFlag restricted){
         this.restricted = restricted;
+        save();
     }
     
 
@@ -645,11 +672,15 @@ public class Zone {
      * Other Methods
      */
     public void farewell(ICModPlayer player) {
-        if(farewell != null) player.sendMessage(farewell.replace("@", "\u00A7"));
+        if(farewell != null){
+            player.sendMessage(farewell.replace("@", "\u00A7"));
+        }
     }
 
     public void greet(ICModPlayer player) {
-        if(greeting != null) player.sendMessage(greeting.replace("@", "\u00A7"));
+        if(greeting != null){
+            player.sendMessage(greeting.replace("@", "\u00A7"));
+        }
     }
 
     // Delete the zone
@@ -672,7 +703,7 @@ public class Zone {
     
     //Save Zone
     public void save(){
-        rhandle.getDataSource().saveZone(this);
+        rhandle.getDataSource().dumpzone();
     }
 
     // Does this zone contain zero area?
@@ -684,14 +715,10 @@ public class Zone {
         if(name.equals("EVERYWHERE-"+block.getWorldName().toUpperCase()+"-DIM"+block.getDimIndex())){
             return true;
         }
-        if(polygon == null){
+        if(isEmpty()){
             return false;
         }
-        if(block.getWorldName() == null){
-            System.out.println("Null world");
-            return false;
-        }
-        if(world.equals(block.getWorldName()) && dimension == block.getDimIndex()){
+        if(isInWorld(block.getWorldName().replace("worlds/", ""), block.getDimIndex())){
             return polygon.contains(block);
         }
         return false;
@@ -701,14 +728,10 @@ public class Zone {
         if(name.equals("EVERYWHERE-"+player.getWorldName().toUpperCase()+"-DIM"+player.getDimIndex())){
             return true;
         }
-        if(polygon == null){
+        if(isEmpty()){
             return false;
         }
-        if(player.getWorldName() == null){
-            System.out.println("Null world");
-            return false;
-        }
-        if(world.equals(player.getWorldName()) && dimension == player.getDimIndex()){
+        if(isInWorld(player.getWorldName().replace("worlds/", ""), player.getDimIndex())){
             return polygon.contains(player);
         }
         return false;
@@ -718,14 +741,10 @@ public class Zone {
         if(name.equals("EVERYWHERE-"+mob.getWorldName().toUpperCase()+"-DIM"+mob.getDimIndex())){
             return true;
         }
-        if(polygon == null){
+        if(isEmpty()){
             return false;
         }
-        if(mob.getWorldName() == null || this.world == null){
-            System.out.println("Null world");
-            return false;
-        }
-        if(world.equals(mob.getWorldName()) && dimension == mob.getDimIndex()){
+        if(isInWorld(mob.getWorldName().replace("worlds/", ""), mob.getDimIndex())){
             return polygon.contains(mob);
         }
         return false;
@@ -875,8 +894,8 @@ public class Zone {
         if(previous != null){
             zoneperms.remove(previous);
         }
-        zoneperms.add(new Permission(ownerName, type, allowed, override));
-        save();
+        zoneperms.add(new Permission(ownerName, type, this.name, allowed, override));
+        rhandle.getDataSource().dumpperm();
     }
     
     public void setPermission(Permission perm){
@@ -913,7 +932,7 @@ public class Zone {
         if(permission != null){
             zoneperms.remove(permission);
         }
-        save();
+        rhandle.getDataSource().dumpperm();
     }
     
     /**

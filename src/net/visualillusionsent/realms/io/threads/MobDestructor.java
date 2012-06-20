@@ -1,4 +1,4 @@
-package net.visualillusionsent.realms.runnables;
+package net.visualillusionsent.realms.io.threads;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -18,9 +18,9 @@ import net.visualillusionsent.viutils.ICModMob;
  * 
  * @author darkdiplomat
  */
-public class MobDestructor implements Runnable{
+public class MobDestructor extends Thread{
     private RHandle rhandle;
-    private String debug = "Killed Mob - Name: '%s' @ Location: X: '%d' Y: '%d' Z: '%d' World: '%s' Dimension: '%d'";
+    private String debug = "Killed Mob - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%s' X: '%s' Y: '%s' Z: '%s')";
     
     /**
      * class constructor
@@ -29,6 +29,8 @@ public class MobDestructor implements Runnable{
      */
     public MobDestructor(RHandle rhandle) {
         this.rhandle = rhandle;
+        this.setName("MobDestructor-Thread");
+        this.setDaemon(true);
     }
     
     /**
@@ -44,21 +46,21 @@ public class MobDestructor implements Runnable{
                 if (!mobList.isEmpty()){
                     for(ICModMob theMob: mobList){
                         //Get Zone Mob is in
-                        Zone myZone = ZoneLists.getZone(rhandle.getEverywhere(theMob.getWorldName(), theMob.getDimIndex()), theMob);
+                        Zone theZone = ZoneLists.getZone(rhandle.getEverywhere(theMob), theMob);
                         
                         boolean destroyed = false;
                         //Check if Mob is a Creeper in a Creeper Disabled Zone
-                        if(theMob.getName().equals("Creeper") && !myZone.getCreeper()){
+                        if(theMob.getName().equals("Creeper") && !theZone.getCreeper()){
                             theMob.destroy();
                             destroyed = true;
                         }
                         //Check if Mob is a Ghast in a Ghast Disabled Zone
-                        else if(theMob.getName().equals("Ghast") && !myZone.getGhast()){
+                        else if(theMob.getName().equals("Ghast") && !theZone.getGhast()){
                             theMob.destroy();
                             destroyed = true;
                         }
                         //Check if Mob is in a Mob Disabled Zone
-                        else if (myZone.getSanctuary()) {
+                        else if (theZone.getSanctuary()) {
                             //Mob is in Mob Disable Zone and needs Destroyed
                             theMob.destroy();
                             destroyed = true;
@@ -66,8 +68,8 @@ public class MobDestructor implements Runnable{
                         
                         if(destroyed){
                             //Debugging
-                            rhandle.log(RLevel.MOB_DESTROY, String.format(debug, theMob.getName(), Math.floor(theMob.getX()), Math.floor(theMob.getY()),
-                                                            Math.floor(theMob.getZ()), theMob.getWorldName(), theMob.getDimension()));
+                            rhandle.log(RLevel.MOB_DESTROY, String.format(debug, theZone.getName(), theMob.getName(), theMob.getWorldName(), theMob.getDimension(),
+                                                                              Math.floor(theMob.getX()), Math.floor(theMob.getY()), Math.floor(theMob.getZ())));
                         }
                     }
                 }

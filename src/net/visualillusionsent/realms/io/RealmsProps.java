@@ -30,15 +30,16 @@ public class RealmsProps {
     
     private static int wandItem, pylontype, pylonheight;
     private static long sanctuarytimeout, healingtimeout, animalstimeout, savetimeout, restricttimeout;
-    private static boolean grantbyDefault, grantOverrules, useMySQL, useCModMySQL, 
+    private static boolean grantbyDefault, grantOverrules, useMySQL, useCModMySQL, autoupdate,
                            creepersallowed, ghastsallowed, sancmobsallowed, pedallowed, t2t, restrictcausedeath,
                            
                            //DEBUG CHECKS
-                           CanPlayerUseCommand, onAnimalDestroy, onBlockBreak, onBlockDestroy, onBlockPhysics,
-                           onBlockPlace, onBlockRightClick, onCommand, onDamage, onEat, onEndermanDrop,
-                           onEndermanPickUp, onEntityRightClick, onExplosion, onFlow, onIgnite, onItemDrop,
-                           onItemPickUp, onItemUse, onMobDestroy, onMobSpawn, onMobTarget, onPistonExtend, 
-                           onPistonRetract, onPortalUse, onPlayerExpode, onPlayerHeal, onPlayerRestict, debugother;
+                           command_check, animal_destory, block_break, block_destroy, block_physics,
+                           block_place, block_rightclicked, command, damage, eat, enderman_drop,
+                           enderman_pickup, entity_rightclick, explosion, flow, ignite, item_drop,
+                           item_pickup, item_use, mob_destroy, mob_spawn, mob_target, piston_extend, 
+                           piston_retract, portal_use, player_explode, player_heal, player_restricted,
+                           food_exhaustionchange, debugother;
     
     private static String sqlUser, sqlPassword, sqlDatabase, sqlDriver;
     
@@ -126,36 +127,39 @@ public class RealmsProps {
         grantbyDefault = parseBoolean(true, "GrantByDefault");
         grantOverrules = parseBoolean(true, "GrantOverrulesDeny");
         
+        autoupdate = parseBoolean(false, "Auto-Update");
+        
         //Start DEBUGGING Checks
-        debugother          = parseBoolean(false, "DebugOther");
-        CanPlayerUseCommand = parseBoolean(false, "CanPlayerUseCommand");
-        onAnimalDestroy     = parseBoolean(false, "onAnimalDestroy");
-        onBlockBreak        = parseBoolean(false, "onBlockBreak");
-        onBlockDestroy      = parseBoolean(false, "onBlockDestroy");
-        onBlockPhysics      = parseBoolean(false, "onBlockPhysics");
-        onBlockPlace        = parseBoolean(false, "onBlockPlace");
-        onBlockRightClick   = parseBoolean(false, "onBlockRightClick");
-        onCommand           = parseBoolean(false, "onCommand");
-        onDamage            = parseBoolean(false, "onDamage");
-        onEat               = parseBoolean(false, "onEat");
-        onEndermanDrop      = parseBoolean(false, "onEndermanDrop");
-        onEndermanPickUp    = parseBoolean(false, "onEndermanPickUp");
-        onEntityRightClick  = parseBoolean(false, "onEntityRightClick");
-        onExplosion         = parseBoolean(false, "onExplosion");
-        onFlow              = parseBoolean(false, "onFlow");
-        onIgnite            = parseBoolean(false, "onIgnite");
-        onItemDrop          = parseBoolean(false, "onItemDrop");
-        onItemPickUp        = parseBoolean(false, "onItemPickUp");
-        onItemUse           = parseBoolean(false, "onItemUse");
-        onMobDestroy        = parseBoolean(false, "onMobDestroy");
-        onMobSpawn          = parseBoolean(false, "onMobSpawn");
-        onMobTarget         = parseBoolean(false, "onMobTarget");
-        onPistonExtend      = parseBoolean(false, "onPistonExtend");
-        onPistonRetract     = parseBoolean(false, "onPistonRetract");
-        onPortalUse         = parseBoolean(false, "onPortalUse");
-        onPlayerExpode      = parseBoolean(false, "onPlayerExpode");
-        onPlayerHeal        = parseBoolean(false, "onPlayerHeal");
-        onPlayerRestict     = parseBoolean(false, "onPlayerRestict");
+        debugother              = parseBoolean(false, "Debug-Other-StackTrace");
+        command_check           = parseBoolean(false, "COMMAND_CHECK");
+        animal_destory          = parseBoolean(false, "ANIMAL_DESTROY");
+        block_break             = parseBoolean(false, "BLOCK_BREAK");
+        block_destroy           = parseBoolean(false, "BLOCK_DESTORY");
+        block_physics           = parseBoolean(false, "BLOCK_PHYSICS");
+        block_place             = parseBoolean(false, "BLOCK_PLACE");
+        block_rightclicked      = parseBoolean(false, "BLOCK_RIGHTCLICKED");
+        command                 = parseBoolean(false, "COMMAND");
+        damage                  = parseBoolean(false, "DAMAGE");
+        eat                     = parseBoolean(false, "EAT");
+        enderman_drop           = parseBoolean(false, "ENDERMAN_DROP");
+        enderman_pickup         = parseBoolean(false, "ENDERMAN_PICKUP");
+        entity_rightclick       = parseBoolean(false, "ENTITY_RIGHTCLICKED");
+        explosion               = parseBoolean(false, "EXPLOSION");
+        flow                    = parseBoolean(false, "FLOW");
+        ignite                  = parseBoolean(false, "IGNITE");
+        item_drop               = parseBoolean(false, "ITEM_DROP");
+        item_pickup             = parseBoolean(false, "ITEM_PICKUP");
+        item_use                = parseBoolean(false, "ITEM_USE");
+        mob_destroy             = parseBoolean(false, "MOB_DESTROY");
+        mob_spawn               = parseBoolean(false, "MOB_SPAWN");
+        mob_target              = parseBoolean(false, "MOB_TARGET");
+        piston_extend           = parseBoolean(false, "PISTON_EXTEND");
+        piston_retract          = parseBoolean(false, "PISTON_RETRACT");
+        portal_use              = parseBoolean(false, "PORTAL_USE");
+        player_explode          = parseBoolean(false, "PLAYER_EXPLODE");
+        player_heal             = parseBoolean(false, "PLAYER_HEAL");
+        player_restricted       = parseBoolean(false, "PLAYER_RESTRICTED");
+        food_exhaustionchange   = parseBoolean(false, "FOOD_EXHAUSTIONCHANGE");
         //End DEBUGGING Checks
         
         useMySQL = parseBoolean(false, "Use-MySQL");
@@ -432,21 +436,12 @@ public class RealmsProps {
     }
     
     /**
-     * Gets canPlayerUseCommand Debug setting
-     * 
-     * @return canPlayerUseCommand
-     */
-    public static boolean getDebugCanPlayerUseCommand(){
-        return CanPlayerUseCommand;
-    }
-    
-    /**
      * Gets onAnimalDestroy Debug setting
      * 
      * @return onAnimalDestroy
      */
-    public static boolean getDebugOnAnimalDestroy(){
-        return onAnimalDestroy;
+    public static boolean getDebugANIMAL_DESTROY(){
+        return animal_destory;
     }
     
     /**
@@ -454,8 +449,8 @@ public class RealmsProps {
      * 
      * @return onBlockBreak
      */
-    public static boolean getDebugOnBlockBreak(){
-        return onBlockBreak;
+    public static boolean getDebugBLOCK_BREAK(){
+        return block_break;
     }
     
     /**
@@ -463,8 +458,8 @@ public class RealmsProps {
      * 
      * @return onBlockDestroy
      */
-    public static boolean getDebugOnBlockDestroy(){
-        return onBlockDestroy;
+    public static boolean getDebugBLOCK_DESTROY(){
+        return block_destroy;
     }
     
     /**
@@ -472,8 +467,8 @@ public class RealmsProps {
      * 
      * @return onBlockPhysics
      */
-    public static boolean getDebugOnBlockPhysics(){
-        return onBlockPhysics;
+    public static boolean getDebugBLOCK_PHYSICS(){
+        return block_physics;
     }
     
     /**
@@ -481,8 +476,8 @@ public class RealmsProps {
      * 
      * @return onBlockPlace
      */
-    public static boolean getDebugOnBlockPlace(){
-        return onBlockPlace;
+    public static boolean getDebugBLOCK_PLACE(){
+        return block_place;
     }
     
     /**
@@ -490,8 +485,8 @@ public class RealmsProps {
      * 
      * @return onBlockRightClick
      */
-    public static boolean getDebugOnBlockRightClick(){
-        return onBlockRightClick;
+    public static boolean getDebugBLOCK_RIGHTCLICKED(){
+        return block_rightclicked;
     }
     
     /**
@@ -499,8 +494,17 @@ public class RealmsProps {
      * 
      * @return onCommand
      */
-    public static boolean getDebugOnCommand(){
-        return onCommand;
+    public static boolean getDebugCOMMAND(){
+        return command;
+    }
+    
+    /**
+     * Gets canPlayerUseCommand Debug setting
+     * 
+     * @return canPlayerUseCommand
+     */
+    public static boolean getDebugCOMMAND_CHECK(){
+        return command_check;
     }
     
     /**
@@ -508,8 +512,8 @@ public class RealmsProps {
      * 
      * @return onDamage
      */
-    public static boolean getDebugOnDamage(){
-        return onDamage;
+    public static boolean getDebugDAMAGE(){
+        return damage;
     }
     
     /**
@@ -517,8 +521,8 @@ public class RealmsProps {
      * 
      * @return onEat
      */
-    public static boolean getDebugOnEat(){
-         return onEat;
+    public static boolean getDebugEAT(){
+         return eat;
     }
     
     /**
@@ -526,8 +530,8 @@ public class RealmsProps {
      * 
      * @return onEndermanDrop
      */
-    public static boolean getDebugOnEndermanDrop(){
-        return onEndermanDrop;
+    public static boolean getDebugENDERMAN_DROP(){
+        return enderman_drop;
     }
     
     /**
@@ -535,8 +539,8 @@ public class RealmsProps {
      * 
      * @return onEndermanPickUp
      */
-    public static boolean getDebugOnEndermanPickUp(){
-        return onEndermanPickUp;
+    public static boolean getDebugENDERMAN_PICKUP(){
+        return enderman_pickup;
     }
     
     /**
@@ -544,8 +548,8 @@ public class RealmsProps {
      * 
      * @return onEntityRightClick
      */
-    public static boolean getDebugOnEntityRightClick(){
-        return onEntityRightClick;
+    public static boolean getDebugENTITY_RIGHTCLICKED(){
+        return entity_rightclick;
     }
     
     /**
@@ -553,8 +557,8 @@ public class RealmsProps {
      * 
      * @return onExplosion
      */
-    public static boolean getDebugOnExplosion(){
-        return onExplosion;
+    public static boolean getDebugEXPLOSION(){
+        return explosion;
     }
     
     /**
@@ -562,8 +566,8 @@ public class RealmsProps {
      * 
      * @return onFlow
      */
-    public static boolean getDebugOnFlow(){
-        return onFlow;
+    public static boolean getDebugFLOW(){
+        return flow;
     }
     
     /**
@@ -571,46 +575,49 @@ public class RealmsProps {
      * 
      * @return onIgnite
      */
-    public static boolean getDebugOnIgnite(){
-        return onIgnite;
+    public static boolean getDebugIGNITE(){
+        return ignite;
     }
     
     //TODO: Fix docs below
-    public static boolean getDebugOnItemDrop(){
-        return onItemDrop;
+    public static boolean getDebugITEM_DROP(){
+        return item_drop;
     }
-    public static boolean getDebugOnItemPickUp(){
-        return onItemPickUp;
+    public static boolean getDebugITEM_PICKUP(){
+        return item_pickup;
     }
-    public static boolean getDebugOnItemUse(){
-        return onItemUse;
+    public static boolean getDebugITEM_USE(){
+        return item_use;
     }
-    public static boolean getDebugOnMobDestroy(){
-        return onMobDestroy;
+    public static boolean getDebugMOB_DESTROY(){
+        return mob_destroy;
     }
-    public static boolean getDebugOnMobSpawn(){
-        return onMobSpawn;
+    public static boolean getDebugMOB_SPAWN(){
+        return mob_spawn;
     }
-    public static boolean getDebugOnMobTarget(){
-        return onMobTarget;
+    public static boolean getDebugMOB_TARGET(){
+        return mob_target;
     }
-    public static boolean getDebugOnPistonExtend(){
-        return onPistonExtend;
+    public static boolean getDebugPISTON_EXTEND(){
+        return piston_extend;
     }
-    public static boolean getDebugOnPistonRetract(){
-        return onPistonRetract;
+    public static boolean getDebugPISTON_RETRACT(){
+        return piston_retract;
     }
-    public static boolean getDebugOnPortalUse(){
-        return onPortalUse;
+    public static boolean getDebugPORTAL_USE(){
+        return portal_use;
     }
-    public static boolean getDebugOnPlayerExpode(){
-        return onPlayerExpode;
+    public static boolean getDebugPLAYER_EXPLODE(){
+        return player_explode;
     }
-    public static boolean getDebugOnPlayerHeal(){
-        return onPlayerHeal;
+    public static boolean getDebugPLAYER_HEAL(){
+        return player_heal;
     }
-    public static boolean getDebugOnPlayerRestict(){
-        return onPlayerRestict;
+    public static boolean getDebugPLAYER_RESTRICT(){
+        return player_restricted;
+    }
+    public static boolean getDebugFOOD_EXHAUSTIONCHANGE(){
+        return food_exhaustionchange;
     }
     
     
@@ -762,5 +769,9 @@ public class RealmsProps {
     
     public static Long getRestrictTimeOut(){
         return restricttimeout;
+    }
+    
+    public static boolean getAutoUpdate(){
+        return autoupdate;
     }
 }

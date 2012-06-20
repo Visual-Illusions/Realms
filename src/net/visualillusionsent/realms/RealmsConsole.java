@@ -1,8 +1,8 @@
 package net.visualillusionsent.realms;
 
-import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
-import net.visualillusionsent.realms.io.InvaildZoneFlagException;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.InvaildPermissionTypeException;
+import net.visualillusionsent.realms.io.exception.InvaildZoneFlagException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.realms.zones.Permission;
 import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.realms.zones.ZoneLists;

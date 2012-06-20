@@ -1,14 +1,14 @@
 import net.visualillusionsent.viutils.ICModMob;
 
 /**
- * CanaryMod Mob wrapper class
+ * CanaryMod-Mob wrapper class
  * <p>
- * This class is a bridge to send Mob data from the default <unnamed package> to
- * packaged classes.
+ * This class is a bridge to send Mob data from the 'default package' to
+ * 'packaged classes'.
  * <p>
- * This file is part of Visual Illusions Utilities (viutils)
+ * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
  * 
- * @author darkdiplomat
+ * @author Jason Jones
  * @see ICModMob
  */
 public class CModMob implements ICModMob{

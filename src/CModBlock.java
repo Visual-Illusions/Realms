@@ -1,16 +1,15 @@
 import net.visualillusionsent.viutils.ICModBlock;
 
 /**
- * CanaryMod Block wrapper class
+ * CanaryMod-Block wrapper class
  * <p>
- * This class is a bridge to send Block data from the default <unnamed package> to
- * packaged classes.
+ * This class is a bridge to send Block data from the 'default package' to
+ * 'packaged classes'.
  * <p>
  * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
  * 
- * @author darkdiplomat
+ * @author Jason Jones
  * @see ICModBlock
- *
  */
 public class CModBlock implements ICModBlock{
     
@@ -18,7 +17,6 @@ public class CModBlock implements ICModBlock{
     
     /**
      * class constructor
-     * 
      * @param block     The block being wrapped.
      */
     public CModBlock(Block block){

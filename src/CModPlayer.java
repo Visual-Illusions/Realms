@@ -2,14 +2,14 @@ import net.visualillusionsent.viutils.ICModItem;
 import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
- * CanaryMod Player wrapper class
+ * CanaryMod-Player wrapper class
  * <p>
- * This class is a bridge to send Player data from the default <unnamed package> to
- * packaged classes.
+ * This class is a bridge to send Player data from the 'default package' to
+ * 'packaged classes'.
  * <p>
  * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
  * 
- * @author darkdiplomat
+ * @author Jason Jones
  * @see ICModPlayer
  */
 public class CModPlayer implements ICModPlayer{
@@ -70,7 +70,7 @@ public class CModPlayer implements ICModPlayer{
         try{
             switch(type){
             case 1: player.getUser().a(ODamageSource.l, amount); break; //EXPLOSION
-            case 2: player.getUser().a(ODamageSource.h, amount); break; //RESTRICT(Cactus)
+            case 2: player.getUser().a(ODamageSource.k, amount); break; //RESTRICT(Generic)
             }
         }
         catch(Exception e){

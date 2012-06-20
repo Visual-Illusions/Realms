@@ -1,8 +1,11 @@
+import java.util.logging.Level;
+
 import net.visualillusionsent.realms.RHandle;
+import net.visualillusionsent.realms.io.RealmsProps;
 import net.visualillusionsent.viutils.ICModServer;
 
 /**
- * Realms v6.x  Polygonal Hierarchy Area Ownership
+ * Realms v5.x  Polygonal Hierarchy Area Ownership
  * <p>
  * Copyright (C) 2012 Visual Illusions Entertainment
  * <p>
@@ -19,25 +22,54 @@ import net.visualillusionsent.viutils.ICModServer;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/gpl.html
  * 
- * @author darkdiplomat - darkdiplomat@visualillusionsent.net
+ * @author Jason Jones - darkdiplomat@visualillusionsent.net
  * 
  */
 public class Realms extends Plugin{
     private final ICModServer serv = new CModServer(etc.getServer());
     private RHandle rhandle = new RHandle(serv);
     private RealmsListener rl;
+    private RealmsHooks rh;
     
     @Override
     public void disable() {
+        rhandle.terminate();
+        if(rh != null){
+            etc.getLoader().removeCustomListener(rh.PermissionChange.getName());
+            etc.getLoader().removeCustomListener(rh.PermissionCheck.getName());
+            etc.getLoader().removeCustomListener(rh.ZoneChange.getName());
+            etc.getLoader().removeCustomListener(rh.ZoneCheck.getName());
+            etc.getLoader().removeCustomListener(rh.ZoneFlagCheck.getName());
+        }
+        rhandle.log(Level.INFO, "Realms v"+rhandle.getVersion()+" disabled.");
     }
 
     @Override
     public void enable() {
+        rhandle.log(Level.INFO, "Realms v"+rhandle.getVersion()+" by DarkDiplomat enabling...");
     }
     
     @Override
     public void initialize(){
         if(rhandle.initialize()){
+            if(!rhandle.isLatest()){
+                if(!RealmsProps.getAutoUpdate()){
+                    rhandle.log(Level.INFO, "An update is availible! Current Version: "+rhandle.getCurrent());
+                }
+                else{
+                    String result = rhandle.update();
+                    if(result.equals("Update Successful")){
+                        rhandle.log(Level.INFO, result);
+                        rhandle.log(Level.INFO, "Reloading Realms...");
+                        etc.getLoader().reloadPlugin("Realms");
+                        return;
+                    }
+                    else{
+                        rhandle.log(Level.WARNING, result);
+                    }
+                }
+            }
+            //Regular Hooks
             rl = new RealmsListener(rhandle);
             etc.getLoader().addListener(PluginLoader.Hook.BLOCK_BROKEN,             rl, this, PluginListener.Priority.HIGH);
             etc.getLoader().addListener(PluginLoader.Hook.BLOCK_DESTROYED,          rl, this, PluginListener.Priority.HIGH);
@@ -68,7 +100,14 @@ public class Realms extends Plugin{
             etc.getLoader().addListener(PluginLoader.Hook.POTION_EFFECT,            rl, this, PluginListener.Priority.HIGH);
             etc.getLoader().addListener(PluginLoader.Hook.SERVERCOMMAND,            rl, this, PluginListener.Priority.MEDIUM);
             
-            //CustomHooks
+            //Custom Hooks
+            rh = new RealmsHooks(this, rhandle);
+            etc.getLoader().addCustomListener(rh.PermissionChange);
+            etc.getLoader().addCustomListener(rh.PermissionCheck);
+            etc.getLoader().addCustomListener(rh.ZoneChange);
+            etc.getLoader().addCustomListener(rh.ZoneCheck);
+            etc.getLoader().addCustomListener(rh.ZoneFlagCheck);
+            
         }
         else{
             etc.getLoader().disablePlugin("Realms");

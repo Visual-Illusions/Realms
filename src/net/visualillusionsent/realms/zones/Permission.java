@@ -1,8 +1,8 @@
 package net.visualillusionsent.realms.zones;
 
-import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
 import net.visualillusionsent.realms.io.RealmsProps;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.InvaildPermissionTypeException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
@@ -15,6 +15,7 @@ import net.visualillusionsent.viutils.ICModPlayer;
 public class Permission {
     private String owner;
     private PermType type;
+    private String zonename;
     
     /**
      * Permission Types
@@ -84,9 +85,10 @@ public class Permission {
      * @param allowed
      * @param override
      */
-    public Permission(String owner, PermType type, boolean allowed, boolean override) {
+    public Permission(String owner, PermType type, String zonename, boolean allowed, boolean override) {
         this.owner = owner;
         this.type = type;
+        this.zonename = zonename;
         this.allowed = allowed;
         this.override = override;
     }
@@ -101,8 +103,8 @@ public class Permission {
      * @param allowed
      * @param override
      */
-    public Permission(String owner, String type, boolean allowed, boolean override){
-        this(owner, PermType.valueOf(type.toUpperCase()), allowed, override);
+    public Permission(String owner, String type, String zonename, boolean allowed, boolean override){
+        this(owner, PermType.valueOf(type.toUpperCase()), zonename, allowed, override);
     }
 
     /**
@@ -112,11 +114,12 @@ public class Permission {
      * @param split
      * @throws ZoneNotFoundException
      */
-    public Permission(String[] split){
-        this.owner = split[0];
-        this.type = PermType.valueOf(split[1].toUpperCase());
-        this.allowed = Integer.parseInt(split[3]) == 1;
-        this.override = Integer.parseInt(split[4]) == 1;
+    public Permission(String[] args){
+        this.owner = args[0];
+        this.type = PermType.valueOf(args[1].toUpperCase());
+        this.zonename = args[2];
+        this.allowed = Integer.parseInt(args[3]) == 1;
+        this.override = Integer.parseInt(args[4]) == 1;
     }
 
     /*
@@ -218,9 +221,11 @@ public class Permission {
         builder.append(',');
         builder.append(type.toString());
         builder.append(',');
-        builder.append(allowed ? "YES" : "NO"); 
+        builder.append(zonename);
         builder.append(',');
-        builder.append(override ? "YES" : "NO");
+        builder.append(allowed ? "1" : "0"); 
+        builder.append(',');
+        builder.append(override ? "1" : "0");
         return builder.toString();
     }
 }

@@ -1,8 +1,8 @@
 package net.visualillusionsent.realms;
 
-import net.visualillusionsent.realms.io.InvaildZoneFlagException;
-import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.InvaildPermissionTypeException;
+import net.visualillusionsent.realms.io.exception.InvaildZoneFlagException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.realms.zones.Permission;
 import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.realms.zones.ZoneLists;
@@ -92,12 +92,13 @@ public enum RealmsCommands {
                     return true;
                 }
                 StringBuilder greeting = new StringBuilder();
-                for(int i = 3; i < command.length; i++) {
+                for(int i = 1; i < command.length; i++) {
                     if(command[i].contains(",")){
                         player.sendMessage(ChatColor.ORANGE+"GREETINGS"+ChatColor.LIGHT_RED+" cannot contain "+ChatColor.YELLOW+"COMMAS"+ChatColor.LIGHT_RED+"!");
                         return true;
                     }
                     greeting.append(command[i]);
+                    greeting.append(" ");
                 }
                 zone.setGreeting(greeting.length() == 0 ? null : greeting.toString().trim());
                 player.sendMessage(ChatColor.ORANGE+"GREETING "+ChatColor.CYAN+" set to "+ChatColor.WHITE+(greeting.length() == 0 ? "null" : greeting.toString().trim().replace("@", "\u00A7")));
@@ -132,12 +133,13 @@ public enum RealmsCommands {
                     return true;
                 }
                 StringBuilder farewell = new StringBuilder();
-                for(int i = 3; i < command.length; i++) {
+                for(int i = 1; i < command.length; i++) {
                     if(command[i].contains(",")){
                         player.sendMessage(ChatColor.ORANGE+"GREETINGS"+ChatColor.LIGHT_RED+" cannot contain "+ChatColor.YELLOW+"COMMAS"+ChatColor.LIGHT_RED+"!");
                         return true;
                     }
                     farewell.append(command[i]);
+                    farewell.append(" ");
                 }
                 zone.setFarewell(farewell.length() == 0 ? null : farewell.toString().trim());
                 player.sendMessage(ChatColor.ORANGE+"GREETING "+ChatColor.CYAN+" set to "+ChatColor.WHITE+(farewell.length() == 0 ? "null" : farewell.toString().trim().replace("@", "\u00A7")));
@@ -1274,87 +1276,55 @@ public enum RealmsCommands {
         }
     },
     
-    /**
-     * ReloadZone command
-     */
-    RELOADZONE ("reloadzone", "<zone>"){
-        @Override
-        public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(player.isAdmin()){
-                if(!commandargsCheck(1, command)){
-                    player.notify(getUsage());
-                    return true;
-                }
-                String zoneName = command[0];
-                try{
-                    Zone zone = ZoneLists.getZoneByName(zoneName);
-                    if(rhandle.getDataSource().reloadZone(zone)){
-                        player.sendMessage(ChatColor.CYAN+"Zone reloaded successfully");
-                    }
-                    else{
-                        player.notify("An error occurred durring reload...");
-                    }
-                }
-                catch (ZoneNotFoundException ZNFE) {
-                    player.notify(String.format(NFE, zoneName));
-                }
-                return true;
-            }
-            return false;
-        }
-    },
-    
-    /**
-     * ReloadAll command
-     */
     RELOADALL ("reloadall", ""){
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(player.isAdmin()){
-                rhandle.getDataSource().reloadAll();
-                player.sendMessage(ChatColor.CYAN+"Zones reloaded!");
-                return true;
+            if(rhandle.getDataSource().reloadAll()){
+                player.sendMessage("\u00A7Zones reloaded!");
             }
-            return false;
+            else{
+                player.notify("Failed to reload all...");
+            }
+            return true;
         }
     },
     
-    SAVEZONE ("savezone", "<zone>"){
+    RELOADZONES ("reloadzones", ""){
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(player.isAdmin()){
-                if(!commandargsCheck(1, command)){
-                    player.notify(getUsage());
-                    return true;
-                }
-                String zoneName = command[0];
-                try{
-                    Zone zone = ZoneLists.getZoneByName(zoneName);
-                    zone.save();
-                    player.sendMessage("Zone: "+zoneName+" has been saved!");
-                }
-                catch (ZoneNotFoundException ZNFE) {
-                    player.notify(String.format(NFE, zoneName));
-                }
-                return true;
+            if(rhandle.getDataSource().reloadZones()){
+                player.sendMessage("\u00A7Zones reloaded!");
             }
-            return false;
+            else{
+                player.notify("Failed to reload zones...");
+            }
+            return true;
         }
     },
     
-    SAVEALL ("saveall", ""){
+    RELOADPOLYS ("reloadpolys", ""){
         @Override
         public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
-            if(player.isAdmin()){
-                synchronized(ZoneLists.getZones()){
-                    for(Zone zone : ZoneLists.getZones()){
-                        zone.save();
-                    }
-                }
-                player.sendMessage("All Zones have been saved!");
-                return true;
+            if(rhandle.getDataSource().reloadPolys()){
+                player.sendMessage("\u00A7Polygons reloaded!");
             }
-            return false;
+            else{
+                player.notify("Failed to reload polygons...");
+            }
+            return true;
+        }
+    },
+    
+    RELOADPERMS ("reloadperms", ""){
+        @Override
+        public boolean execute(ICModPlayer player, String[] command, RHandle rhandle) {
+            if(rhandle.getDataSource().reloadZones()){
+                player.sendMessage("\u00A7Permissions reloaded!");
+            }
+            else{
+                player.notify("Failed to reload permissions...");
+            }
+            return true;
         }
     },
     

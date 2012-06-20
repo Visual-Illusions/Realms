@@ -1,4 +1,4 @@
-package net.visualillusionsent.realms.runnables;
+package net.visualillusionsent.realms.io.threads;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -20,9 +20,9 @@ import net.visualillusionsent.viutils.ICModPlayer;
  * 
  * @author darkdiplomat
  */
-public class RestrictionDamager implements Runnable{
+public class RestrictionDamager extends Thread{
     private RHandle rhandle;
-    private String debug = "Player - Name: '%s' @ Location: X: '%d' Y: '%d' Z: '%d' World: '%s' Dimension: '%d'";
+    private String debug = "Player - Name: '%s' @ Location: X: '%s' Y: '%s' Z: '%s' World: '%s' Dimension: '%s'";
         
     /**
      * Class Constructor
@@ -31,6 +31,8 @@ public class RestrictionDamager implements Runnable{
      */
     public RestrictionDamager (RHandle rhandle) {
         this.rhandle = rhandle;
+        this.setName("RestictionDamager-Thread");
+        this.setDaemon(true);
     }
     
     /**

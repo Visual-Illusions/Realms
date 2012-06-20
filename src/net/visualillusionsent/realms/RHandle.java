@@ -15,18 +15,18 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.visualillusionsent.realms.io.InvaildPermissionTypeException;
 import net.visualillusionsent.realms.io.LogFormat;
 import net.visualillusionsent.realms.io.RLevel;
 import net.visualillusionsent.realms.io.RealmsData;
 import net.visualillusionsent.realms.io.RealmsFlatFile;
 import net.visualillusionsent.realms.io.RealmsMySQL;
 import net.visualillusionsent.realms.io.RealmsProps;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
-import net.visualillusionsent.realms.runnables.AnimalDestructor;
-import net.visualillusionsent.realms.runnables.Healer;
-import net.visualillusionsent.realms.runnables.MobDestructor;
-import net.visualillusionsent.realms.runnables.RestrictionDamager;
+import net.visualillusionsent.realms.io.exception.InvaildPermissionTypeException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.threads.AnimalDestructor;
+import net.visualillusionsent.realms.io.threads.Healer;
+import net.visualillusionsent.realms.io.threads.MobDestructor;
+import net.visualillusionsent.realms.io.threads.RestrictionDamager;
 import net.visualillusionsent.realms.zones.Permission;
 import net.visualillusionsent.realms.zones.Wand;
 import net.visualillusionsent.realms.zones.Zone;
@@ -37,6 +37,7 @@ import net.visualillusionsent.viutils.ICModMob;
 import net.visualillusionsent.viutils.ICModPlayer;
 import net.visualillusionsent.viutils.ICModServer;
 import net.visualillusionsent.viutils.ChatColor;
+import net.visualillusionsent.viutils.UpdateException;
 import net.visualillusionsent.viutils.Updater;
 import net.visualillusionsent.viutils.VersionCheck;
 
@@ -45,15 +46,15 @@ import net.visualillusionsent.viutils.VersionCheck;
  * <p>
  * This file is part of Realms
  * 
- * @author darkdiplomat
+ * @author Jason Jones
  */
 public class RHandle {
     private Logger mclog = Logger.getLogger("Minecraft");
     private Logger rlog = Logger.getLogger("Realms");
     
-    private final String version = "6.0",
+    private final String version = "5.5_1",
                             name = "Realms",
-                        checkurl = "http://visualillusionsent.net/cmod_plugins/versions.php?plugin="+name,
+                        checkurl = "http://visualillusionsent.net/cmod_plugins/versions.php?plugin=Realms",
                          downurl = "http://dl.dropbox.com/u/25586491/CanaryPlugins/Realms.jar",
                           jarloc = "plugins/Realms.jar";
     private final VersionCheck vc = new VersionCheck(version, checkurl);
@@ -67,6 +68,9 @@ public class RHandle {
     protected RealmsProps rprop;
     private RealmsData datasource;
     private ScheduledThreadPoolExecutor threadhandle;
+    private FileHandler fhandle;
+    
+    private Connection conn;
     
     /**
      * class constructor
@@ -93,24 +97,25 @@ public class RHandle {
         else{
             this.datasource = new RealmsFlatFile(this);
         }
-        if(!this.datasource.loadZones()){
-            return false;
-        }
         threadhandle = new ScheduledThreadPoolExecutor(3);
         threadhandle.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-        threadhandle.setKeepAliveTime(1, TimeUnit.MINUTES);
         if(!RealmsProps.getAC() && !RealmsProps.getAG() && !RealmsProps.getSM() && (RealmsProps.getSanctuaryTimeOut() > 0)){ //If allowing all mobs into Sanctuary area don't bother scheduling
             threadhandle.scheduleAtFixedRate(new MobDestructor(this), RealmsProps.getSanctuaryTimeOut(), RealmsProps.getSanctuaryTimeOut(), TimeUnit.MILLISECONDS); //Sanctuary Runnable
         }
-        if(RealmsProps.getAnimalsTimeOut() > 0){
+        if(RealmsProps.getAnimalsTimeOut() > 200){
             threadhandle.scheduleAtFixedRate(new AnimalDestructor(this), RealmsProps.getAnimalsTimeOut(), RealmsProps.getAnimalsTimeOut(), TimeUnit.MILLISECONDS); //Animals Runnable
         }
-        if(RealmsProps.getHealingTimeOut() > 0){
+        if(RealmsProps.getHealingTimeOut() > 200){
             threadhandle.scheduleAtFixedRate(new Healer(this), RealmsProps.getHealingTimeOut(), RealmsProps.getHealingTimeOut(), TimeUnit.MILLISECONDS); //Healing Runnable
         }
-        if(RealmsProps.getRestrictTimeOut() > 0){
+        if(RealmsProps.getRestrictTimeOut() > 200){
             threadhandle.scheduleAtFixedRate(new RestrictionDamager(this), RealmsProps.getRestrictTimeOut(), RealmsProps.getRestrictTimeOut(), TimeUnit.MILLISECONDS);
         }
+        long save = 30;
+        if(RealmsProps.getSaveTimeOut() > 5){
+            save = RealmsProps.getSaveTimeOut();
+        }
+        threadhandle.scheduleAtFixedRate(new RSave(this), save, save, TimeUnit.MINUTES);
         return true;
     }
     
@@ -124,43 +129,47 @@ public class RHandle {
         if(lvl instanceof RLevel){
             boolean log = false;
             switch(lvl.intValue()){
-            case 6001: if(RealmsProps.getDebugCanPlayerUseCommand()) log = true; break;
-            case 6002: if(RealmsProps.getDebugOnBlockBreak())        log = true; break;
-            case 6003: if(RealmsProps.getDebugOnBlockDestroy())      log = true; break;
-            case 6004: if(RealmsProps.getDebugOnBlockPhysics())      log = true; break;
-            case 6005: if(RealmsProps.getDebugOnBlockPlace())        log = true; break;
-            case 6006: if(RealmsProps.getDebugOnBlockRightClick())   log = true; break;
-            case 6007: if(RealmsProps.getDebugOnCommand())           log = true; break;
-            case 6008: if(RealmsProps.getDebugOnDamage())            log = true; break;
-            case 6009: if(RealmsProps.getDebugOnEat())               log = true; break;
-            case 6010: if(RealmsProps.getDebugOnEndermanDrop())      log = true; break;
-            case 6011: if(RealmsProps.getDebugOnEndermanPickUp())    log = true; break;
-            case 6012: if(RealmsProps.getDebugOnEntityRightClick())  log = true; break;
-            case 6013: if(RealmsProps.getDebugOnExplosion())         log = true; break;
-            case 6014: if(RealmsProps.getDebugOnFlow())              log = true; break;
-            case 6015: if(RealmsProps.getDebugOnIgnite())            log = true; break;
-            case 6016: if(RealmsProps.getDebugOnItemDrop())          log = true; break;
-            case 6017: if(RealmsProps.getDebugOnItemPickUp())        log = true; break;
-            case 6018: if(RealmsProps.getDebugOnItemUse())           log = true; break;
-            case 6019: if(RealmsProps.getDebugOnMobDestroy())        log = true; break;
-            case 6020: if(RealmsProps.getDebugOnMobSpawn())          log = true; break;
-            case 6021: if(RealmsProps.getDebugOnMobTarget())         log = true; break;
-            case 6022: if(RealmsProps.getDebugOnPistonExtend())      log = true; break;
-            case 6023: if(RealmsProps.getDebugOnPistonRetract())     log = true; break;
-            case 6024: if(RealmsProps.getDebugOnPortalUse())         log = true; break;
-            case 6025: if(RealmsProps.getDebugOnPlayerExpode())      log = true; break;
-            case 6026: if(RealmsProps.getDebugOnPlayerHeal())        log = true; break;
-            case 6027: if(RealmsProps.getDebugOnPlayerRestict())     log = true; break;
-            case 6028: if(RealmsProps.getDebugOnAnimalDestroy())     log = true; break;
-            case 6030:
-            case 6040:
-            case 6041:
-                if(RealmsProps.getDebugOther()) log = true; break;
+                case 6001: if(RealmsProps.getDebugANIMAL_DESTROY()){        log = true; } break;
+                case 6002: if(RealmsProps.getDebugBLOCK_BREAK()){           log = true; } break;
+                case 6003: if(RealmsProps.getDebugBLOCK_DESTROY()){         log = true; } break;
+                case 6004: if(RealmsProps.getDebugBLOCK_PHYSICS()){         log = true; } break;
+                case 6005: if(RealmsProps.getDebugBLOCK_PLACE()){           log = true; } break;
+                case 6006: if(RealmsProps.getDebugBLOCK_RIGHTCLICKED()){    log = true; } break; 
+                case 6007: if(RealmsProps.getDebugCOMMAND()){               log = true; } break; 
+                case 6008: if(RealmsProps.getDebugCOMMAND_CHECK()){         log = true; } break;
+                case 6009: if(RealmsProps.getDebugDAMAGE()){                log = true; } break; 
+                case 6010: if(RealmsProps.getDebugEAT()){                   log = true; } break; 
+                case 6011: if(RealmsProps.getDebugENDERMAN_DROP()){         log = true; } break; 
+                case 6012: if(RealmsProps.getDebugENDERMAN_PICKUP()){       log = true; } break; 
+                case 6013: if(RealmsProps.getDebugENTITY_RIGHTCLICKED()){   log = true; } break; 
+                case 6014: if(RealmsProps.getDebugEXPLOSION()){             log = true; } break; 
+                case 6015: if(RealmsProps.getDebugFLOW()){                  log = true; } break;
+                case 6016: if(RealmsProps.getDebugIGNITE()){                log = true; } break;
+                case 6017: if(RealmsProps.getDebugITEM_DROP()){             log = true; } break;
+                case 6018: if(RealmsProps.getDebugITEM_PICKUP()){           log = true; } break;
+                case 6019: if(RealmsProps.getDebugITEM_USE()){              log = true; } break;
+                case 6020: if(RealmsProps.getDebugMOB_DESTROY()){           log = true; } break;
+                case 6021: if(RealmsProps.getDebugMOB_SPAWN()){             log = true; } break;
+                case 6022: if(RealmsProps.getDebugMOB_TARGET()){            log = true; } break;
+                case 6023: if(RealmsProps.getDebugPISTON_EXTEND()){         log = true; } break;
+                case 6024: if(RealmsProps.getDebugPISTON_RETRACT()){        log = true; } break;
+                case 6025: if(RealmsProps.getDebugPORTAL_USE()){            log = true; } break;
+                case 6026: if(RealmsProps.getDebugPLAYER_EXPLODE()){        log = true; } break;
+                case 6027: if(RealmsProps.getDebugPLAYER_HEAL()){           log = true; } break;
+                case 6028: if(RealmsProps.getDebugPLAYER_RESTRICT()){       log = true; } break;
+                case 6029: if(RealmsProps.getDebugFOOD_EXHAUSTIONCHANGE()){ log = true; } break;
+                case 6100:
+                case 6200:
+                case 6300:
+                    if(RealmsProps.getDebugOther()){ log = true; } break;
+                default: break;
             }
-            if(log) rlog.log(lvl, toLog);
+            if(log){
+                rlog.log(lvl, toLog);
+            }
         }
         else{
-            mclog.log(lvl, toLog);
+            mclog.log(lvl, "[Realms] "+toLog);
         }
     }
     
@@ -552,7 +561,13 @@ public class RHandle {
      * @return return message
      */
     public String update(){
-        return update.performUpdate();
+        try{
+            update.performUpdate();
+        }
+        catch(UpdateException ue){
+            return ue.getMessage();
+        }
+        return "Update Successful!";
     }
     
     /**
@@ -569,13 +584,13 @@ public class RHandle {
             ConsoleHandler chand = new ConsoleHandler();
             chand.setFormatter(lf);
             // Create an appending file handler
-            FileHandler fhand = new FileHandler("plugins/config/Realms/Log/RealmsDebug%g.log", 52428800, 50, true); //52428800 == 50 MegaBytes - Max File Size
-            fhand.setFormatter(lf);
-            fhand.setEncoding("UTF-8");
+            fhandle = new FileHandler("plugins/config/Realms/Log/RealmsDebug%g.log", 2621440, 21, true); //2621440 == 20 MegaBytes - Max File Size & max 21 files (0 - 20)
+            fhandle.setFormatter(lf);
+            fhandle.setEncoding("UTF-8");
             // Add to the desired logger if not there already
             if(rlog.getHandlers().length < 1){
                 rlog.addHandler(chand);
-                rlog.addHandler(fhand);
+                rlog.addHandler(fhandle);
             }
         } catch (IOException e) {
             log(Level.WARNING, "Fail to create Realms DebugLogging File");
@@ -603,15 +618,14 @@ public class RHandle {
      * @param player
      */
     public void playerMessage(ICModPlayer player) {
-        if(ZoneLists.getplayerZones(player) == null){
-            List<Zone> zones = new ArrayList<Zone>();
-            zones.add(getEverywhere(player));
-            ZoneLists.addplayerzones(player, zones);
+        List<Zone> oldZoneList = ZoneLists.getplayerZones(player);
+        Zone everywhere = getEverywhere(player);
+        List<Zone> newZoneList = ZoneLists.getZonesPlayerIsIn(everywhere, player);
+        if(oldZoneList.isEmpty()){
+            ZoneLists.addplayerzones(player, newZoneList);
             return;
         }
-        List<Zone> oldZoneList = ZoneLists.getplayerZones(player);
-        List<Zone> newZoneList = ZoneLists.getZonesPlayerIsIn(getEverywhere(player), player);
-        if (oldZoneList.hashCode() != newZoneList.hashCode()) {
+        else if (oldZoneList.hashCode() != newZoneList.hashCode()) {
             for(Zone zone : oldZoneList){
                 if(!newZoneList.contains(zone)){
                     zone.farewell(player);
@@ -627,11 +641,69 @@ public class RHandle {
     }
     
     public Connection getSQLConnection() throws SQLException{
-        if(RealmsProps.getCMySQL()){
-            return serv.getCanarySQLConnection();
+        if(conn != null){
+            return conn;
+        }
+        else if(RealmsProps.getCMySQL()){
+            conn = serv.getCanarySQLConnection();
+            return conn;
         }
         else{
-            return DriverManager.getConnection(RealmsProps.getDataBase(), RealmsProps.getUsername(), RealmsProps.getPassword(this));
+            conn = DriverManager.getConnection(RealmsProps.getDataBase(), RealmsProps.getUsername(), RealmsProps.getPassword(this));
+            return conn;
         }
+    }
+    
+    public void releaseConn() throws SQLException{
+        if(RealmsProps.getCMySQL()){
+            serv.releaseConn();
+        }
+        else{
+            if(conn != null && !conn.isClosed()){
+                conn.close();
+            }
+        }
+        conn = null;
+    }
+
+    public void storeInventory(ICModPlayer player, ICModItem[] items) {
+        if(!inventories.containsKey(player)){
+            inventories.put(player, items);
+         }
+    }
+
+    public HashMap<ICModPlayer, ICModItem[]> getInvMap() {
+        HashMap<ICModPlayer, ICModItem[]> invmap = new HashMap<ICModPlayer, ICModItem[]>(inventories);
+        inventories.putAll(inventories);
+        return invmap;
+    }
+    
+    public void forceSave(){
+        threadhandle.execute(new RSave(this));
+    }
+    
+    //TempFix for saving :/
+    public class RSave implements Runnable{
+        
+        public RSave(RHandle rhandle){
+        }
+        
+        /**
+         * Runs the saving of the data
+         */
+        public void run(){
+            /*Saving Data*/
+            log(Level.INFO, "Saving...");
+            while(datasource.dumpzone()){/*waiting*/if(!datasource.dumpzone()){ break;}else{ continue; }}
+            while(datasource.dumppoly()){/*waiting*/if(!datasource.dumppoly()){ break;}else{ continue; }}
+            while(datasource.dumpperm()){/*waiting*/if(!datasource.dumpperm()){ break;}else{ continue; }}
+            while(datasource.dumpinv()){/*waiting*/if(!datasource.dumpinv()){ break;}else{ continue;}}
+            log(Level.INFO, "Save complete!");
+        }
+    }
+    
+    public void terminate(){
+        threadhandle.shutdown(); //Terminate Threads
+        fhandle.close(); //Close out logger
     }
 }

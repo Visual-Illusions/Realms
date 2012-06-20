@@ -98,4 +98,13 @@ public interface ICModServer {
      * @return connection
      */
     public Connection getCanarySQLConnection() throws SQLException;
+    
+    /**
+     * releases the Canary MySQL Connection
+     */
+    public void releaseConn();
+    
+    public ICModItem makeItem(int id, int amount, int slot, int damage);
+
+    public ICModPlayer getPlayer(String name);
 }

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.lang.Math;
 
 import net.visualillusionsent.realms.RHandle;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.viutils.ICModBlock;
 import net.visualillusionsent.viutils.ICModMob;
@@ -29,6 +29,8 @@ public class PolygonArea {
 
     private Point centroid = null;
     private double radius = 0;
+    
+    private RHandle rhandle;
 
    /**
     * PolygonArea Constructor
@@ -40,6 +42,7 @@ public class PolygonArea {
         this.zone = zone;
         this.ceiling = 1000;
         this.floor = 0;
+        this.rhandle = rhandle;
     }
 
    /**
@@ -51,14 +54,15 @@ public class PolygonArea {
     */
     public PolygonArea(RHandle rhandle, Zone zone, String[] args){
         this.zone = zone;
-        this.ceiling = Integer.parseInt(args[0]);
-        this.floor = Integer.parseInt(args[1]);
-        for(int i = 2; i < args.length; i += 3){
+        this.ceiling = Integer.parseInt(args[1]);
+        this.floor = Integer.parseInt(args[2]);
+        for(int i = 3; i < args.length; i += 3){
             vertices.add(new Point(Integer.parseInt(args[i]), Integer.parseInt(args[i+1]), Integer.parseInt(args[i+2])));
         }
         zone.setPolygon(this);
         centroid = calculateCentroid(vertices);
         radius = calculateRadius(vertices, centroid);
+        this.rhandle = rhandle;
     }
 
     /**
@@ -68,6 +72,8 @@ public class PolygonArea {
      */
     public String toString() {
         StringBuffer builder = new StringBuffer();
+        builder.append(zone.getName());
+        builder.append(",");
         builder.append(ceiling);
         builder.append(",");
         builder.append(floor);
@@ -135,7 +141,7 @@ public class PolygonArea {
             centroid = calculateCentroid(vertices);
             radius = calculateRadius(vertices, centroid);
         }
-        zone.save();
+        rhandle.getDataSource().dumppoly();
     }
 
     /**
@@ -316,6 +322,7 @@ public class PolygonArea {
     }
 
     public boolean workingVerticesContain(PolygonArea polygonArea) {
+        
         for(Point p : polygonArea.getVertices()){
             if(!contains(workingVertices, p, this.workingFloor, this.workingCeiling)){
                 return false;
@@ -414,7 +421,7 @@ public class PolygonArea {
         // The vertex must not already be in the vertex list
         if(containsWorkingVertex(block)){
             player.notify("Warning: This column of blocks is already in the vertex list.");
-            //return false;
+            return false;
         }
         // All checks passed: test vertex is valid
         return true;
@@ -434,16 +441,13 @@ public class PolygonArea {
         }
         // The polygon must not intersect any other sibling zones unless completely containing them
         for(Zone sibling : zone.getParent().getChildren()) {
-            if(sibling != zone && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
+            if(sibling != zone && !sibling.isEmpty() && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
                 if (sibling.getPolygon().getFloor() < workingCeiling && sibling.getPolygon().getCeiling() > workingFloor) {
-                    //rhandle.log(Level.INFO, "Floor/Ceiling Overlap. Sibling (" + sibling.getName() + ") C/F:" +
-                    //       sibling.getPolygon().getCeiling() + "," + sibling.getPolygon().getFloor() +
-                    //        " NewZone (" + zone.getName() + ") C/F: " + workingCeiling + "," + workingFloor);
                     player.notify("A block enclosed by this polygon is already claimed by " + sibling.getName() + ".");
                     return false;
                 }    
             }
-            else if(workingVerticesContain(sibling.getPolygon()) && sibling.getName() != zone.getName()) {
+            else if(!sibling.isEmpty() && workingVerticesContain(sibling.getPolygon()) && sibling.getName() != zone.getName()) {
                 player.notify("Moving " + sibling.getName() + " into child list of current working zone.");
                 zone.getParent().removeChild(sibling);
                 sibling.setParent(zone);
@@ -460,7 +464,7 @@ public class PolygonArea {
         // The polygon must not contain intersecting lines
         if (intersects(workingVertices, workingVertices)){
             player.notify("Warning: Polygon line intersection!");
-            //TODO reorder points
+            //TODO reorder points?
             
             //return false; NOTE: Testing by-pass
         }

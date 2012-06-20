@@ -13,7 +13,7 @@ Realms originally by Impact and durron597
 
 License
 ---------
-Realms v6.x
+Realms v5.x
 Copyright (C) 2012 Visual Illusions Entertainment
 
 Author: Jason Jones (darkdiplomat) <darkdiplomat@visualillusionsent.net>

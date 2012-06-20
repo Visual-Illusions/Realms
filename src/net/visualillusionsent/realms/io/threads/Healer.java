@@ -1,4 +1,4 @@
-package net.visualillusionsent.realms.runnables;
+package net.visualillusionsent.realms.io.threads;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -9,24 +9,23 @@ import net.visualillusionsent.realms.zones.ZoneLists;
 import net.visualillusionsent.viutils.ICModPlayer;
 
 /**
- * Realms Healing
- * <p>
- * Heals players in Healing enabled zones
- * <p>
+ * Realms Healing<br>
+ * Heals players in Healing enabled zones<br>
  * This file is part of Realms
- * 
  * @author darkdiplomat
  */
-public class Healer implements Runnable{
+public class Healer extends Thread{
     private RHandle rhandle;
+    private String debug = "Healing Player - Name: '%s' in World: '%s' Dimension: '%s' @ Location: X: '%s' Y: '%s' Z: '%s'";
     
     /**
      * class constructor
-     * 
      * @param RHandle
      */
     public Healer(RHandle rhandle) {
         this.rhandle = rhandle;
+        this.setName("Healer-Thread");
+        this.setDaemon(true);
     }
     
     /**
@@ -44,7 +43,8 @@ public class Healer implements Runnable{
                         int health = thePlayer.getHealth();
                         if(health < 20){ //Need Healing
                             thePlayer.heal(1); //Heal
-                            rhandle.log(RLevel.PLAYER_HEAL, "Trying to heal Player: " + thePlayer.getName() + " at location " + Math.floor(thePlayer.getX()) + "," + Math.floor(thePlayer.getY()) + "," + Math.floor(thePlayer.getZ())); //Debugging
+                            rhandle.log(RLevel.PLAYER_HEAL, String.format(debug, thePlayer.getName(), thePlayer.getWorldName(), thePlayer.getDimension(), 
+                                                                                 Math.floor(thePlayer.getX()), Math.floor(thePlayer.getY()), Math.floor(thePlayer.getZ()))); //Debugging
                         }
                     }
                 }

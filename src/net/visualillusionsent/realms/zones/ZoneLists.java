@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import net.visualillusionsent.realms.RHandle;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.viutils.ICModBlock;
 import net.visualillusionsent.viutils.ICModMob;
 import net.visualillusionsent.viutils.ICModPlayer;
@@ -131,15 +131,19 @@ public class ZoneLists {
      * @return List<Zone> Zones Player is In
      */
     public static List<Zone> getZonesPlayerIsIn(Zone zone, ICModPlayer player) {
-        List<Zone> newZoneList = new ArrayList<Zone>();
-        newZoneList.add(zone);
-        for(Zone child : zone.getChildren()) {
-            if(child.contains(player)) {
-                newZoneList.addAll(getZonesPlayerIsIn(child, player));
-                return newZoneList;
+        ArrayList<Zone> nzl = new ArrayList<Zone>();
+        nzl.add(zone);
+        for(Zone child : zone.getChildren()){
+            if(child.contains(player)){
+                nzl.add(child);
+            }
+            for(Zone children : child.getChildren()){
+                if(children.contains(player)){
+                    nzl.add(children);
+                }
             }
         }
-        return newZoneList;
+        return nzl;
     }
     
     /**
@@ -149,12 +153,10 @@ public class ZoneLists {
      * @return List<Zone> Zones Player is In
      */
     public static List<Zone> getplayerZones(ICModPlayer player){
-        if(inst.playerZoneList.containsKey(player.getName())){
-            List<Zone> pzone = new ArrayList<Zone>();
-            pzone.addAll(inst.playerZoneList.get(player.getName()));
-            return pzone;
+        if(!inst.playerZoneList.containsKey(player)){
+            inst.playerZoneList.put(player, new ArrayList<Zone>());
         }
-        return null;
+        return inst.playerZoneList.get(player);
     }
     
     /**

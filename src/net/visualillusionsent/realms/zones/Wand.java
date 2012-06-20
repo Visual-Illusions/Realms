@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.visualillusionsent.realms.RHandle;
 import net.visualillusionsent.realms.io.RealmsProps;
-import net.visualillusionsent.realms.io.ZoneNotFoundException;
+import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.realms.zones.polygons.Point;
 import net.visualillusionsent.realms.zones.polygons.PolygonArea;
 import net.visualillusionsent.viutils.ICModBlock;
@@ -434,7 +434,7 @@ public class Wand {
                 StringBuilder points = new StringBuilder();
                 String[] poin = zone.whichChildContains(block).getPolygon().toString().split(",");
                 int i = 0;
-                for(i = 2; i < poin.length; i += 3){
+                for(i = 3; i < poin.length; i += 3){
                     points.append("("+poin[i]+","+poin[i+2]+") ");
                     if(i+3 > 23 && i+3 < poin.length){
                         points.append("...");

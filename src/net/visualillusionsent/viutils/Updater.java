@@ -16,14 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Visual Illusions Entertainment Java jar file updater
- * <p>
- * Used to update jar files on the fly
- * <p>
+ * Visual Illusions Entertainment Java jar file updater<br>
+ * Used to update jar files on the fly<br>
  * This File is part of the VIUtils Java Software package (net.visualillusionsent.viutils)
  * 
- * @author darkdiplomat
- * @version 1.0
+ * @author Jason Jones
+ * @version 1.1
  */
 public class Updater {
     private String downloadurl, jarloc, jarname;
@@ -38,77 +36,87 @@ public class Updater {
     
     /**
      * Performs jar file update
-     * 
-     * @return message of update status
+     * @return true if successful
+     * @throws UpdateException
+     *              use the getMessage() method to retrieve the reason why
      */
-    public String performUpdate(){
+    public boolean performUpdate() throws UpdateException{
         logger.info("[VIUtils] Please wait, downloading latest version of "+jarname+"...");
         
         if(!jarloc.endsWith(".jar")){
             logger.info("[VIUtils] The jar file location needs to end with .jar... Terminating update...");
-            return "Failed to update... Check log for errors...";
+            throw new UpdateException("Failed to update due to: 'Incorrect File Extension'");
         }
         
         File local = new File(jarloc);
         if(!local.exists()){
             logger.warning("[VIUtils] Unable to find "+jarloc+"... Terminating update...");
-            return "Failed to update... Check log for errors...";
+            throw new UpdateException("Failed to update due to: 'FileNotFound'");
         }
         
         //BackUp just in case of failure
-        File bak = backupjar(jarloc);
-        if(bak == null){
-            System.out.println("Failed to create backup...");
-            return "Backup failed...";
+        File bak = null;
+        try {
+             bak = backupjar(jarloc);
+        } catch (IOException e) {
+            throw new UpdateException("Failed to update due to: 'Backup failed'");
         }
         
-        if(loadAllClasses(jarloc, logger)){
-            try{
-                OutputStream outputStream = new FileOutputStream(local);
-                URL url = new URI(downloadurl).toURL();
-                InputStream inputStream = url.openConnection().getInputStream();
-    
-                byte[] buffer = new byte[1024];
-                int read = 0;
-     
-                while ((read = inputStream.read(buffer)) > 0){
-                    outputStream.write(buffer, 0, read);
-                }
-    
-                outputStream.close();
-                inputStream.close();
-                logger.info("[VIUtils] Successfully installed latest version of "+jarname+"!");
-                bak.delete();
-                return "Updated successfully! Please reload "+jarname+"!";
-            } 
-            catch (IOException IOE){
-                logger.log(Level.WARNING, "[VIUtils] Failed to download new version. Restoring old version...", IOE);
-                
-                //Restore
-                if(restorejar(jarloc)){
+        try{
+            if(loadAllClasses(jarloc, logger)){
+                try{
+                    OutputStream outputStream = new FileOutputStream(local);
+                    URL url = new URI(downloadurl).toURL();
+                    InputStream inputStream = url.openConnection().getInputStream();
+        
+                    byte[] buffer = new byte[1024];
+                    int read = 0;
+         
+                    while ((read = inputStream.read(buffer)) > 0){
+                        outputStream.write(buffer, 0, read);
+                    }
+        
+                    outputStream.close();
+                    inputStream.close();
+                    logger.info("[VIUtils] Successfully downloaded latest version of "+jarname+"!");
                     bak.delete();
+                    return true;
+                } 
+                catch (IOException IOE){
+                    logger.log(Level.WARNING, "[VIUtils] Failed to download new version. Restoring old version...", IOE);
+                    
+                    //Restore
+                    if(restorejar(jarloc)){
+                        bak.delete();
+                    }
+                    throw new UpdateException("Failed to update due to: 'Failed to download'");
+                } catch (URISyntaxException urise) {
+                    //Restore
+                    if(restorejar(jarloc)){
+                        bak.delete();
+                    }
+                    logger.log(Level.WARNING, "[VIUtils] There was an error with the URI syntax... Restoring old version...", urise);
+                    throw new UpdateException("Failed to update due to: 'Failed to download'");
                 }
-                return "An Exception occurred during update...";
-            } catch (URISyntaxException urise) {
-                //Restore
-                if(restorejar(jarloc)){
-                    bak.delete();
-                }
-                logger.log(Level.WARNING, "[VIUtils] There was an error with your ULR syntax... Restoring old version...", urise);
-                return "An Exception occurred during update...";
             }
         }
-        return "Failed to update... Check log for errors...";
+        catch(IOException ioe){
+            
+        } 
+        catch (ClassNotFoundException e) {
+            
+        }
+        return false;
     }
     
     /**
-     * loads all the jar's classes for updating
+     * loads all the jar's files for updating
      * 
      * @param jarloc    The location of the jar file to be updated
      * @param logger    The logger to use for logging messages
      * @return true if successfully loaded all classes
      */
-    private boolean loadAllClasses(String jarloc, Logger logger){
+    private boolean loadAllClasses(String jarloc, Logger logger) throws IOException, ClassNotFoundException{
         try{
             // Load the jar
             JarFile jar = new JarFile(jarloc);
@@ -127,7 +135,7 @@ public class Updater {
                     path = path.substring(0, path.length() - ".class".length());
 
                     // Load it
-                    this.getClass().getClassLoader().loadClass(path);
+                    ClassLoader.getSystemClassLoader().loadClass(path);
                 }
             }
             return true;
@@ -144,24 +152,20 @@ public class Updater {
         return false;
     }
     
-    private File backupjar(String jarfile){
-        try{
-            File bak = new File(jarloc.substring(0, jarloc.lastIndexOf("/")+1)+jarname+".bak");
-            OutputStream outputStream = new FileOutputStream(bak);
-            InputStream inputStream = new FileInputStream(jarfile);
+    private File backupjar(String jarfile) throws IOException{
+        File bak = new File(jarloc.substring(0, jarloc.lastIndexOf("/")+1)+jarname+".bak");
+        OutputStream outputStream = new FileOutputStream(bak);
+        InputStream inputStream = new FileInputStream(jarfile);
             
-            int read = 0;
+        int read = 0;
  
-            while ((read = inputStream.read()) != -1){
-                outputStream.write(read);
-            }
-
-            outputStream.close();
-            inputStream.close();
-            return bak;
+        while ((read = inputStream.read()) != -1){
+            outputStream.write(read);
         }
-        catch (IOException IOE){ }
-        return null;
+
+        outputStream.close();
+        inputStream.close();
+        return bak;
     }
     
     private boolean restorejar(String jarfile){
