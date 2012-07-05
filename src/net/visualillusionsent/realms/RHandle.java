@@ -55,7 +55,7 @@ public class RHandle {
     private Logger mclog = Logger.getLogger("Minecraft");
     private Logger rlog = Logger.getLogger("Realms");
 
-    private final String version = "5.5.2",
+    private final String version = "5.6.0",
             name = "Realms",
             checkurl = "http://visualillusionsent.net/cmod_plugins/versions.php?plugin=Realms",
             downurl = "http://dl.dropbox.com/u/25586491/CanaryPlugins/Realms.jar",
