@@ -6,85 +6,87 @@ import net.visualillusionsent.viutils.ICModBlock;
  * This class is a bridge to send Block data from the 'default package' to
  * 'packaged classes'.
  * <p>
- * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
+ * This file is part of the VI Utilities Package
+ * (net.visualillusionsent.viutils)
  * 
  * @author Jason Jones
  * @see ICModBlock
  */
-public class CModBlock implements ICModBlock{
-    
+public class CModBlock implements ICModBlock {
+
     private Block block; //The block being wrapped
-    
+
     /**
      * class constructor
-     * @param block     The block being wrapped.
+     * 
+     * @param block
+     *            The block being wrapped.
      */
-    public CModBlock(Block block){
+    public CModBlock(Block block) {
         this.block = block;
     }
 
     @Override
-    public int getType() {
+    public final int getType() {
         return block.getType();
     }
 
     @Override
-    public int getData() {
+    public final int getData() {
         return block.getData();
     }
 
     @Override
-    public int getX() {
+    public final int getX() {
         return block.getX();
     }
 
     @Override
-    public int getY() {
+    public final int getY() {
         return block.getY();
     }
 
     @Override
-    public int getZ() {
+    public final int getZ() {
         return block.getZ();
     }
-    
+
     @Override
-    public int getDimension(){
+    public final int getDimension() {
         return block.getWorld().getType().getId();
     }
-    
+
     @Override
-    public int getDimIndex(){
+    public final int getDimIndex() {
         return block.getWorld().getType().toIndex();
     }
 
     @Override
-    public String getWorldName() {
+    public final String getWorldName() {
         return block.getWorld() != null ? block.getWorld().getName() : "null";
     }
 
     @Override
-    public Object getBlock() {
+    public final Object getBlock() {
         return block;
     }
-    
-    
+
     @Override
-    public String toString(){
+    public final String toString() {
         return block.toString();
     }
-    
+
     @Override
-    public boolean equals(Object obj){
-        if(obj instanceof CModBlock){
+    public final boolean equals(Object obj) {
+        if (obj instanceof CModBlock) {
             CModBlock cBlock = (CModBlock) obj;
             return block.equals(cBlock.getBlock());
         }
         return false;
     }
-    
+
     @Override
-    public int hashCode(){
+    public final int hashCode() {
         return block.hashCode();
     }
 }

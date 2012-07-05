@@ -9,33 +9,36 @@ import java.net.URL;
  * <p>
  * Used to check if software is the latest version
  * <p>
- * This File is part of the VIUtils Java Software package (net.visualillusionsent.viutils)
+ * This File is part of the VIUtils Java Software package
+ * (net.visualillusionsent.viutils)
  * 
  * @author darkdiplomat
- * @version 1.0
+ * @version 1.2
  */
-public class VersionCheck {
+public final class VersionCheck {
     private String version, currver, checkurl;
-    
+
     /**
      * class constructor
      * 
-     * @param version   A string representation of the software version
-     * @param checkurl  A string representation of the url to verify version though
+     * @param version
+     *            A string representation of the software version
+     * @param checkurl
+     *            A string representation of the url to verify version though
      */
-    public VersionCheck(String version, String checkurl){
+    public VersionCheck(String version, String checkurl) {
         this.version = version;
         this.currver = version;
         this.checkurl = checkurl;
     }
-    
+
     /**
      * checks if version is latest
      * 
      * @return true if latest, false otherwise
      */
-    public final boolean isLatest(){
-        try{
+    public final boolean isLatest() {
+        try {
             BufferedReader in = new BufferedReader(new InputStreamReader(new URL(checkurl).openStream()));
             String inputLine;
             if ((inputLine = in.readLine()) != null) {
@@ -43,24 +46,29 @@ public class VersionCheck {
             }
             in.close();
             boolean is = true;
-            try{
-                is = Float.valueOf(version.replace("_", "")) >= Float.valueOf(currver.replace("_", ""));
+            String checkVer = version.replaceAll("\\.", "");
+            String current = currver.replaceAll("\\.", "");
+            try {
+                if (checkVer.length() < current.length()) {
+                    checkVer.concat("0");
+                }
+                is = Float.parseFloat(version) >= Float.parseFloat(currver);
             }
-            catch(NumberFormatException nfe){
+            catch (NumberFormatException nfe) {
                 is = version.equals(currver);
             }
-            return  is;
-        } 
-        catch (Exception E) { }
+            return is;
+        }
+        catch (Exception E) {}
         return true;
     }
-    
+
     /**
      * gets the current version
      * 
      * @return currver
      */
-    public String getCurrentVersion(){
+    public final String getCurrentVersion() {
         return currver;
     }
 }

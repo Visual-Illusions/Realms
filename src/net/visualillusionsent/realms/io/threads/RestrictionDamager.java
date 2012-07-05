@@ -20,43 +20,44 @@ import net.visualillusionsent.viutils.ICModPlayer;
  * 
  * @author darkdiplomat
  */
-public class RestrictionDamager extends Thread{
+public class RestrictionDamager extends Thread {
     private RHandle rhandle;
     private String debug = "Player - Name: '%s' @ Location: X: '%s' Y: '%s' Z: '%s' World: '%s' Dimension: '%s'";
-        
+
     /**
      * Class Constructor
      * 
      * @param Realm
      */
-    public RestrictionDamager (RHandle rhandle) {
+    public RestrictionDamager(RHandle rhandle) {
         this.rhandle = rhandle;
         this.setName("RestictionDamager-Thread");
         this.setDaemon(true);
     }
-    
+
     /**
      * Realms Player Restricted Damage Run
      */
+    @Override
     public void run() {
-        try{
-            /*Player Lists*/
+        try {
+            /* Player Lists */
             List<ICModPlayer> restricted = ZoneLists.getInRestricted();
-                
-            /*Check Player List*/
-            if (!restricted.isEmpty()){
-                synchronized(restricted){
-                    for(ICModPlayer thePlayer : restricted){
+
+            /* Check Player List */
+            if (!restricted.isEmpty()) {
+                synchronized (restricted) {
+                    for (ICModPlayer thePlayer : restricted) {
                         Zone zone = ZoneLists.getZone(rhandle.getEverywhere(thePlayer), thePlayer);
                         //Double Checks for Player can be hurt by the zone
-                        if(!zone.permissionCheck(thePlayer, Permission.PermType.AUTHED) && !thePlayer.getMode() && !thePlayer.isDamageDisabled() && zone.getRestricted()){
+                        if (!zone.permissionCheck(thePlayer, Permission.PermType.AUTHED) && !thePlayer.getMode() && !thePlayer.isDamageDisabled() && zone.getRestricted()) {
                             //check that we can kill the player
-                            if(!RealmsProps.getRestrictKills() && thePlayer.getHealth()-1 <= 0){
+                            if (!RealmsProps.getRestrictKills() && thePlayer.getHealth() - 1 <= 0) {
                                 continue;
                             }
                             //Hurt Player
                             thePlayer.doDamage(2, 1);
-                            
+
                             //Debugging message
                             rhandle.log(RLevel.PLAYER_EXPLODE, String.format(debug, thePlayer.getName(), Math.floor(thePlayer.getX()), Math.floor(thePlayer.getY()),
                                     Math.floor(thePlayer.getZ()), thePlayer.getWorldName(), thePlayer.getDimension()));
@@ -64,7 +65,8 @@ public class RestrictionDamager extends Thread{
                     }
                 }
             }
-        }catch(ConcurrentModificationException CME){
+        }
+        catch (ConcurrentModificationException CME) {
             rhandle.log(RLevel.DEBUGWARNING, "Concurrent Modification Exception in RestrictedDamager. (Don't worry Not a major issue)");
         }
     }

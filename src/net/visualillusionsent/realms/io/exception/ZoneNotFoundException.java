@@ -7,10 +7,10 @@ package net.visualillusionsent.realms.io.exception;
  * 
  * @author darkdiplomat
  */
-public class ZoneNotFoundException extends Exception{
+public class ZoneNotFoundException extends Exception {
     private static final long serialVersionUID = 6070670920816832190L;
-    
-    public ZoneNotFoundException(){ 
+
+    public ZoneNotFoundException() {
         super();
     }
 }

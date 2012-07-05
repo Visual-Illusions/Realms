@@ -6,43 +6,46 @@ import net.visualillusionsent.viutils.ICModItem;
  * This class is a bridge to send Item data from the 'default package' to
  * 'packaged classes'.
  * <p>
- * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
+ * This file is part of the VI Utilities Package
+ * (net.visualillusionsent.viutils)
  * 
  * @author Jason Jones
  * @see ICModItem
  */
-public class CModItem implements ICModItem{
-    private Item item;
-    
-    public CModItem(Item item){
+public class CModItem implements ICModItem {
+    private final Item item;
+
+    public CModItem(Item item) {
         this.item = item;
     }
-    
+
     @Override
-    public int getId() {
+    public final int getId() {
         return item.getItemId();
     }
 
     @Override
-    public int getDamage() {
+    public final int getDamage() {
         return item.getDamage();
     }
 
     @Override
-    public int getAmount() {
+    public final int getAmount() {
         return item.getAmount();
     }
-    
-    public int getSlot(){
+
+    @Override
+    public final int getSlot() {
         return item.getSlot();
     }
 
     @Override
-    public Object getItem() {
+    public final Object getItem() {
         return item;
     }
-    
-    public String toString(){
+
+    @Override
+    public final String toString() {
         StringBuilder toRet = new StringBuilder();
         toRet.append(item.getItemId());
         toRet.append(':');

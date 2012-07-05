@@ -1,18 +1,23 @@
 package net.visualillusionsent.realms.zones;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
 import net.visualillusionsent.realms.RHandle;
+import net.visualillusionsent.realms.io.FlatFileDeleter;
+import net.visualillusionsent.realms.io.FlatFileSaver;
+import net.visualillusionsent.realms.io.MySQLDeleter;
+import net.visualillusionsent.realms.io.MySQLSaver;
 import net.visualillusionsent.realms.io.RealmsProps;
 import net.visualillusionsent.realms.io.exception.InvaildZoneFlagException;
 import net.visualillusionsent.realms.io.exception.ZoneNotFoundException;
 import net.visualillusionsent.realms.zones.polygons.PolygonArea;
+import net.visualillusionsent.viutils.ChatColor;
 import net.visualillusionsent.viutils.ICModBlock;
 import net.visualillusionsent.viutils.ICModMob;
 import net.visualillusionsent.viutils.ICModPlayer;
-import net.visualillusionsent.viutils.ChatColor;
 
 /**
  * Realms Zone Class
@@ -30,7 +35,7 @@ public class Zone {
     private List<Permission> zoneperms = new ArrayList<Permission>();
     private List<Zone> children = new ArrayList<Zone>();
     private String flagform = "\u00A76%s\u00A7B= %s %s";
-    
+
     private ZoneFlag pvp; // OFF = pvp disabled, ON = pvp enabled
     private ZoneFlag sanctuary; // OFF = zone is not a sanctuary, ON = zone is a sanctuary
     private ZoneFlag creeper; // OFF = creepers may not explode, ON = creepers may explode
@@ -50,72 +55,73 @@ public class Zone {
     private ZoneFlag potion; //OFF = no potion damage, ON = potions can damage
     private ZoneFlag starve; //OFF = no Starvation, ON = Starvation
     private ZoneFlag restricted; //OFF = Allow All, ON = Those without Authed permission take damage
-    
+
     public enum ZoneFlag {
-        ON (true), OFF (false), INHERIT (false), NULL (false);
-        
+        ON(true), OFF(false), INHERIT(false), NULL(false);
+
         private boolean value;
-        
-        private ZoneFlag (boolean value) {
+
+        private ZoneFlag(boolean value) {
             this.value = value;
         }
-        
+
         public boolean getValue() {
             return value;
         }
-        
+
         public static ZoneFlag getZoneFlag(String type) throws InvaildZoneFlagException {
             try {
                 return ZoneFlag.valueOf(type.toUpperCase());
-            }catch(IllegalArgumentException IAE){
+            }
+            catch (IllegalArgumentException IAE) {
                 throw new InvaildZoneFlagException();
             }
         }
     }
-    
 
     // Regular Constructor
-    public Zone(RHandle rhandle, String name, Zone parent, String world, int dimension){
+    public Zone(RHandle rhandle, String name, Zone parent, String world, int dimension) {
         this.rhandle = rhandle;
         this.name = name;
         this.parent = parent;
         this.polygon = null;
         this.greeting = null;
         this.farewell = null;
-        
+
         setDefaults(parent == null);
 
-        if(parent != null && !parent.getChildren().contains(this)){
+        if (parent != null && !parent.getChildren().contains(this)) {
             parent.children.add(this);
         }
-        if(name.startsWith("EVERYWHERE")){
+        if (name.startsWith("EVERYWHERE")) {
             this.rhandle.addEverywhere(this);
         }
         this.world = world;
         this.dimension = dimension;
         ZoneLists.addZone(this);
-        if(name.startsWith("EVERYWHERE")){
+        if (name.startsWith("EVERYWHERE")) {
             rhandle.addEverywhere(this);
         }
         this.rhandle.log(Level.INFO, "Zone created: " + name);
+        save();
     }
 
     // CSV File Constructor
-    public Zone(RHandle rhandle, String[] args){
+    public Zone(RHandle rhandle, String[] args) {
         this.rhandle = rhandle;
         this.name = args[0];
         this.world = args[1];
         this.dimension = Integer.valueOf(args[2]);
-        
-        if(name.equals("everywhere")){
-            name = "EVERYWHERE-"+rhandle.getServer().getDefaultWorldName().toUpperCase().replaceAll("worlds/", "")+"-DIM"+args[2];
+
+        if (name.equals("everywhere")) {
+            name = "EVERYWHERE-" + rhandle.getServer().getDefaultWorldName().toUpperCase().replaceAll("worlds/", "") + "-DIM" + args[2];
         }
-        if(name.startsWith("EVERYWHERE")){
+        if (name.startsWith("EVERYWHERE")) {
             this.parent = null;
         }
-        else{
-            if(args[3].equals("everywhere")){
-                args[3] = "EVERYWHERE-"+rhandle.getServer().getDefaultWorldName().toUpperCase().replaceAll("worlds/", "")+"-DIM"+args[2];
+        else {
+            if (args[3].equals("everywhere")) {
+                args[3] = "EVERYWHERE-" + rhandle.getServer().getDefaultWorldName().toUpperCase().replaceAll("worlds/", "") + "-DIM" + args[2];
             }
             try {
                 this.parent = args[3] != null ? ZoneLists.getZoneByName(args[3]) : null;
@@ -124,184 +130,203 @@ public class Zone {
                 //this.parent = rhandle.getEverywhere(world, dimension);
             }
         }
-        if(parent != null && !parent.getChildren().contains(this)){
+        if (parent != null && !parent.getChildren().contains(this)) {
             parent.children.add(this);
         }
-        if(args.length < 5 || args[4] == null || args[4].equalsIgnoreCase("null")){
+        if (args.length < 5 || args[4] == null || args[4].equalsIgnoreCase("null")) {
             this.greeting = null;
         }
-        else{
+        else {
             this.greeting = args[4];
         }
-        if(args.length < 6 || args[5] == null || args[5].equalsIgnoreCase("null")){
+        if (args.length < 6 || args[5] == null || args[5].equalsIgnoreCase("null")) {
             this.farewell = null;
         }
-        else{
+        else {
             this.farewell = args[5];
         }
-        
-        if(args.length < 7) {
-            setDefaults(name.toUpperCase().startsWith("EVERYWHERE")); 
-        } 
+
+        if (args.length < 7) {
+            setDefaults(name.toUpperCase().startsWith("EVERYWHERE"));
+        }
         else {
             try {
                 this.pvp = ZoneFlag.getZoneFlag(args[6]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.pvp = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.pvp = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.sanctuary = ZoneFlag.getZoneFlag(args[7]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.sanctuary = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.sanctuary = ZoneFlag.OFF;
                 }
             }
-            try{
+            try {
                 this.creeper = ZoneFlag.getZoneFlag(args[8]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.creeper = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.creeper = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.ghast = ZoneFlag.getZoneFlag(args[9]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.ghast = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.ghast = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.fall = ZoneFlag.getZoneFlag(args[10]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.fall = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.fall = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.suffocate = ZoneFlag.getZoneFlag(args[11]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.suffocate = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.suffocate = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.fire = ZoneFlag.getZoneFlag(args[12]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.fire = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.fire = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.animals = ZoneFlag.getZoneFlag(args[13]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.animals = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.animals = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.physics = ZoneFlag.getZoneFlag(args[14]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.physics = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.physics = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.creative = ZoneFlag.getZoneFlag(args[15]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.creative = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.creative = ZoneFlag.OFF;
                 }
             }
-            try{
+            try {
                 this.pistons = ZoneFlag.getZoneFlag(args[16]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.pistons = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.pistons = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.healing = ZoneFlag.getZoneFlag(args[17]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.healing = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.healing = ZoneFlag.OFF;
                 }
             }
-            try{
+            try {
                 this.enderman = ZoneFlag.getZoneFlag(args[18]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.enderman = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.enderman = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.spread = ZoneFlag.getZoneFlag(args[19]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.spread = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.spread = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.flow = ZoneFlag.getZoneFlag(args[20]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.flow = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.flow = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.TNT = ZoneFlag.getZoneFlag(args[21]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.TNT = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.TNT = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.potion = ZoneFlag.getZoneFlag(args[22]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.potion = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.potion = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.starve = ZoneFlag.getZoneFlag(args[23]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.starve = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.starve = ZoneFlag.ON;
                 }
             }
-            try{
+            try {
                 this.restricted = ZoneFlag.getZoneFlag(args[24]);
-            }catch (Exception e) {
+            }
+            catch (Exception e) {
                 this.restricted = ZoneFlag.INHERIT;
-                if(name.toUpperCase().startsWith("EVERYWHERE")){
+                if (name.toUpperCase().startsWith("EVERYWHERE")) {
                     this.restricted = ZoneFlag.ON;
                 }
             }
         }
         this.children = new ArrayList<Zone>();
-        if(parent != null && !parent.getChildren().contains(this)){
+        if (parent != null && !parent.getChildren().contains(this)) {
             parent.children.add(this);
         }
-        if(name.startsWith("EVERYWHERE")){
+        if (name.startsWith("EVERYWHERE")) {
             rhandle.addEverywhere(this);
         }
         ZoneLists.addZone(this);
@@ -328,7 +353,7 @@ public class Zone {
             this.potion = ZoneFlag.ON;
             this.starve = ZoneFlag.ON;
             this.restricted = ZoneFlag.OFF;
-        } 
+        }
         else {
             this.pvp = ZoneFlag.INHERIT;
             this.sanctuary = ZoneFlag.INHERIT;
@@ -351,192 +376,290 @@ public class Zone {
             this.restricted = ZoneFlag.INHERIT;
         }
     }
-    
+
     /*
      * Accessor Methods
      */
 
-    public String getName() {return name; }
-    public Zone getParent() {return parent; }
-    public String getWorld() { return world; }
-    public int getDimension() { return dimension; }
-    public String getGreeting() { return greeting; }
-    public String getFarewell() { return farewell; }
-    public List<Zone> getChildren() {return children; }
-    public PolygonArea getPolygon() {return polygon; }
-    
-    public ZoneFlag getAbsolutePVP() { return pvp; }
-    public ZoneFlag getAbsoluteSanctuary() { return sanctuary; }
-    public ZoneFlag getAbsoluteCreeper() { return creeper; }
-    public ZoneFlag getAbsoluteGhast() { return ghast; }
-    public ZoneFlag getAbsoluteFall() { return fall; }
-    public ZoneFlag getAbsoluteSuffocate() { return suffocate; }
-    public ZoneFlag getAbsoluteFire() { return fire; }
-    public ZoneFlag getAbsoluteAnimals(){ return animals; }
-    public ZoneFlag getAbsolutePhysics(){ return physics; }
-    public ZoneFlag getAbsoluteCreative(){ return creative; }
-    public ZoneFlag getAbsolutePistons(){ return pistons;}
-    public ZoneFlag getAbsoluteHealing() { return healing;}
-    public ZoneFlag getAbsoluteEnderman() { return enderman;}
-    public ZoneFlag getAbsoluteSpread() { return spread;}
-    public ZoneFlag getAbsoluteFlow() { return flow;}
-    public ZoneFlag getAbsoluteTNT() { return TNT;}
-    public ZoneFlag getAbsolutePotion() { return potion;}
-    public ZoneFlag getAbsoluteStarve(){ return starve; }
-    public ZoneFlag getAbsoluteRestricted(){ return restricted; }
+    public String getName() {
+        return name;
+    }
+
+    public Zone getParent() {
+        return parent;
+    }
+
+    public String getWorld() {
+        return world;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public String getGreeting() {
+        return greeting;
+    }
+
+    public String getFarewell() {
+        return farewell;
+    }
+
+    public List<Zone> getChildren() {
+        return children;
+    }
+
+    public PolygonArea getPolygon() {
+        return polygon;
+    }
+
+    public ZoneFlag getAbsolutePVP() {
+        return pvp;
+    }
+
+    public ZoneFlag getAbsoluteSanctuary() {
+        return sanctuary;
+    }
+
+    public ZoneFlag getAbsoluteCreeper() {
+        return creeper;
+    }
+
+    public ZoneFlag getAbsoluteGhast() {
+        return ghast;
+    }
+
+    public ZoneFlag getAbsoluteFall() {
+        return fall;
+    }
+
+    public ZoneFlag getAbsoluteSuffocate() {
+        return suffocate;
+    }
+
+    public ZoneFlag getAbsoluteFire() {
+        return fire;
+    }
+
+    public ZoneFlag getAbsoluteAnimals() {
+        return animals;
+    }
+
+    public ZoneFlag getAbsolutePhysics() {
+        return physics;
+    }
+
+    public ZoneFlag getAbsoluteCreative() {
+        return creative;
+    }
+
+    public ZoneFlag getAbsolutePistons() {
+        return pistons;
+    }
+
+    public ZoneFlag getAbsoluteHealing() {
+        return healing;
+    }
+
+    public ZoneFlag getAbsoluteEnderman() {
+        return enderman;
+    }
+
+    public ZoneFlag getAbsoluteSpread() {
+        return spread;
+    }
+
+    public ZoneFlag getAbsoluteFlow() {
+        return flow;
+    }
+
+    public ZoneFlag getAbsoluteTNT() {
+        return TNT;
+    }
+
+    public ZoneFlag getAbsolutePotion() {
+        return potion;
+    }
+
+    public ZoneFlag getAbsoluteStarve() {
+        return starve;
+    }
+
+    public ZoneFlag getAbsoluteRestricted() {
+        return restricted;
+    }
 
     public boolean getPVP() {
         if (this.pvp.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getPVP();
-        } else {
+        }
+        else {
             return this.pvp.getValue();
         }
     }
-    
+
     public boolean getSanctuary() {
         if (this.sanctuary.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getSanctuary();
-        } else {
+        }
+        else {
             return this.sanctuary.getValue();
         }
     }
-    
+
     public boolean getCreeper() {
         if (this.creeper.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getCreeper();
-        } else {
+        }
+        else {
             return this.creeper.getValue();
         }
     }
-    
+
     public boolean getGhast() {
         if (this.ghast.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getGhast();
-        } else {
+        }
+        else {
             return this.ghast.getValue();
         }
     }
-    
+
     public boolean getFall() {
-        if (this.fall.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.fall.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getFall();
-        }else{
+        }
+        else {
             return this.fall.getValue();
         }
     }
-    
+
     public boolean getSuffocate() {
-        if (this.suffocate.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.suffocate.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getSuffocate();
-        }else{
+        }
+        else {
             return this.suffocate.getValue();
         }
     }
-    
+
     public boolean getFire() {
-        if (this.fire.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.fire.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getFire();
-        }else{
+        }
+        else {
             return this.fire.getValue();
         }
     }
-    
+
     public boolean getAnimals() {
-        if (this.animals.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.animals.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getAnimals();
-        }else{
+        }
+        else {
             return this.animals.getValue();
         }
     }
-    
+
     public boolean getPhysics() {
-        if (this.physics.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.physics.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getPhysics();
-        }else{
+        }
+        else {
             return this.physics.getValue();
         }
     }
-    
+
     public boolean getCreative() {
-        if (this.creative.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.creative.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getCreative();
-        }else{
+        }
+        else {
             return this.creative.getValue();
         }
     }
-    
+
     public boolean getPistons() {
-        if (this.pistons.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.pistons.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getPistons();
-        }else{
+        }
+        else {
             return this.pistons.getValue();
         }
     }
-    
+
     public boolean getHealing() {
-        if (this.healing.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.healing.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getHealing();
-        }else{
+        }
+        else {
             return this.healing.getValue();
         }
     }
-    
+
     public boolean getEnderman() {
-        if (this.enderman.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.enderman.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getEnderman();
-        }else{
+        }
+        else {
             return this.enderman.getValue();
         }
     }
-    
+
     public boolean getSpread() {
-        if (this.spread.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.spread.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getSpread();
-        }else{
+        }
+        else {
             return this.spread.getValue();
         }
     }
-    
+
     public boolean getFlow() {
-        if (this.flow.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.flow.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getFlow();
-        }else{
+        }
+        else {
             return this.flow.getValue();
         }
     }
-    
+
     public boolean getTNT() {
-        if (this.TNT.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.TNT.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getTNT();
-        }else{
+        }
+        else {
             return this.TNT.getValue();
         }
     }
-    
+
     public boolean getPotion() {
-        if (this.potion.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.potion.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getPotion();
-        }else{
+        }
+        else {
             return this.potion.getValue();
         }
     }
-    
+
     public boolean getStarve() {
-        if (this.starve.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.starve.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getStarve();
-        }else{
+        }
+        else {
             return this.starve.getValue();
         }
     }
-    
+
     public boolean getRestricted() {
-        if (this.restricted.equals(ZoneFlag.INHERIT) && this.parent != null){
+        if (this.restricted.equals(ZoneFlag.INHERIT) && this.parent != null) {
             return parent.getRestricted();
-        }else{
+        }
+        else {
             return this.restricted.getValue();
         }
     }
-    
+
     /*
      * Mutator Methods
      */
@@ -548,12 +671,12 @@ public class Zone {
     public void setPolygon(PolygonArea polygon) {
         this.polygon = polygon;
     }
-    
-    public void setWorld(String world){
+
+    public void setWorld(String world) {
         this.world = world;
     }
-    
-    public void setDimension(int dim){
+
+    public void setDimension(int dim) {
         this.dimension = dim;
     }
 
@@ -571,139 +694,149 @@ public class Zone {
         this.farewell = farewell;
         save();
     }
-    
+
     public void setPVP(ZoneFlag pvp) {
         this.pvp = pvp;
         save();
     }
-    
+
     public void setSanctuary(ZoneFlag sanctuary) {
         this.sanctuary = sanctuary;
         save();
     }
-    
+
     public void setCreeper(ZoneFlag creeper) {
         this.creeper = creeper;
         save();
     }
-    
+
     public void setGhast(ZoneFlag ghast) {
         this.ghast = ghast;
         save();
     }
-    
-    public void setFall(ZoneFlag fall){
+
+    public void setFall(ZoneFlag fall) {
         this.fall = fall;
         save();
     }
-    
-    public void setSuffocate(ZoneFlag suffocate){
+
+    public void setSuffocate(ZoneFlag suffocate) {
         this.suffocate = suffocate;
         save();
     }
-    
-    public void setFire(ZoneFlag fire){
+
+    public void setFire(ZoneFlag fire) {
         this.fire = fire;
         save();
     }
-    
-    public void setAnimals(ZoneFlag animals){
+
+    public void setAnimals(ZoneFlag animals) {
         this.animals = animals;
         save();
     }
-    
-    public void setPhysics(ZoneFlag physics){
+
+    public void setPhysics(ZoneFlag physics) {
         this.physics = physics;
         save();
     }
-    
-    public void setCreative(ZoneFlag creative){
+
+    public void setCreative(ZoneFlag creative) {
         this.creative = creative;
         save();
     }
-    
-    public void setPistons(ZoneFlag pistons){
+
+    public void setPistons(ZoneFlag pistons) {
         this.pistons = pistons;
         save();
     }
-    
+
     public void setHealing(ZoneFlag healing) {
         this.healing = healing;
         save();
     }
-    
-    public void setEnderman(ZoneFlag enderman){
+
+    public void setEnderman(ZoneFlag enderman) {
         this.enderman = enderman;
         save();
     }
-    
-    public void setSpread(ZoneFlag spread){
+
+    public void setSpread(ZoneFlag spread) {
         this.spread = spread;
         save();
     }
-    
-    public void setFlow(ZoneFlag flow){
+
+    public void setFlow(ZoneFlag flow) {
         this.flow = flow;
         save();
     }
-    
-    public void setTNT(ZoneFlag TNT){
+
+    public void setTNT(ZoneFlag TNT) {
         this.TNT = TNT;
         save();
     }
-    
-    public void setPotion(ZoneFlag potion){
+
+    public void setPotion(ZoneFlag potion) {
         this.potion = potion;
         save();
     }
-    
-    public void setStarve(ZoneFlag starve){
+
+    public void setStarve(ZoneFlag starve) {
         this.starve = starve;
         save();
     }
-    
-    public void setRestricted(ZoneFlag restricted){
+
+    public void setRestricted(ZoneFlag restricted) {
         this.restricted = restricted;
         save();
     }
-    
 
     /*
      * Other Methods
      */
     public void farewell(ICModPlayer player) {
-        if(farewell != null){
+        if (farewell != null) {
             player.sendMessage(farewell.replace("@", "\u00A7"));
         }
     }
 
     public void greet(ICModPlayer player) {
-        if(greeting != null){
+        if (greeting != null) {
             player.sendMessage(greeting.replace("@", "\u00A7"));
         }
     }
 
     // Delete the zone
-    public void delete() {
-        // Delete polygon
-        polygon.delete();
-
-        if(parent != null){
-            parent.removeChild(this);
+    public final void delete() {
+        if (!isEmpty()) {
+            polygon.delete();
         }
-        for(Zone child : getChildren()){
-            if(parent != null){
+        if (parent != null) {
+            parent.removeChild(this);
+            for (Zone child : getChildren()) {
                 child.setParent(parent);
             }
         }
+        for (Permission perm : getPerms()) {
+            perm.delete();
+        }
         ZoneLists.removeZonefromPlayerZoneList(this);
         ZoneLists.removeZone(this);
-        //rhandle.getDataSource().deleteZone(this);
+        if (RealmsProps.getMySQL()) {
+            rhandle.executeTask(new MySQLDeleter(rhandle, this));
+        }
+        else {
+            rhandle.executeTask(new FlatFileDeleter(rhandle, this));
+        }
     }
-    
+
     //Save Zone
-    public void save(){
-        rhandle.getDataSource().dumpzone();
+    public void save() {
+        if (RealmsProps.getMySQL()) {
+            rhandle.executeTask(new MySQLSaver(rhandle, this));
+        }
+        else {
+            rhandle.executeTask(new FlatFileSaver(rhandle, this));
+        }
     }
 
     // Does this zone contain zero area?
@@ -712,75 +845,75 @@ public class Zone {
     }
 
     public boolean contains(ICModBlock block) {
-        if(name.equals("EVERYWHERE-"+block.getWorldName().toUpperCase()+"-DIM"+block.getDimIndex())){
+        if (name.equals("EVERYWHERE-" + block.getWorldName().toUpperCase() + "-DIM" + block.getDimIndex())) {
             return true;
         }
-        if(isEmpty()){
+        if (isEmpty()) {
             return false;
         }
-        if(isInWorld(block.getWorldName().replace("worlds/", ""), block.getDimIndex())){
+        if (isInWorld(block.getWorldName().replace("worlds/", ""), block.getDimIndex())) {
             return polygon.contains(block);
         }
         return false;
     }
 
     public boolean contains(ICModPlayer player) {
-        if(name.equals("EVERYWHERE-"+player.getWorldName().toUpperCase()+"-DIM"+player.getDimIndex())){
+        if (name.equals("EVERYWHERE-" + player.getWorldName().toUpperCase() + "-DIM" + player.getDimIndex())) {
             return true;
         }
-        if(isEmpty()){
+        if (isEmpty()) {
             return false;
         }
-        if(isInWorld(player.getWorldName().replace("worlds/", ""), player.getDimIndex())){
+        if (isInWorld(player.getWorldName().replace("worlds/", ""), player.getDimIndex())) {
             return polygon.contains(player);
         }
         return false;
     }
-    
+
     public boolean contains(ICModMob mob) {
-        if(name.equals("EVERYWHERE-"+mob.getWorldName().toUpperCase()+"-DIM"+mob.getDimIndex())){
+        if (name.equals("EVERYWHERE-" + mob.getWorldName().toUpperCase() + "-DIM" + mob.getDimIndex())) {
             return true;
         }
-        if(isEmpty()){
+        if (isEmpty()) {
             return false;
         }
-        if(isInWorld(mob.getWorldName().replace("worlds/", ""), mob.getDimIndex())){
+        if (isInWorld(mob.getWorldName().replace("worlds/", ""), mob.getDimIndex())) {
             return polygon.contains(mob);
         }
         return false;
     }
 
     public Zone whichChildContains(ICModPlayer player) {
-        for(Zone child : children){
-            if(child.contains(player)){
+        for (Zone child : children) {
+            if (child.contains(player)) {
                 return child.whichChildContains(player);
             }
         }
         return this;
     }
-    
-    public Zone whichChildContains(ICModBlock block){
-        for(Zone child : children){
-            if(child.contains(block)){
+
+    public Zone whichChildContains(ICModBlock block) {
+        for (Zone child : children) {
+            if (child.contains(block)) {
                 return child.whichChildContains(block);
             }
         }
         return this;
     }
-    
+
     public Zone whichChildContains(ICModMob mob) {
-        for(Zone child : children){
-            if(child.contains(mob)){
+        for (Zone child : children) {
+            if (child.contains(mob)) {
                 return child.whichChildContains(mob);
             }
         }
         return this;
     }
-    
-    public boolean isInWorld(String world, int dim){
+
+    public boolean isInWorld(String world, int dim) {
         return world != null && this.world != null ? this.world.equals(world) && this.dimension == dim : false;
     }
-    
+
     /**
      * Gets a zone's flags
      * 
@@ -789,137 +922,147 @@ public class Zone {
      * @param showEnviro
      * @return flags
      */
-    public String[] getFlags(boolean showComb, boolean showEnviro){
+    public String[] getFlags(boolean showComb, boolean showEnviro) {
         String[] environ = new String[5];
         String[] comb = new String[2];
         StringBuilder flags = new StringBuilder();
         //Start Environment Flags
-        if(showEnviro){
-            flags.append(padAlign(String.format(flagform, "FALL", (getFall() ? "\u00A72ON " : "\u00A74OFF "), (getAbsoluteFall().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(padAlign(String.format(flagform, "SUFFOCATE", (getSuffocate() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteSuffocate().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "FIRE", (getFire() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteFire().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
+        if (showEnviro) {
+            flags.append(padAlign(String.format(flagform, "FALL", getFall() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteFall().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "SUFFOCATE", getSuffocate() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteSuffocate().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(String.format(flagform, "FIRE", getFire() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteFire().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""));
             environ[0] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(padAlign(String.format(flagform, "PHYSICS", (getPhysics() ?"\u00A72ON " : "\u00A74OFF "), (getAbsolutePhysics().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(padAlign(String.format(flagform, "ANIMALS", (getAnimals() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteAnimals().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "CREATIVE", (getCreative() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteCreative().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
+            flags.append(padAlign(String.format(flagform, "PHYSICS", getPhysics() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePhysics().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "ANIMALS", getAnimals() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteAnimals().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(String.format(flagform, "CREATIVE", getCreative() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteCreative().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""));
             environ[1] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(padAlign(String.format(flagform, "PISTONS", (getPistons() ?"\u00A72ON " : "\u00A74OFF "), (getAbsolutePistons().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(padAlign(String.format(flagform, "ENDERMAN", (getEnderman() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteEnderman().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "SPREAD", (getSpread() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteSpread().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
+            flags.append(padAlign(String.format(flagform, "PISTONS", getPistons() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePistons().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "ENDERMAN", getEnderman() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteEnderman().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(String.format(flagform, "SPREAD", getSpread() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteSpread().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""));
             environ[2] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(padAlign(String.format(flagform, "FLOW", (getFlow() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteFlow().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(padAlign(String.format(flagform, "STARVE", (getStarve() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteStarve().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "TNT", (getTNT() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteTNT().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
+            flags.append(padAlign(String.format(flagform, "FLOW", getFlow() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteFlow().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "STARVE", getStarve() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteStarve().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(String.format(flagform, "TNT", getTNT() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteTNT().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""));
             environ[3] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(padAlign(String.format(flagform, "RESTRICTED", (getRestricted() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteRestricted().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "RESTRICTED", getRestricted() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteRestricted().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
             environ[4] = flags.toString();
             flags.delete(0, flags.length());
         }
         //End Environment Flags
         //Start Combat Flags
-        if(showComb){
-            flags.append(padAlign(String.format(flagform, "PVP", (getPVP() ?"\u00A72ON " : "\u00A74OFF "), (getAbsolutePVP().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(padAlign(String.format(flagform, "SANCTUARY", (getSanctuary() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteSanctuary().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "CREEPER", (getCreeper() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteCreeper().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
+        if (showComb) {
+            flags.append(padAlign(String.format(flagform, "PVP", getPVP() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePVP().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "SANCTUARY", getSanctuary() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteSanctuary().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(String.format(flagform, "CREEPER", getCreeper() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteCreeper().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""));
             comb[0] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(padAlign(String.format(flagform, "GHAST", (getGhast() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteGhast().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(padAlign(String.format(flagform, "HEALING", (getHealing() ?"\u00A72ON " : "\u00A74OFF "), (getAbsoluteHealing().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")), 30, ' ', false));
-            flags.append(String.format(flagform, "POTION", (getPotion() ?"\u00A72ON " : "\u00A74OFF "), (getAbsolutePotion().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK+"(I)" : "")));
+            flags.append(padAlign(String.format(flagform, "GHAST", getGhast() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteGhast().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(padAlign(String.format(flagform, "HEALING", getHealing() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteHealing().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""), 30, ' ', false));
+            flags.append(String.format(flagform, "POTION", getPotion() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePotion().equals(Zone.ZoneFlag.INHERIT) ? ChatColor.PINK + "(I)" : ""));
             comb[1] = flags.toString();
         }
         //End Combat Flags
-        if(showComb && !showEnviro){
+        if (showComb && !showEnviro) {
             return comb;
         }
-        else if(!showComb && showEnviro){
+        else if (!showComb && showEnviro) {
             return environ;
         }
-        else{
-            String[] allFlags = new String[environ.length+comb.length];
-            for(int i = 0; i < environ.length; i++){
-                if(environ[i] != null){
+        else {
+            String[] allFlags = new String[environ.length + comb.length];
+            for (int i = 0; i < environ.length; i++) {
+                if (environ[i] != null) {
                     allFlags[i] = environ[i];
                 }
             }
-            for(int i = 0; i < comb.length; i++){
-                if(comb[i] != null){
-                    allFlags[environ.length+i] = comb[i];
+            for (int i = 0; i < comb.length; i++) {
+                if (comb[i] != null) {
+                    allFlags[environ.length + i] = comb[i];
                 }
             }
             return allFlags;
         }
     }
-    private String padAlign(String string, int fieldLength, char padding, boolean alignRight){
+
+    private String padAlign(String string, int fieldLength, char padding, boolean alignRight) {
         int length = fieldLength - getRealLength(string);
-        if (length <= 0){
+        if (length <= 0) {
             return string;
         }
         StringBuffer buffer = new StringBuffer(fieldLength);
-        for(int i=0; i<length; i++){
+        for (int i = 0; i < length; i++) {
             buffer.append(padding);
         }
-        if (alignRight){
+        if (alignRight) {
             buffer.append(string);
         }
-        else{
-            buffer.insert(0,string);
+        else {
+            buffer.insert(0, string);
         }
         return buffer.toString();
     }
-    
-    private int getRealLength(String string){
+
+    private int getRealLength(String string) {
         return string.replace("\u00A7[0-9A-Fa-f]", "").length();
     }
-    
+
     //Start Permission Checks
     /**
      * Set Permissions Method
      * 
-     * Overrides previous permission if it existed
-     * Otherwise creates new permission
-     *
-     * @param String ownerName
-     * @param PermType type
-     * @param Zone zone
-     * @param Boolean allowed
-     * @param Boolean override
+     * Overrides previous permission if it existed Otherwise creates new
+     * permission
+     * 
+     * @param String
+     *            ownerName
+     * @param PermType
+     *            type
+     * @param Zone
+     *            zone
+     * @param Boolean
+     *            allowed
+     * @param Boolean
+     *            override
      */
     public void setPermission(String ownerName, Permission.PermType type, boolean allowed, boolean override) {
         Permission previous = getSpecificPermission(ownerName, type);
-        if(previous != null){
+        if (previous != null) {
             zoneperms.remove(previous);
         }
-        zoneperms.add(new Permission(ownerName, type, this.name, allowed, override));
-        rhandle.getDataSource().dumpperm();
+        Permission perm = new Permission(ownerName, type, this.name, allowed, override);
+        zoneperms.add(perm);
+        perm.save();
     }
-    
-    public void setPermission(Permission perm){
+
+    public void setPermission(Permission perm) {
         zoneperms.add(perm);
     }
-    
+
     /**
      * Gets Specific Permission
      * 
-     * @param String ownerName
-     * @param PermType type
-     * @param Zone zone
+     * @param String
+     *            ownerName
+     * @param PermType
+     *            type
+     * @param Zone
+     *            zone
      * 
      * @return Permission
      */
     public Permission getSpecificPermission(String ownerName, Permission.PermType type) {
-        for(Permission p : zoneperms){
-            if(p.getOwnerName().equals(ownerName) && p.getType().equals(type)){
+        for (Permission p : zoneperms) {
+            if (p.getOwnerName().equals(ownerName) && p.getType().equals(type)) {
                 return p;
             }
         }
         return null;
     }
-    
+
     /**
      * Permission Delete
      * 
@@ -929,12 +1072,12 @@ public class Zone {
      */
     public void deletePermission(String ownerName, Permission.PermType type) {
         Permission permission = getSpecificPermission(ownerName, type);
-        if(permission != null){
+        if (permission != null) {
             zoneperms.remove(permission);
         }
-        rhandle.getDataSource().dumpperm();
+        permission.delete();
     }
-    
+
     /**
      * Delegate check
      * 
@@ -944,19 +1087,19 @@ public class Zone {
      * @return boolean check result
      */
     public boolean delegateCheck(ICModPlayer player, Permission.PermType type) {
-        if(getParent() != null){
-            if(getParent().permissionCheck(player, Permission.PermType.ALL)){
+        if (getParent() != null) {
+            if (getParent().permissionCheck(player, Permission.PermType.ALL)) {
                 return true;
             }
         }
-        if(type.equals(Permission.PermType.DELEGATE)){
+        if (type.equals(Permission.PermType.DELEGATE)) {
             return permissionCheck(player, Permission.PermType.ALL);
         }
-        else{
+        else {
             return permissionCheck(player, Permission.PermType.DELEGATE) && permissionCheck(player, type);
         }
     }
-    
+
     /**
      * General Permission Check
      * 
@@ -967,34 +1110,39 @@ public class Zone {
      */
     public boolean permissionCheck(ICModPlayer player, Permission.PermType type) {
         Permission result = null;
-        
-        for(Permission p : zoneperms) {
-            if(p.applicable(player, type)) {
-                if(result == null){
+
+        for (Permission p : zoneperms) {
+            if (p.applicable(player, type)) {
+                if (result == null) {
                     result = p;
                 }
-                else{
+                else {
                     result = p.battle(result, p);
                 }
             }
         }
-        if(result == null) {
-            if(getParent() != null){
+        if (result == null) {
+            if (getParent() != null) {
                 return getParent().permissionCheck(player, type);
             }
-            else{
+            else {
                 return RealmsProps.getGrantByDefault();
             }
-        } else {
+        }
+        else {
             return result.getAllowed();
         }
     }
-    
+
     public List<Permission> getPerms() {
-        return zoneperms;
+        List<Permission> theperms = new ArrayList<Permission>(zoneperms);
+        Collections.copy(theperms, zoneperms);
+        return theperms;
     }
+
     //End Permission checks
-    
+
+    @Override
     public String toString() {
         StringBuffer toRet = new StringBuffer();
         toRet.append(name);
@@ -1048,23 +1196,25 @@ public class Zone {
         toRet.append(restricted.toString());
         return toRet.toString();
     }
-    
-    public int hashCode(){
+
+    @Override
+    public int hashCode() {
         int hash = 7;
         hash = 31 * hash + dimension;
         hash = 31 * hash + (null == world ? 0 : world.hashCode());
         hash = 31 * hash + (null == name ? 0 : name.hashCode());
         return hash;
     }
-    
-    public boolean equals(Object obj){
-        if(this == obj){
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if((obj == null) || !(obj instanceof Zone)){
+        if (obj == null || !(obj instanceof Zone)) {
             return false;
         }
-        Zone zone = (Zone)obj;
+        Zone zone = (Zone) obj;
         return this.name.equals(zone.getName());
     }
 }

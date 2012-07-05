@@ -7,189 +7,194 @@ import net.visualillusionsent.viutils.ICModPlayer;
  * This class is a bridge to send Player data from the 'default package' to
  * 'packaged classes'.
  * <p>
- * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
+ * This file is part of the VI Utilities Package
+ * (net.visualillusionsent.viutils)
  * 
  * @author Jason Jones
  * @see ICModPlayer
  */
-public class CModPlayer implements ICModPlayer{
+public class CModPlayer implements ICModPlayer {
     private Player player;
-    
-    public CModPlayer(Player player){
+
+    public CModPlayer(Player player) {
         this.player = player;
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
         return player.getName();
     }
 
     @Override
-    public void sendMessage(String message) {
+    public final void sendMessage(String message) {
         player.sendMessage(message);
     }
 
     @Override
-    public void notify(String message) {
+    public final void notify(String message) {
         player.notify(message);
     }
 
     @Override
-    public void dropInventory() {
+    public final void dropInventory() {
         player.dropInventory();
     }
 
     @Override
-    public boolean canUseCommand(String cmd) {
+    public final boolean canUseCommand(String cmd) {
         return player.canUseCommand(cmd);
     }
 
     @Override
-    public void moveTo(double x, double y, double z, float rotation, float pitch) {
+    public final void moveTo(double x, double y, double z, float rotation, float pitch) {
         player.teleportTo(x, y, z, rotation, pitch);
     }
 
     @Override
-    public int getHealth() {
+    public final int getHealth() {
         return player.getHealth();
     }
 
     @Override
-    public void setHealth(int newVal) {
+    public final void setHealth(int newVal) {
         player.setHealth(newVal);
     }
-    
+
     @Override
-    public void heal(int newVal){
+    public final void heal(int newVal) {
         int newHealth = player.getHealth() + newVal;
         player.setHealth(newHealth);
     }
-    
+
     @Override
-    public void doDamage(int type, int amount) {
-        try{
-            switch(type){
-            case 1: player.getUser().a(ODamageSource.l, amount); break; //EXPLOSION
-            case 2: player.getUser().a(ODamageSource.k, amount); break; //RESTRICT(Generic)
+    public final void doDamage(int type, int amount) {
+        try {
+            switch (type) {
+                case 1:
+                    player.getUser().a(ODamageSource.l, amount);
+                    break; //EXPLOSION
+                case 2:
+                    player.getUser().a(ODamageSource.k, amount);
+                    break; //RESTRICT(Generic)
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
             //Possible change to the Notchian so revert to old methods
             int newHealth = player.getHealth() - amount;
-            player.setHealth(newHealth); 
+            player.setHealth(newHealth);
         }
     }
 
     @Override
-    public boolean getMode() {
+    public final boolean getMode() {
         return player.getMode();
     }
 
     @Override
-    public boolean isDamageDisabled() {
+    public final boolean isDamageDisabled() {
         return player.isDamageDisabled();
     }
 
     @Override
-    public double getX() {
+    public final double getX() {
         return player.getX();
     }
 
     @Override
-    public double getY() {
+    public final double getY() {
         return player.getY();
     }
 
     @Override
-    public double getZ() {
+    public final double getZ() {
         return player.getZ();
     }
 
     @Override
-    public double getRotation() {
+    public final double getRotation() {
         return player.getRotation();
     }
 
     @Override
-    public double getPitch() {
+    public final double getPitch() {
         return player.getPitch();
     }
 
     @Override
-    public String getWorldName() {
+    public final String getWorldName() {
         return player.getWorld() != null ? player.getWorld().getName() : "null";
     }
 
     @Override
-    public int getDimension() {
+    public final int getDimension() {
         return player.getWorld().getType().getId();
     }
 
     @Override
-    public int getDimIndex() {
+    public final int getDimIndex() {
         return player.getWorld().getType().toIndex();
     }
-    
+
     @Override
-    public boolean isInGroup(String group){
+    public final boolean isInGroup(String group) {
         return player.isInGroup(group);
     }
-    
+
     @Override
-    public boolean isAdmin(){
+    public final boolean isAdmin() {
         return player.isAdmin();
     }
-    
+
     @Override
-    public ICModItem[] getInvContents(){
+    public final ICModItem[] getInvContents() {
         ICModItem[] inv = new ICModItem[40];
         Item[] items = player.getInventory().getContents();
-        for(int i = 0; i < 40; i++){
-            if(items[i] != null){
+        for (int i = 0; i < 40; i++) {
+            if (items[i] != null) {
                 inv[i] = new CModItem(items[i]);
             }
         }
         return inv;
     }
-    
+
     @Override
-    public void setInvContents(ICModItem[] cItems){
+    public final void setInvContents(ICModItem[] cItems) {
         Item[] items = new Item[40];
-        for(ICModItem theItem : cItems){
-            if(theItem != null){
-                items[theItem.getSlot()] = (Item)theItem.getItem();
+        for (ICModItem theItem : cItems) {
+            if (theItem != null) {
+                items[theItem.getSlot()] = (Item) theItem.getItem();
             }
         }
         player.getInventory().setContents(items);
         player.getInventory().update();
     }
-    
+
     @Override
-    public void clearInventory(){
+    public final void clearInventory() {
         player.getInventory().setContents(new Item[40]);
     }
-    
+
     @Override
-    public Object getPlayer(){
+    public final Object getPlayer() {
         return player;
     }
-    
+
     @Override
-    public String toString(){
+    public final String toString() {
         return player.toString();
     }
-    
+
     @Override
-    public boolean equals(Object obj){
-        if(obj instanceof CModPlayer){
+    public final boolean equals(Object obj) {
+        if (obj instanceof CModPlayer) {
             CModPlayer cPlayer = (CModPlayer) obj;
             return player.equals(cPlayer.getPlayer());
         }
         return false;
     }
-    
+
     @Override
-    public int hashCode(){
+    public final int hashCode() {
         return player.hashCode();
     }
 }

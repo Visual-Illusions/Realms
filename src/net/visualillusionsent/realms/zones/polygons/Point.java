@@ -1,5 +1,4 @@
 package net.visualillusionsent.realms.zones.polygons;
-import java.lang.Math;
 
 /**
  * Realms Point
@@ -24,9 +23,9 @@ public class Point {
     }
 
     public double distance2D(Point p) {
-        return Math.sqrt(Math.pow((x-p.x),2)+Math.pow((z-p.z),2));
+        return Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(z - p.z, 2));
     }
-    
+
     public static int isLeft2D(Point p1, Point p2, Point p3) {
         return (p2.x - p1.x) * (p3.z - p1.z) - (p3.x - p1.x) * (p2.z - p1.z);
     }

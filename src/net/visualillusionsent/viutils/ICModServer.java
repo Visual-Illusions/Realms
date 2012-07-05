@@ -1,6 +1,5 @@
 package net.visualillusionsent.viutils;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,34 +8,35 @@ import java.util.List;
  * <p>
  * Handles methods from Server inside of packages
  * <p>
- * This file is part of the VI Utilities Package (net.visualillusionsent.viutils)
+ * This file is part of the VI Utilities Package
+ * (net.visualillusionsent.viutils)
  * 
  * @author darkdiplomat
- *
+ * 
  */
 public interface ICModServer {
-    
+
     /**
      * gets a list of Mobs
      * 
      * @return moblist
      */
     public List<ICModMob> getMobList();
-    
+
     /**
      * gets a list of Players
      * 
      * @return playerlist
      */
     public List<ICModPlayer> getPlayerList();
-    
+
     /**
      * gets a list of animals
      * 
      * @return animallist
      */
     public List<ICModMob> getAnimalList();
-    
+
     /**
      * gets a block at specificed position
      * 
@@ -48,16 +48,17 @@ public interface ICModServer {
      * @return block
      */
     public ICModBlock getBlockAt(int x, int y, int z, int dim, String WorldName);
-    
+
     /**
      * sets specified block
+     * 
      * @param block
      */
     public void setBlock(ICModBlock block);
-    
+
     /**
      * sets a block of specified type and at specified location
-     *  
+     * 
      * @param type
      * @param x
      * @param y
@@ -66,16 +67,17 @@ public interface ICModServer {
      * @param dim
      */
     public void setBlock(int type, int x, int y, int z, String worldname, int dim);
-    
+
     /**
      * gets the default world's name
      * 
      * @return worldname
      */
     public String getDefaultWorldName();
-    
+
     /**
      * gets the block at the highest y position at specified x,z position
+     * 
      * @param x
      * @param z
      * @param worldname
@@ -83,27 +85,23 @@ public interface ICModServer {
      * @return y
      */
     public int getHighestBlockY(int x, int z, String worldname, int dim);
-    
+
     /**
      * gets the default group name
      * 
      * @return default group name
      */
     public String getDefaultGroup();
-    
+
     public List<String> getAdminGroups();
-    
+
     /**
      * gets Canary's MySQL Connection
+     * 
      * @return connection
      */
-    public Connection getCanarySQLConnection() throws SQLException;
-    
-    /**
-     * releases the Canary MySQL Connection
-     */
-    public void releaseConn();
-    
+    public ICModConnection getCanarySQLConnection() throws SQLException;
+
     public ICModItem makeItem(int id, int amount, int slot, int damage);
 
     public ICModPlayer getPlayer(String name);
