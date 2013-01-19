@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Title: Realms
+Version: 7.0
+Build: 0
+Beta: true
+Release-Canidate: false
+Vendor: Visual Illusions Entertainment
+Built-By: darkdiplomat
+Class-Path: ../lib/jdom.jar ../lib/viutils-1.0.0.jar ../lib/sqlite.jar

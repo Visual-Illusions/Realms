@@ -1,0 +1,8 @@
+/build
+/dist
+/realmsBukkit.jardesc
+/realmsCanary.jardesc
+/bin
+/.settings
+/.project
+/.classpath
