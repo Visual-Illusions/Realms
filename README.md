@@ -15,11 +15,12 @@ Be sure to include as much information about the issue as possible, including Se
 
 ## Compiling ##
 Create a new project in the IDE of your choice
-Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom.jar to the build path
+Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)
 Export!
 
-You can find VIUtils by visiting [ci.visualillusionsent.net](http://ci.visualillusionsent.net "jenkins")
-JDOM can be found by visiting [
+You can find VIUtils by visiting [ci.visualillusionsent.net](http://ci.visualillusionsent.net/job/VIUtils/lastBuild/net.visualillusionsent$viutils/ "jenkins")
+JDOM2 can be found by visiting [jdom.org](http://www.jdom.org/downloads/index.html "jdom")
+SQLite3-JDBC can be found by visiting [xerial.org](http://www.xerial.org/maven/repository/artifact/org/xerial/sqlite-jdbc/3.7.2/)
 
 ## License ##
 Realms v7
