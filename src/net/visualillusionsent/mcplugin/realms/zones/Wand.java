@@ -178,11 +178,11 @@ public final class Wand {
 
             switch (command.length) {
                 case 1:
-                    user.sendMessage(ChatColors.CYAN.concat("Usage: /wand show [x1,z1 x2,z2] [zonename]"));
+                    user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                     return true;
                 case 2:
                     if (!mode.equalsIgnoreCase("polygon")) {
-                        user.sendMessage(ChatColors.CYAN.concat("Usage: /wand show [x1,z1 x2,z2] [zonename]"));
+                        user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     else {
@@ -229,7 +229,7 @@ public final class Wand {
                     break;
                 case 4:
                     if (mode.equalsIgnoreCase("default")) {
-                        user.sendMessage(ChatColors.CYAN.concat("Usage: /wand show [x1,z1 x2,z2] [zonename]"));
+                        user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     else {
@@ -240,7 +240,7 @@ public final class Wand {
                         String[] coord1 = command[1].split(",");
                         String[] coord2 = command[2].split(",");
                         if (coord1.length < 2 || coord2.length < 2) {
-                            user.sendMessage(ChatColors.CYAN.concat("Usage: /wand show [x1,z1 x2,z2] [zonename]"));
+                            user.sendMessage(ChatColors.CYAN.concat("Usage: / realms wand show <x1,z1 x2,z2> <zone>"));
                             return true;
                         }
                         x1 = Integer.parseInt(coord1[0]);
@@ -249,7 +249,7 @@ public final class Wand {
                         z2 = Integer.parseInt(coord2[1]);
                     }
                     catch (NumberFormatException e) {
-                        user.sendMessage(ChatColors.CYAN.concat("Usage: /wand show [x1,z1 x2,z2] [zonename]"));
+                        user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     if (thePolygon == null) {

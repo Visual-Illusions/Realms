@@ -1,15 +1,26 @@
 # Realms 7 #
 ### Polygonal Hierarchical Area Ownership Plugin for the CanaryMod and Bukkit Minecraft Server Modifications ###
-#### &copy; 2012 - 2013 Visual Illusions Entertainment ####
+#### &copy; Copyright 2012 - 2013 Visual Illusions Entertainment ####
 #### Licensed under the GNU General Public License v3 ####
 #### Realms originally developed by Impact and durron597 (versions before v3) ####
 
 ## About ##
-See the [CanaryMod Forums Realms Topic](http://forums.canarymod.net/?topic=1142 "realms_topic") for more information
+See the [Realms Usage File](https://github.com/darkdiplomat/Realms/blob/v7/src/resources/usage.txt "realms_usage") for more information
+
+[CanaryMod Forums Realms Topic](http://forums.canarymod.net/?topic=1142 "realms_topic")
+
+## Bug Reporting ##
+Please use the [GitHub issue tracker](https://github.com/darkdiplomat/Realms/issues "issues") associated with this repository.
+Be sure to include as much information about the issue as possible, including Server Mod info
+
+## Compiling ##
+Create a new project in the IDE of your choice
+Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom.jar to the build path
+Export!
 
 ## License ##
 Realms v7
-Copyright (C) 2012 - 2013 Visual Illusions Entertainment
+&copy; Copyright 2012 - 2013 Visual Illusions Entertainment
 
 Author: Jason Jones (darkdiplomat) <darkdiplomat@visualillusionsent.net>
 

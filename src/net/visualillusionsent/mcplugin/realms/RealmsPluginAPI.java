@@ -21,7 +21,6 @@ package net.visualillusionsent.mcplugin.realms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,14 +62,9 @@ public final class RealmsPluginAPI {
         List<Zone> zones = ZoneLists.getplayerZones(user);
         List<String> names = new ArrayList<String>();
         Iterator<Zone> zoneIter = zones.iterator();
-        try {
-            while (zoneIter.hasNext()) {
-                names.add(zoneIter.next().getName());
-            }
-        }
-        catch (ConcurrentModificationException CME) {
-            //Hoping this doesn't happen but can't be 100% certain
-            return herp;
+
+        while (zoneIter.hasNext()) {
+            names.add(zoneIter.next().getName());
         }
 
         return names.toArray(herp);
