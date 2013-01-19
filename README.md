@@ -18,6 +18,9 @@ Create a new project in the IDE of your choice
 Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom.jar to the build path
 Export!
 
+You can find VIUtils by visiting [ci.visualillusionsent.net](http://ci.visualillusionsent.net "jenkins")
+JDOM can be found by visiting [
+
 ## License ##
 Realms v7
 &copy; Copyright 2012 - 2013 Visual Illusions Entertainment

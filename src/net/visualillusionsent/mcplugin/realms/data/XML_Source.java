@@ -42,14 +42,14 @@ import net.visualillusionsent.mcplugin.realms.zones.polygon.PolygonArea;
 import net.visualillusionsent.mcplugin.realms.zones.polygon.PolygonConstructException;
 import net.visualillusionsent.utils.SystemUtils;
 
-import org.jdom.Comment;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Comment;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 /**
  * This file is part of Realms.
@@ -59,7 +59,6 @@ import org.jdom.output.XMLOutputter;
  * 
  * @author Jason (darkdiplomat)
  */
-@SuppressWarnings("unchecked")
 final class XML_Source implements DataSource {
     private final Format xmlform = Format.getPrettyFormat().setExpandEmptyElements(true).setOmitDeclaration(true).setOmitEncoding(true).setLineSeparator(SystemUtils.LINE_SEP);
     private final XMLOutputter outputter = new XMLOutputter(xmlform);

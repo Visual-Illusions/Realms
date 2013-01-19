@@ -18,6 +18,7 @@
  * Source Code availible @ https://github.com/darkdiplomat/Realms
  */
 import net.visualillusionsent.mcplugin.realms.RealmsBase;
+import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
 import net.visualillusionsent.mcplugin.realms.commands.RealmsCommandHandler;
 
 /**
@@ -39,19 +40,16 @@ public final class Realms extends Plugin {
     @Override
     public final void disable() {
         if (RealmsBase.isLoaded()) {
+            etc.getLoader().removeCustomListener("Realms-API");
             base.terminate();
-            clearCustomHooks();
         }
     }
 
     @Override
     public final void initialize() {
-        new Realms_CanaryListener(this);
         RealmsCommandHandler.herp();
+        RealmsTranslate.herp();
+        new Realms_CanaryListener(this);
         new Realms_CanaryPluginInterface(this);
-    }
-
-    private final void clearCustomHooks() {
-        etc.getLoader().removeCustomListener("Realms-API");
     }
 }

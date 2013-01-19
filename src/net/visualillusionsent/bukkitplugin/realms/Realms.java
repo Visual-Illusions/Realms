@@ -21,6 +21,7 @@ package net.visualillusionsent.bukkitplugin.realms;
 
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcplugin.realms.RealmsBase;
+import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
 import net.visualillusionsent.mcplugin.realms.commands.RealmsCommandHandler;
 import net.visualillusionsent.mcplugin.realms.logging.RLevel;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
@@ -46,7 +47,7 @@ public class Realms extends JavaPlugin {
     public final void onEnable() {
         base = new RealmsBase(new Bukkit_Server(getServer()));
         RealmsCommandHandler.herp();
-        //RealmsTranslate.herp();
+        RealmsTranslate.herp();
         new Realms_BukkitListener(this);
         //Bukkit.getHelpMap().addTopic(null);
     }

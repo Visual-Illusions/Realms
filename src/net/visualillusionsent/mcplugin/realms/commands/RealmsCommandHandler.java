@@ -120,7 +120,7 @@ public class RealmsCommandHandler {
         caller.sendError(RealmsTranslate.transformMessage("cmd.specify", getRealmsCommandsList()));
     }
 
-    public static String herp() {
+    public static String herp() { //Just meant to help initialize the class so there isnt a delay later
         return "derp";
     }
 }
