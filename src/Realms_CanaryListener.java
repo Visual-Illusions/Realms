@@ -394,8 +394,8 @@ public final class Realms_CanaryListener extends PluginListener {
                 switch (type) {
                     case ENTITY:
                         if (attacker != null) {
-                            if (attacker.isPlayer() || (attacker.getEntity() instanceof OEntityArrow && (new Arrow((OEntityArrow) attacker.getEntity()).getShooter().isPlayer()) || (attacker.getEntity() instanceof OEntityWolf && (new Wolf((OEntityWolf) attacker.getEntity()).isTame())))) {
-                                deny = !zone.getPVP() || zone.getSanctuary();
+                            if (attacker.isPlayer() || (attacker.getName().equals("Wolf") && (new Wolf((OEntityWolf) attacker.getEntity()).isTame()))) {
+                                deny = (!zone.getPVP()) || zone.getSanctuary();
                             }
                         }
                         break;
@@ -425,7 +425,7 @@ public final class Realms_CanaryListener extends PluginListener {
                         deny = zone.getSanctuary();
                         break;
                 }
-                RealmsLogMan.log(RLevel.DAMAGE, "Player: " + defender.getName() + "Damage: " + type.name() + " Zone: '" + zone.getName() + "' Result: '" + (deny ? "Took Damage'" : "Didn't Take Damage'"));
+                RealmsLogMan.log(RLevel.DAMAGE, "Player: " + defender.getPlayer().getName() + " Damage: " + type.name() + " Attacker: " + (attacker != null ? attacker.getName() : "No Attacker") + " Zone: '" + zone.getName() + "' Result: " + (deny ? "'No Damage'" : "'Damaged'"));
             }
         }
         catch (Exception ex) {

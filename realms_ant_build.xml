@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Realms Distribution Package Script" default="dist" basedir=".">
+    <description>
+        This script will build the Realms and zip appropriate files.
+    </description>
+
+    <property name="src" location="src" />
+    <property name="lib" location="lib" />
+    <property name="build" location="build" />
+    <property name="dist" location="dist" />
+
+    <path id="classpath">
+        <fileset dir="lib">
+        	<!--Files specified here should be downloaded using the links provided in the README.md-->
+        	<!--You may also need a valid minecraft_servero.jar from CanaryMod for compilation-->
+            <include name="jdom2.jar" />
+            <include name="viutils-1.0.0.jar" />
+        	<include name="sqlite.jar" />
+        	<include name="bukkit-api.jar" />
+        	<include name="CanaryMod.jar" />
+        </fileset>
+    </path>
+
+    <target name="init" depends="clean" description="Create the output directories.">
+        <mkdir dir="${build}" />
+        <mkdir dir="${build}/classes" />
+        <mkdir dir="${dist}" />
+        <mkdir dir="${dist}/lib" />
+    </target>
+
+    <target name="compile" depends="init" description="Compile the source.">
+        <javac destdir="${build}/classes" optimize="on" debug="on" includeantruntime="false" debuglevel="lines,vars,source" source="1.6" target="1.6" nowarn="off">
+            <src path="${src}" />
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="Create the jar file">
+        <jar destfile="${dist}/Realms.jar">
+            <fileset dir="${build}/classes" />
+            <manifest>
+            	<attribute name="Title" value="Realms" />
+            	<attribute name="Version" value="7.0" />
+            	<attribute name="Build" value="0" />
+            	<attribute name="Beta" value="true" />
+            	<attribute name="Release-Canidate" value="false" />
+            	<attribute name="Vendor" value="Visual Illusions Entertainment" />
+                <atrribute name="Built-By" value="darkdiplomat" />
+                <attribute name="Class-Path" value="../lib/viutils-1.0.0.jar ../lib/jdom2.jar ../lib/sqlite.jar" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist" depends="jar" >
+        <!--Files specified here should be downloaded using the links provided in the README.md-->
+        <copy todir="${dist}/lib">
+            <fileset dir="lib">
+            	<include name="jdom2.jar" />
+            	<include name="viutils-1.0.0.jar" />
+            	<include name="sqlite.jar" />
+            	<include name="*.lib" />
+            </fileset>
+        </copy>
+        <zip destfile="${dist}/Realms.zip" basedir="${dist}" />
+    </target>
+
+    <target name="clean" description="Remove the output directories">
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+    </target>
+</project>
