@@ -10,7 +10,7 @@ commands:
   realms:
     description: Realms base command.
     usage: /realms <subcommand> <subargs>
-    
+
 permissions:
   realms.admin:
     description: Gives access to the /realms givemepermission command

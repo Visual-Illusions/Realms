@@ -111,7 +111,7 @@ public class DataSourceHandler {
 
     private final void testJDOM() throws DataSourceException {
         try {
-            Class.forName("org.jdom.JDOMException");
+            Class.forName("org.jdom2.JDOMException");
         }
         catch (ClassNotFoundException cnfe) {
             throw new DataSourceException(cnfe, DataSourceType.XML);

@@ -32,6 +32,9 @@ Overview:
     Disable Enderman from moving blocking in a Zone
     Disable Potions in a Zone
     Allow Player healing in a Zone
+	
+Plugin Install:
+	
     
 Zone Flags:    (D) = Default Setting    (E) = Environmental Flag    (C) Combat Flag
     /-----------------------------------------------------------------------------------------------------------------------------------------------------------\
