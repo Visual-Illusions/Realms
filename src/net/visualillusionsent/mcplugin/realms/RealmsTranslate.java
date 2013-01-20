@@ -47,7 +47,7 @@ public class RealmsTranslate extends LocaleHelper {
     }
 
     private final static String colorize(String msg) {
-        return msg.replaceAll("%c", ChatColors.MARKER);
+        return msg.replaceAll("\\$c", ChatColors.MARKER);
     }
 
     public static String herp() { //Just meant to help initialize the class so there isnt a delay later
