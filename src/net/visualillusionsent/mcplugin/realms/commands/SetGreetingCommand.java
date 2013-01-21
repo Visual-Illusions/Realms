@@ -36,7 +36,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone|*> [greeting] - Sets the greeting for a zone", name = "setgreeting", usage = "<zone|*> [greeting]")
+@RCommand(desc = "Sets the greeting for a zone", name = "setgreeting", usage = "<zone|*> [greeting]")
 final class SetGreetingCommand extends RealmsCommand {
 
     @Override

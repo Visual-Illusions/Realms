@@ -22,7 +22,7 @@ Export with the provide MANIFEST.MF file!
 You can find VIUtils by visiting [ci.visualillusionsent.net](http://ci.visualillusionsent.net/job/VIUtils/lastBuild/net.visualillusionsent$viutils/ "jenkins")<br>
 JDOM2 can be found by visiting [jdom.org](http://www.jdom.org/downloads/index.html "jdom")<br>
 SQLite3-JDBC can be found by visiting [xerial.org](http://www.xerial.org/maven/repository/artifact/org/xerial/sqlite-jdbc/3.7.2/)<br>
-Bukkit API Jars can be found on the [Bukkit Wiki](http://wiki.bukkit.org/Main_Page)<br> (Requires bukkit-1.4.5-R1.0.jar or greater)
+Bukkit API Jars can be found on the [Bukkit Wiki](http://wiki.bukkit.org/Main_Page) (Requires bukkit-1.4.5-R1.0.jar or greater)<br>
 CanaryMod can be found at [CanaryMod.net](http://www.canarymod.net/download)  (Requires Crow 5.7.11 or greater)
 
 ## License ##

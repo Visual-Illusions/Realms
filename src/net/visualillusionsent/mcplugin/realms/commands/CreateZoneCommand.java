@@ -37,7 +37,7 @@ import net.visualillusionsent.utils.TaskManager;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone> [parent] - Creates a new zone", name = "createzone", usage = "<zone> [parent]", minParam = 1, maxParam = 2)
+@RCommand(desc = "Creates a new zone", name = "createzone", usage = "<zone> [parent]", minParam = 1, maxParam = 2)
 final class CreateZoneCommand extends RealmsCommand {
 
     @Override

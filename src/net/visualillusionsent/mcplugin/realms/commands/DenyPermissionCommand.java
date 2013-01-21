@@ -38,7 +38,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<player> <permission> <zone|*> ['OVERRIDE'] - Denies a player a permission in a zone", name = "denyperm", usage = "<player> <permission> <zone|*> ['OVERRIDE']", minParam = 3, maxParam = 4)
+@RCommand(desc = "Denies a player a permission in a zone", name = "denyperm", usage = "<player> <permission> <zone|*> ['OVERRIDE']", minParam = 3, maxParam = 4)
 final class DenyPermissionCommand extends RealmsCommand {
 
     final void execute(Mod_Caller caller, String[] args) {

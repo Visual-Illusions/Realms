@@ -34,7 +34,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "- Gives all permission to zone", name = "givemepermission", usage = "", noConsole = true)
+@RCommand(desc = "Gives all permission to zone", name = "givemepermission", usage = "", noConsole = true)
 final class GiveMePermissionCommand extends RealmsCommand {
 
     @Override

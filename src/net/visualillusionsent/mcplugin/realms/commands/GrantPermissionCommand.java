@@ -38,7 +38,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<player> <permission> <zone|*> ['OVERRIDE'] - Grants a player a permission in a zone", name = "grantperm", usage = "<player> <permission> <zone|*> ['OVERRIDE']", minParam = 3, maxParam = 4)
+@RCommand(desc = "Grants a player a permission in a zone", name = "grantperm", usage = "<player> <permission> <zone|*> ['OVERRIDE']", minParam = 3, maxParam = 4)
 final class GrantPermissionCommand extends RealmsCommand {
 
     final void execute(Mod_Caller caller, String[] args) {

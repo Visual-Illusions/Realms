@@ -35,7 +35,7 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneNotFoundException;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone|*> - Reloads the specified Zone", name = "reloadzone", usage = "<zone|*>", minParam = 1, maxParam = 1)
+@RCommand(desc = "Reloads the specified Zone", name = "reloadzone", usage = "<zone|*>", minParam = 1, maxParam = 1)
 final class ReloadZoneCommand extends RealmsCommand {
 
     @Override

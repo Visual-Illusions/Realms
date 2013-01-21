@@ -8,7 +8,7 @@ website: http://visualillusionsent.net
 
 commands:
   realms:
-    description: Realms base command.
+    description: Realms base command. Use /realms help for sub command help.
     usage: /realms <subcommand> <subargs>
 
 permissions:

@@ -35,7 +35,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone|*> - Deletes a zone", name = "deletezone", usage = "<zone|*>", minParam = 1, maxParam = 1)
+@RCommand(desc = "Deletes a zone", name = "deletezone", usage = "<zone|*>", minParam = 1, maxParam = 1)
 final class DeleteZoneCommand extends RealmsCommand {
 
     @Override

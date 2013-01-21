@@ -36,7 +36,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone|*> [farewell] - Sets the farewell for a zone", name = "setfarewell", usage = "<zone|*> [farewell]")
+@RCommand(desc = "Sets the farewell for a zone", name = "setfarewell", usage = "<zone|*> [farewell]")
 final class SetFarewellCommand extends RealmsCommand {
 
     @Override

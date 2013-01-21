@@ -51,5 +51,6 @@ public final class Realms extends Plugin {
         RealmsTranslate.herp();
         new Realms_CanaryListener(this);
         new Realms_CanaryPluginInterface(this);
+        etc.getInstance().addCommand("/realms", "- Realms base command. Use /realms help for sub command help.");
     }
 }

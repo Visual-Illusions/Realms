@@ -19,6 +19,8 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 import net.visualillusionsent.mcmod.interfaces.ChatColors;
@@ -46,6 +48,7 @@ public class RealmsCommandHandler {
         new DenyPermissionCommand();
         new GiveMePermissionCommand();
         new GrantPermissionCommand();
+        new HelpCommand();
         new PermissionsListCommand();
         new ReloadZoneCommand();
         new SetAdventureFlagCommand();
@@ -76,10 +79,20 @@ public class RealmsCommandHandler {
 
     private RealmsCommandHandler() {}
 
+    static RealmsCommand getCommand(String cmd) {
+        if (commands.containsKey(cmd)) {
+            return commands.get(cmd);
+        }
+        return null;
+    }
+
+    static Collection<RealmsCommand> getRealmsSubCommands() {
+        return Collections.unmodifiableCollection(commands.values());
+    }
+
     static void register(String name, RealmsCommand cmd) {
         if (name != null && cmd != null) {
             if (!commands.containsValue(cmd)) {
-                //RealmsBase.getServer().addCommand("/realms ".concat(name), cmd.getClass().getAnnotation(RCommand.class).usage());
                 commands.put(name, cmd);
                 RealmsLogMan.log(RLevel.GENERAL, "Registering SubCommand: ".concat(name));
             }

@@ -31,7 +31,7 @@ import net.visualillusionsent.mcplugin.realms.RealmsBase;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "- Checks the current version and if it's the latest", name = "version", usage = "")
+@RCommand(desc = "Checks the current version and if it's the latest", name = "version", usage = "")
 final class VersionCommand extends RealmsCommand {
     private final String VER = ChatColors.PURPLE.concat("----- ").concat(ChatColors.BLUE).concat("Realms v%s by ").concat(ChatColors.LIGHT_GREEN).concat("DarkDiplomat").concat(ChatColors.PURPLE).concat(" -----"), //
             NOT_LATEST = ChatColors.PURPLE.concat("----- ").concat(ChatColors.LIGHT_GRAY).concat("Update Availible: v%s").concat(ChatColors.PURPLE).concat(" -----"), //

@@ -38,7 +38,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone|*> <on|off|inherit> - Sets a zones Animals Flag", name = "animals", usage = "<zone|*> <on|off|inherit>", minParam = 2, maxParam = 2)
+@RCommand(desc = "Sets a zones Animals Flag", name = "animals", usage = "<zone|*> <on|off|inherit>", minParam = 2, maxParam = 2)
 final class SetAnimalsFlagCommand extends RealmsCommand {
 
     @Override

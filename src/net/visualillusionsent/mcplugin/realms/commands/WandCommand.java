@@ -31,7 +31,7 @@ import net.visualillusionsent.mcplugin.realms.RealmsBase;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "- Activates a player's Realms Edit Wand", name = "wand", usage = "", noConsole = true)
+@RCommand(desc = "Activates a player's Realms Edit Wand", name = "wand", usage = "", noConsole = true)
 final class WandCommand extends RealmsCommand {
 
     @Override

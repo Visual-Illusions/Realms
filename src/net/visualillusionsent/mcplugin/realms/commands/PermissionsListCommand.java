@@ -39,7 +39,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.Permission;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<zone|*> [page#|all] - Gets the List of Permissions for a Zone", name = "permlist", usage = "<zone|*> [page#|all]", minParam = 1, maxParam = 2)
+@RCommand(desc = "Gets the List of Permissions for a Zone", name = "permlist", usage = "<zone|*> [page#|all]", minParam = 1, maxParam = 2)
 final class PermissionsListCommand extends RealmsCommand {
     private final String LIST = ChatColors.CYAN.concat("List all Permissions attached to Zone: ").concat(ChatColors.BLUE).concat("%s");
     private final String PAGE = ChatColors.CYAN.concat(" Page ").concat(ChatColors.PINK).concat("%d").concat(ChatColors.CYAN).concat(" of ").concat(ChatColors.PURPLE).concat("%d");

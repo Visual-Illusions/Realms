@@ -36,7 +36,7 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "<player> <permission> <zone|*> - Deletes a player's permission in a zone", name = "deleteperm", usage = "<player> <permission> <zone|*>", minParam = 3, maxParam = 3)
+@RCommand(desc = "Deletes a player's permission in a zone", name = "deleteperm", usage = "<player> <permission> <zone|*>", minParam = 3, maxParam = 3)
 final class DeletePermissionCommand extends RealmsCommand {
 
     @Override

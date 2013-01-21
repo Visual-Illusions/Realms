@@ -32,7 +32,7 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "[page#|all] - Gets the list of Zones", name = "zonelist", usage = "[page#|all]", maxParam = 1)
+@RCommand(desc = "Gets the list of Zones", name = "zonelist", usage = "[page#|all]", maxParam = 1)
 final class ZoneListCommand extends RealmsCommand {
 
     @Override
