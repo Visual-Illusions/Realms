@@ -18,6 +18,7 @@
  * Source Code availible @ https://github.com/darkdiplomat/Realms
  */
 import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.
@@ -57,6 +58,11 @@ public class Canary_Entity implements Mod_Entity {
     @Override
     public final double getZ() {
         return entity.getZ();
+    }
+
+    @Override
+    public final Point getLocationPoint() {
+        return new Point((int) Math.floor(getX()), (int) Math.floor(getY()), (int) Math.floor(getZ()));
     }
 
     @Override

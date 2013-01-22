@@ -42,6 +42,8 @@ import net.visualillusionsent.mcplugin.realms.runnable.RestrictionDamager;
 import net.visualillusionsent.mcplugin.realms.zones.Wand;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.PolygonArea;
 import net.visualillusionsent.utils.TaskManager;
 import net.visualillusionsent.utils.UpdateException;
 import net.visualillusionsent.utils.Updater;
@@ -56,7 +58,7 @@ import net.visualillusionsent.utils.VersionChecker;
  * @author Jason (darkdiplomat)
  */
 public class RealmsBase {
-    private static RealmsBase instance;
+    private static RealmsBase $;
 
     private final Mod_Server server;
     private final String name = "Realms";
@@ -85,8 +87,8 @@ public class RealmsBase {
     private static boolean loaded;
 
     public RealmsBase(Mod_Server server) {
-        if (instance == null) {
-            instance = this;
+        if ($ == null) {
+            $ = this;
             this.server = server;
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(isBeta() ? " BETA" : isReleaseCandidate() ? " RC" : "").concat(" initializing..."));
             if (beta) {
@@ -138,10 +140,10 @@ public class RealmsBase {
      * Terminates the threadhandler and closes the log file
      */
     public final void terminate() {
-        TaskManager.removeTask(instance.mobdes);
-        TaskManager.removeTask(instance.animaldes);
-        TaskManager.removeTask(instance.healer);
-        TaskManager.removeTask(instance.restrictdam);
+        TaskManager.removeTask($.mobdes);
+        TaskManager.removeTask($.animaldes);
+        TaskManager.removeTask($.healer);
+        TaskManager.removeTask($.restrictdam);
         TaskManager.terminateThreadPool();
         source_handler.killOutput();
         ZoneLists.clearOut();
@@ -157,31 +159,31 @@ public class RealmsBase {
     }
 
     public final static DataSourceHandler getDataSourceHandler() {
-        return instance.source_handler;
+        return $.source_handler;
     }
 
     public final static Mod_Server getServer() {
-        return instance.server;
+        return $.server;
     }
 
     public final static RealmsProps getProperties() {
-        return instance.props;
+        return $.props;
     }
 
     public final static Wand getPlayerWand(Mod_User user) {
-        if (instance.wands.containsKey(user)) {
-            return instance.wands.get(user);
+        if ($.wands.containsKey(user)) {
+            return $.wands.get(user);
         }
         Wand wand = new Wand(user);
-        instance.wands.put(user, wand);
+        $.wands.put(user, wand);
         return wand;
     }
 
     public final static void removePlayerWand(Mod_User user) {
-        synchronized (instance.wands) {
-            if (instance.wands.containsKey(user)) {
-                instance.wands.get(user).softReset();
-                instance.wands.remove(user);
+        synchronized ($.wands) {
+            if ($.wands.containsKey(user)) {
+                $.wands.get(user).softReset();
+                $.wands.remove(user);
             }
         }
     }
@@ -211,29 +213,29 @@ public class RealmsBase {
 
     public final static void handleInventory(Mod_User user, boolean store) {
         if (store) {
-            if (!instance.inventories.containsKey(user.getName())) {
+            if (!$.inventories.containsKey(user.getName())) {
                 Mod_Item[] items = user.getInventoryContents();
-                instance.inventories.put(user.getName(), items);
-                instance.source_handler.addToQueue(OutputAction.SAVE_INVENTORY, user, items);
+                $.inventories.put(user.getName(), items);
+                $.source_handler.addToQueue(OutputAction.SAVE_INVENTORY, user, items);
                 user.clearInventoryContents();
             }
         }
-        else if (instance.inventories.containsKey(user.getName())) {
-            user.setInventoryContents(instance.inventories.get(user.getName()));
-            instance.inventories.remove(user.getName());
-            instance.source_handler.addToQueue(OutputAction.DELETE_INVENTORY, user);
+        else if ($.inventories.containsKey(user.getName())) {
+            user.setInventoryContents($.inventories.get(user.getName()));
+            $.inventories.remove(user.getName());
+            $.source_handler.addToQueue(OutputAction.DELETE_INVENTORY, user);
         }
     }
 
     public final static void storeInventory(String name, Mod_Item[] items) {
-        if (!instance.inventories.containsKey(name)) {
-            instance.inventories.put(name, items);
+        if (!$.inventories.containsKey(name)) {
+            $.inventories.put(name, items);
         }
     }
 
     public final static String update() {
         try {
-            instance.updater.performUpdate();
+            $.updater.performUpdate();
         }
         catch (UpdateException ue) {
             return ue.getMessage();
@@ -242,34 +244,34 @@ public class RealmsBase {
     }
 
     public final static boolean isLatest() {
-        return instance.vc.isLatest();
+        return $.vc.isLatest();
     }
 
     public final static String getCurrent() {
-        return instance.vc.getCurrentVersion();
+        return $.vc.getCurrentVersion();
     }
 
     public final static String getVersion() {
-        if (instance.version == null) {
-            instance.generateVersion();
+        if ($.version == null) {
+            $.generateVersion();
         }
 
-        return instance.version.concat(".").concat(instance.build);
+        return $.version.concat(".").concat($.build);
     }
 
     private final String getRawVersion() {
-        if (instance.version == null) {
-            instance.generateVersion();
+        if ($.version == null) {
+            $.generateVersion();
         }
-        return instance.version;
+        return $.version;
     }
 
     public final static boolean isBeta() {
-        return instance.beta;
+        return $.beta;
     }
 
     public final static boolean isReleaseCandidate() {
-        return instance.rc;
+        return $.rc;
     }
 
     private void generateVersion() {
@@ -330,5 +332,27 @@ public class RealmsBase {
             }
         }
         return newArgs;
+    }
+
+    public final static Point throwBack(Zone zone, Point pPoint, Point oPoint) {
+        PolygonArea area = zone.getPolygon();
+        if (area != null) {
+            while (area.contains(pPoint)) {
+                if (pPoint.x > oPoint.x) {
+                    pPoint.x -= 1;
+                }
+                else if (pPoint.x < oPoint.x) {
+                    pPoint.x += 1;
+                }
+                if (pPoint.z > oPoint.z) {
+                    pPoint.z -= 1;
+                }
+                else if (pPoint.z < oPoint.z) {
+                    pPoint.z += 1;
+                }
+            }
+        }
+        pPoint.y = $.server.getHighestY(pPoint.x, pPoint.z, zone.getWorld(), zone.getDimension());
+        return pPoint;
     }
 }

@@ -17,6 +17,8 @@
  */
 package net.visualillusionsent.mcmod.interfaces;
 
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
+
 /**
  * This file is part of VI-MCMIL.
  * Copyright 2013 Visual Illusions Entertainment.
@@ -34,6 +36,8 @@ public interface Mod_Entity {
     double getY();
 
     double getZ();
+
+    Point getLocationPoint();
 
     int getDimension();
 

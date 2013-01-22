@@ -29,9 +29,11 @@ import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
 import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -784,7 +786,13 @@ public final class Realms_BukkitListener implements Listener {
             //Start Enter Zone Checks
             if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to enter that zone!");
-                event.setCancelled(true);
+                Location from = event.getFrom();
+                Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint(), new Point((int) from.getX(), (int) from.getY(), (int) from.getZ()));
+                Location loc = player.getLocation();
+                loc.setX(thrown.x);
+                loc.setY(thrown.y);
+                loc.setZ(thrown.z);
+                player.teleport(loc);
                 return;
             }
             //End Enter Zone Checks

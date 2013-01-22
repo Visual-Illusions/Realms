@@ -29,6 +29,7 @@ import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
 import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.
@@ -893,7 +894,8 @@ public final class Realms_CanaryListener extends PluginListener {
             //Start Enter Zone Checks
             if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                 player.notify("You do not have permission to enter that zone!");
-                player.teleportTo(throwBack(to.x, from.x), from.y, throwBack(to.z, from.z), player.getRotation(), player.getPitch());
+                Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint(), new Point((int) from.x, (int) from.y, (int) from.z));
+                player.teleportTo(thrown.x + 0.5D, thrown.y + 0.5D, thrown.z + 0.5D, player.getRotation(), player.getPitch());
                 return;
             }
             //End Enter Zone Checks
@@ -1040,7 +1042,8 @@ public final class Realms_CanaryListener extends PluginListener {
                 //Start Enter Zone Checks
                 if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                     player.dismount();
-                    player.teleportTo(throwBack(vehicle.getX(), x), y, throwBack(vehicle.getZ(), z), player.getRotation(), player.getPitch());
+                    Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint(), new Canary_Entity(vehicle).getLocationPoint());
+                    player.teleportTo(thrown.x, thrown.y, thrown.z, player.getRotation(), player.getPitch());
                     if (vehicle.getName().equals("Boat")) {
                         player.sendMessage("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your boat! Need some help?");
                     }
@@ -1125,19 +1128,5 @@ public final class Realms_CanaryListener extends PluginListener {
                 break;
         }
         return pushing;
-    }
-
-    private final double throwBack(double d1, double d2) {
-        d1 = Math.floor(d1);
-        d2 = Math.floor(d2);
-        if (d1 > d2) {
-            return d2 - 1.5D;
-        }
-        else if (d1 < d2) {
-            return d2 + 1.5D;
-        }
-        else {
-            return d2;
-        }
     }
 }

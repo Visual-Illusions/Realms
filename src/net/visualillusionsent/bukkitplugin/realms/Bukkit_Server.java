@@ -153,6 +153,11 @@ public final class Bukkit_Server implements net.visualillusionsent.mcmod.interfa
     }
 
     @Override
+    public final int getHighestY(int x, int z, String world, int dimension) {
+        return server.getWorld(world).getHighestBlockYAt(x, z);
+    }
+
+    @Override
     public final boolean isCanary() {
         return false;
     }

@@ -54,4 +54,6 @@ public interface Mod_Server {
 
     boolean isBukkit();
 
+    int getHighestY(int x, int z, String world, int dimension);
+
 }

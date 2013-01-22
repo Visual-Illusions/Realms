@@ -205,6 +205,11 @@ public final class Canary_Server implements net.visualillusionsent.mcmod.interfa
     }
 
     @Override
+    public final int getHighestY(int x, int z, String world, int dimension) {
+        return etc.getServer().getWorld(world)[dimension].getHighestBlockY(x, z);
+    }
+
+    @Override
     public boolean isCanary() {
         return true;
     }

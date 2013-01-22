@@ -20,6 +20,7 @@
 package net.visualillusionsent.bukkitplugin.realms;
 
 import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
 import org.bukkit.entity.Entity;
 
@@ -56,6 +57,11 @@ public class Bukkit_Entity implements Mod_Entity {
     @Override
     public final double getZ() {
         return entity.getLocation().getZ();
+    }
+
+    @Override
+    public final Point getLocationPoint() {
+        return new Point((int) Math.floor(getX()), (int) Math.floor(getY()), (int) Math.floor(getZ()));
     }
 
     @Override
