@@ -34,7 +34,7 @@ import net.visualillusionsent.mcplugin.realms.RealmsBase;
  * @author Jason (darkdiplomat)
  */
 public final class RealmsLogMan {
-    private static final Logger logger;
+    private static Logger logger;
 
     static {
         logger = new RLogger();
@@ -107,5 +107,10 @@ public final class RealmsLogMan {
 
     public static void log(RLevel lvl, String msg, Throwable thrown) {
         logger.log(lvl, msg, thrown);
+    }
+
+    public static void killLogger() {
+        logger.setLevel(Level.OFF);
+        logger = null;
     }
 }

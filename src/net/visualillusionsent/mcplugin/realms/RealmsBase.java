@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.visualillusionsent.mcmod.interfaces.Mod_Item;
 import net.visualillusionsent.mcmod.interfaces.Mod_Server;
@@ -36,7 +34,6 @@ import net.visualillusionsent.mcplugin.realms.data.DataSourceHandler;
 import net.visualillusionsent.mcplugin.realms.data.DataSourceType;
 import net.visualillusionsent.mcplugin.realms.data.OutputAction;
 import net.visualillusionsent.mcplugin.realms.data.RealmsProps;
-import net.visualillusionsent.mcplugin.realms.logging.RLevel;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.mcplugin.realms.runnable.AnimalDestructor;
 import net.visualillusionsent.mcplugin.realms.runnable.Healer;
@@ -141,7 +138,7 @@ public class RealmsBase {
      * Terminates the threadhandler and closes the log file
      */
     public final void terminate() {
-        RealmsLogMan.log(RLevel.GENERAL, "Shutdown MobDestructionThread? : " + TaskManager.removeTask(instance.mobdes));
+        TaskManager.removeTask(instance.mobdes);
         TaskManager.removeTask(instance.animaldes);
         TaskManager.removeTask(instance.healer);
         TaskManager.removeTask(instance.restrictdam);
@@ -152,7 +149,7 @@ public class RealmsBase {
             wand.softReset();
         }
         wands.clear();
-        Logger.getLogger("Realms").setLevel(Level.OFF);
+        RealmsLogMan.killLogger();
     }
 
     public final static boolean isLoaded() {

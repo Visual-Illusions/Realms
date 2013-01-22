@@ -44,37 +44,35 @@ public final class MobDestructor implements Runnable {
 
     @Override
     public final void run() {
-        while (true) {
-            try {
-                //Mob Lists
-                List<Mod_Entity> mobList = RealmsBase.getServer().getMobs();
+        try {
+            //Mob Lists
+            List<Mod_Entity> mobList = RealmsBase.getServer().getMobs();
 
-                //Check Mob List
-                synchronized (mobList) {
-                    if (!mobList.isEmpty()) {
-                        for (Mod_Entity theMob : mobList) {
-                            //Get Zone Mob is in
-                            Zone theZone = ZoneLists.getInZone(theMob);
+            //Check Mob List
+            synchronized (mobList) {
+                if (!mobList.isEmpty()) {
+                    for (Mod_Entity theMob : mobList) {
+                        //Get Zone Mob is in
+                        Zone theZone = ZoneLists.getInZone(theMob);
 
-                            boolean destroyed = false;
+                        boolean destroyed = false;
 
-                            if (theZone.getSanctuary()) {
-                                //Mob is in Mob Disable Zone and needs Destroyed
-                                theMob.destroy();
-                                destroyed = true;
-                            }
+                        if (theZone.getSanctuary()) {
+                            //Mob is in Mob Disable Zone and needs Destroyed
+                            theMob.destroy();
+                            destroyed = true;
+                        }
 
-                            if (destroyed) {
-                                //Debugging
-                                RealmsLogMan.log(RLevel.MOB_DESTROY, String.format(debug, theZone.getName(), theMob.getName(), theMob.getWorld(), theMob.getDimension(), theMob.getX(), theMob.getY(), theMob.getZ()));
-                            }
+                        if (destroyed) {
+                            //Debugging
+                            RealmsLogMan.log(RLevel.MOB_DESTROY, String.format(debug, theZone.getName(), theMob.getName(), theMob.getWorld(), theMob.getDimension(), theMob.getX(), theMob.getY(), theMob.getZ()));
                         }
                     }
                 }
             }
-            catch (ConcurrentModificationException CME) {
-                RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in MobDestructor. (Don't worry Not a major issue)");
-            }
+        }
+        catch (ConcurrentModificationException CME) {
+            RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in MobDestructor. (Don't worry Not a major issue)");
         }
     }
 }

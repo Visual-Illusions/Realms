@@ -2,8 +2,6 @@
 Polygonal Hierarchical Area Ownership Plugin for the CanaryMod and Bukkit(CraftBukkit) Minecraft Server Modifications
 © Copyright 2012 - 2013 Visual Illusions Entertainment
 
-|- File best veiwed with NotePad++ -|
-
 About:
     Realms is a Polygonal Hierarchical Area Ownership plugin.
     What this means is Realms can create protected areas that are 2D polygonal in shape, with configurable area height.
@@ -34,6 +32,7 @@ Overview:
     Allow Player healing in a Zone
 	
 Plugin Install:
+    place Realms.jar in the plugin folder, place the jars in the lib folder in the lib folder in the server mod main directory (ie: /home/Canary/lib)
 	
     
 Zone Flags:    (D) = Default Setting    (E) = Environmental Flag    (C) Combat Flag
@@ -120,6 +119,8 @@ Realms SubCommands:
     /-------------------------------------------------------------------------------------------------------------------------------------------------------\
     |        COMMAND            |                        USAGE                      |                    DESCRIPTION                                        |
     |---------------------------|---------------------------------------------------|-----------------------------------------------------------------------|
+    |        help               | /realms help [subname|page#|all]                  | Displays help for a command, a page, or all sub commands at once      |
+	|---------------------------|---------------------------------------------------|-----------------------------------------------------------------------|
     |        createzone         | /realms createzone <zone> [parent]                | Creates a Zone                                                        |
     |---------------------------|---------------------------------------------------|-----------------------------------------------------------------------|
     |        deleteperm         | /realms deleteperm <player> <perm> <zone|*>       | Deletes a Player's permission within a Zone                           |
@@ -195,7 +196,7 @@ Realms SubCommands:
         |---------------|-------------------------------------------|---------------------------------------------------------------------------|
         |    edit       | /realms wand edit <zone>                  | Sets the Wand to EDIT mode for editing a Zone polygon                     |
         |---------------|-------------------------------------------|---------------------------------------------------------------------------|
-        |    setfloor   | /realms wand setfloor    [Y]              | Sets the floor of a Zone polygon (either specified or via rightclick)     |
+        |    setfloor   | /realms wand setfloor [Y]                 | Sets the floor of a Zone polygon (either specified or via rightclick)     |
         |---------------|-------------------------------------------|---------------------------------------------------------------------------|
         |   setceiling  | /realms wand setceiling [Y]               | Sets the ceiling of a Zone polygon (either specified or via rightclick)   |
         \---------------|-------------------------------------------|---------------------------------------------------------------------------/
@@ -272,4 +273,5 @@ Change Log:
                             |-    Moved config and other files to plugins/Realms folder
                             |-    Redone Realms-API
                             |-    Redone Properties File
-                            \-    Added changing zone/inventories table name
+                            |-    Added changing zone/inventories table name
+                            \-    Added /realms help command
