@@ -54,7 +54,6 @@ public final class Zone {
     private PolygonArea polygon;
     private List<Permission> zoneperms = new ArrayList<Permission>();
     private List<Zone> children = new ArrayList<Zone>();
-    private String flagform = "\u00A76%s\u00A7B= %s %s";
 
     private ZoneFlag adventure; //OFF = Survival Mode, ON = Adventure Mode
     private ZoneFlag animals; //OFF = NO Animals, ON = Animals
@@ -328,7 +327,7 @@ public final class Zone {
     }
 
     public final boolean getAdventure() {
-        if (this.adventure.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.adventure.isInherit() && this.parent != null) {
             return parent.getAdventure();
         }
         else {
@@ -337,7 +336,7 @@ public final class Zone {
     }
 
     public final boolean getAnimals() {
-        if (this.animals.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.animals.isInherit() && this.parent != null) {
             return parent.getAnimals();
         }
         else {
@@ -346,7 +345,7 @@ public final class Zone {
     }
 
     public final boolean getBurn() {
-        if (this.burn.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.burn.isInherit() && this.parent != null) {
             return parent.getBurn();
         }
         else {
@@ -355,7 +354,7 @@ public final class Zone {
     }
 
     public final boolean getCreative() {
-        if (this.creative.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.creative.isInherit() && this.parent != null) {
             return parent.getCreative();
         }
         else {
@@ -364,7 +363,7 @@ public final class Zone {
     }
 
     public final boolean getDispensers() {
-        if (this.dispensers.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.dispensers.isInherit() && this.parent != null) {
             return parent.getDispensers();
         }
         else {
@@ -373,7 +372,7 @@ public final class Zone {
     }
 
     public final boolean getEnderman() {
-        if (this.enderman.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.enderman.isInherit() && this.parent != null) {
             return parent.getEnderman();
         }
         else {
@@ -382,7 +381,7 @@ public final class Zone {
     }
 
     public final boolean getExplode() {
-        if (this.explode.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.explode.isInherit() && this.parent != null) {
             return parent.getExplode();
         }
         else {
@@ -391,7 +390,7 @@ public final class Zone {
     }
 
     public final boolean getFall() {
-        if (this.fall.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.fall.isInherit() && this.parent != null) {
             return parent.getFall();
         }
         else {
@@ -400,7 +399,7 @@ public final class Zone {
     }
 
     public final boolean getFire() {
-        if (this.fire.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.fire.isInherit() && this.parent != null) {
             return parent.getFire();
         }
         else {
@@ -409,7 +408,7 @@ public final class Zone {
     }
 
     public final boolean getFlow() {
-        if (this.flow.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.flow.isInherit() && this.parent != null) {
             return parent.getFlow();
         }
         else {
@@ -418,7 +417,7 @@ public final class Zone {
     }
 
     public final boolean getHealing() {
-        if (this.healing.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.healing.isInherit() && this.parent != null) {
             return parent.getHealing();
         }
         else {
@@ -427,7 +426,7 @@ public final class Zone {
     }
 
     public final boolean getPhysics() {
-        if (this.physics.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.physics.isInherit() && this.parent != null) {
             return parent.getPhysics();
         }
         else {
@@ -436,7 +435,7 @@ public final class Zone {
     }
 
     public final boolean getPistons() {
-        if (this.pistons.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.pistons.isInherit() && this.parent != null) {
             return parent.getPistons();
         }
         else {
@@ -445,7 +444,7 @@ public final class Zone {
     }
 
     public final boolean getPotion() {
-        if (this.potion.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.potion.isInherit() && this.parent != null) {
             return parent.getPotion();
         }
         else {
@@ -454,7 +453,7 @@ public final class Zone {
     }
 
     public final boolean getPVP() {
-        if (this.pvp.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.pvp.isInherit() && this.parent != null) {
             return parent.getPVP();
         }
         else {
@@ -463,7 +462,7 @@ public final class Zone {
     }
 
     public final boolean getRestricted() {
-        if (this.restricted.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.restricted.isInherit() && this.parent != null) {
             return parent.getRestricted();
         }
         else {
@@ -472,7 +471,7 @@ public final class Zone {
     }
 
     public final boolean getSanctuary() {
-        if (this.sanctuary.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.sanctuary.isInherit() && this.parent != null) {
             return parent.getSanctuary();
         }
         else {
@@ -481,7 +480,7 @@ public final class Zone {
     }
 
     public final boolean getStarve() {
-        if (this.starve.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.starve.isInherit() && this.parent != null) {
             return parent.getStarve();
         }
         else {
@@ -490,7 +489,7 @@ public final class Zone {
     }
 
     public final boolean getSuffocate() {
-        if (this.suffocate.equals(ZoneFlag.INHERIT) && this.parent != null) {
+        if (this.suffocate.isInherit() && this.parent != null) {
             return parent.getSuffocate();
         }
         else {
@@ -735,41 +734,41 @@ public final class Zone {
         StringBuilder flags = new StringBuilder();
         //Start Environment Flags
         if (showEnviro) {
-            flags.append(StringUtils.padCharRight(String.format(flagform, "FALL", getFall() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteFall() == ZoneFlag.INHERIT ? ChatColors.PINK.concat("(I)") : ""), 15, ' '));
-            flags.append(StringUtils.padCharRight(String.format(flagform, "SUFFOCATE", getSuffocate() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteSuffocate() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 10, ' '));
-            flags.append(String.format(flagform, "FIRE", getFire() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteFire() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""));
+            flags.append(formatFlag("ADVENTURE", getAbsoluteAdventure().isInherit(), getAdventure(), true));
+            flags.append(formatFlag("ANIMALS", getAbsoluteAnimals().isInherit(), getAnimals(), true));
+            flags.append(formatFlag("BURN", getAbsoluteBurn().isInherit(), getBurn(), false));
             environ[0] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(StringUtils.padCharRight(String.format(flagform, "PHYSICS", getPhysics() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePhysics() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 12, ' '));
-            flags.append(StringUtils.padCharRight(String.format(flagform, "ANIMALS", getAnimals() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteAnimals() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 12, ' '));
-            flags.append(String.format(flagform, "CREATIVE", getCreative() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteCreative() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""));
+            flags.append(formatFlag("CREATIVE", getAbsoluteCreative().isInherit(), getCreative(), true));
+            flags.append(formatFlag("DISPENSERS", getAbsoluteDispensers().isInherit(), getDispensers(), true));
+            flags.append(formatFlag("ENDERMAN", getAbsoluteEnderman().isInherit(), getEnderman(), false));
             environ[1] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(StringUtils.padCharRight(String.format(flagform, "PISTONS", getPistons() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePistons() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 12, ' '));
-            flags.append(StringUtils.padCharRight(String.format(flagform, "ENDERMAN", getEnderman() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteEnderman() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 11, ' '));
-            flags.append(String.format(flagform, "BURN", getBurn() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteBurn() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""));
+            flags.append(formatFlag("FALL", getAbsoluteFall().isInherit(), getFall(), true));
+            flags.append(formatFlag("FIRE", getAbsoluteFire().isInherit(), getFire(), true));
+            flags.append(formatFlag("FLOW", getAbsoluteFlow().isInherit(), getFlow(), false));
             environ[2] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(StringUtils.padCharRight(String.format(flagform, "FLOW", getFlow() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteFlow() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 15, ' '));
-            flags.append(StringUtils.padCharRight(String.format(flagform, "STARVE", getStarve() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteStarve() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 13, ' '));
+            flags.append(formatFlag("PHYSICS", getAbsolutePhysics().isInherit(), getPhysics(), true));
+            flags.append(formatFlag("PISTONS", getAbsolutePistons().isInherit(), getPistons(), true));
+            flags.append(formatFlag("RESTRICTED", getAbsoluteRestricted().isInherit(), getRestricted(), false));
             environ[3] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(StringUtils.padCharRight(String.format(flagform, "RESTRICTED", getRestricted() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteRestricted() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 5, ' '));
-            flags.append(StringUtils.padCharRight(String.format(flagform, "ADVENTURE", getAdventure() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteAdventure() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""), 7, ' '));
-            flags.append(String.format(flagform, "DISPENSERS", getDispensers() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteDispensers() == ZoneFlag.INHERIT ? ChatColors.PINK + "(I)" : ""));
+            flags.append(formatFlag("SUFFOCATE", getAbsoluteSuffocate().isInherit(), getSuffocate(), true));
+            flags.append(formatFlag("STARVE", getAbsoluteStarve().isInherit(), getStarve(), false));
             environ[4] = flags.toString();
             flags.delete(0, flags.length());
         }
         //End Environment Flags
         //Start Combat Flags
         if (showComb) {
-            flags.append(StringUtils.padCharRight(String.format(flagform, "PVP", getPVP() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePVP().equals(ZoneFlag.INHERIT) ? ChatColors.PINK + "(I)" : ""), 15, ' '));
-            flags.append(StringUtils.padCharRight(String.format(flagform, "SANCTUARY", getSanctuary() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteSanctuary().equals(ZoneFlag.INHERIT) ? ChatColors.PINK + "(I)" : ""), 10, ' '));
-            flags.append(String.format(flagform, "EXPLODE", getExplode() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteExplode().equals(ZoneFlag.INHERIT) ? ChatColors.PINK + "(I)" : ""));
+            flags.append(formatFlag("HEALING", getAbsoluteHealing().isInherit(), getHealing(), true));
+            flags.append(formatFlag("EXPLODE", getAbsoluteExplode().isInherit(), getExplode(), true));
+            flags.append(formatFlag("POTION", getAbsolutePotion().isInherit(), getPotion(), false));
             comb[0] = flags.toString();
             flags.delete(0, flags.length());
-            flags.append(StringUtils.padCharRight(String.format(flagform, "HEALING", getHealing() ? "\u00A72ON " : "\u00A74OFF ", getAbsoluteHealing().equals(ZoneFlag.INHERIT) ? ChatColors.PINK + "(I)" : ""), 13, ' '));
-            flags.append(String.format(flagform, "POTION", getPotion() ? "\u00A72ON " : "\u00A74OFF ", getAbsolutePotion().equals(ZoneFlag.INHERIT) ? ChatColors.PINK + "(I)" : ""));
+            flags.append(formatFlag("PVP", getAbsolutePVP().isInherit(), getPVP(), true));
+            flags.append(formatFlag("SANCTUARY", getAbsoluteSanctuary().isInherit(), getSanctuary(), false));
             comb[1] = flags.toString();
         }
         //End Combat Flags
@@ -786,6 +785,35 @@ public final class Zone {
             System.arraycopy(comb, 0, allFlags, environ.length, comb.length);
             return allFlags;
         }
+    }
+
+    private String formatFlag(String flag, boolean absolute, boolean on, boolean pad) {
+        StringBuffer tempRet = new StringBuffer(ChatColors.ORANGE);
+        tempRet.append(flag);
+        tempRet.append(ChatColors.CYAN);
+        tempRet.append("= ");
+        if (absolute) {
+            tempRet.append(ChatColors.PINK);
+            if (on) {
+                tempRet.append("ON");
+            }
+            else {
+                tempRet.append("OFF");
+            }
+        }
+        else if (on) {
+            tempRet.append(ChatColors.GREEN);
+            tempRet.append("ON");
+        }
+        else {
+            tempRet.append(ChatColors.RED);
+            tempRet.append("OFF");
+        }
+        String toRet = tempRet.toString();
+        if (pad) {
+            toRet = StringUtils.padCharRight(toRet, (26 - toRet.length()), ' ');
+        }
+        return toRet;
     }
 
     //Start Permission Checks

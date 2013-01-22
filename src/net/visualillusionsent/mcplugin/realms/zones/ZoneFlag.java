@@ -46,6 +46,18 @@ public enum ZoneFlag {
         return this.name().toLowerCase();
     }
 
+    public final boolean isInherit() {
+        return this == INHERIT;
+    }
+
+    public final boolean isOn() {
+        return this == ON;
+    }
+
+    public final boolean isOff() {
+        return this == OFF;
+    }
+
     public static final ZoneFlag getZoneFlag(String type) throws InvaildZoneFlagException {
         try {
             return ZoneFlag.valueOf(type.toUpperCase());
