@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
@@ -63,7 +63,7 @@ final class ZoneListCommand extends RealmsCommand {
         int start = 9 * show - 9;
         caller.sendMessage("\u00A7AList all \u00A76ZONES \u00A7A Page \u00A7E" + show + "\u00A7A of \u00A7E" + total);
         for (int index = start; index < page && index < zonesplit.length; index++) {
-            caller.sendMessage(ChatColors.ORANGE + zonesplit[index]);
+            caller.sendMessage(MCChatForm.ORANGE.concat(zonesplit[index]));
         }
     }
 

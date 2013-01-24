@@ -17,7 +17,7 @@
  * 
  * Source Code availible @ https://github.com/darkdiplomat/Realms
  */
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 
 /**
@@ -34,12 +34,12 @@ public final class Canary_Console implements Mod_Caller {
 
     @Override
     public final void sendError(String msg) {
-        System.out.println("[ERROR]".concat(ChatColors.removeFormating(msg)));
+        System.out.println("[ERROR]".concat(MCChatForm.removeFormating(msg)));
     }
 
     @Override
     public final void sendMessage(String msg) {
-        System.out.println(ChatColors.removeFormating(msg));
+        System.out.println(MCChatForm.removeFormating(msg));
     }
 
     @Override

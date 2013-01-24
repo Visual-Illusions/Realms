@@ -21,7 +21,7 @@ package net.visualillusionsent.mcplugin.realms.commands;
 
 import java.util.Collection;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 
 /**
@@ -34,9 +34,9 @@ import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
  */
 @RCommand(desc = "Displays Realms subcommand help", name = "help", usage = "[subname|page#|all]", maxParam = 1)
 final class HelpCommand extends RealmsCommand {
-    private final String HELP_TITLE = ChatColors.BLUE + "Realms Subcommand Help Page " + ChatColors.YELLOW + "%d" + ChatColors.BLUE + " of " + ChatColors.ORANGE + "%d";
-    private final String HELP_FORM_1 = ChatColors.CYAN.concat("/realms %s%s %s");
-    private final String HELP_FORM_2 = ChatColors.CYAN + "             \\- " + ChatColors.YELLOW + "%s";
+    private final String HELP_TITLE = MCChatForm.BLUE + "Realms Subcommand Help Page " + MCChatForm.YELLOW + "%d" + MCChatForm.BLUE + " of " + MCChatForm.ORANGE + "%d";
+    private final String HELP_FORM_1 = MCChatForm.CYAN.concat("/realms %s%s %s");
+    private final String HELP_FORM_2 = MCChatForm.CYAN + "             \\- " + MCChatForm.YELLOW + "%s";
 
     @Override
     final void execute(Mod_Caller caller, String[] args) {
@@ -44,14 +44,14 @@ final class HelpCommand extends RealmsCommand {
             RealmsCommand cmd = RealmsCommandHandler.getCommand(args[0]);
             if (cmd != null) {
                 RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
-                caller.sendMessage(String.format(HELP_FORM_1, ChatColors.ORANGE, rcmd.name(), rcmd.usage()));
+                caller.sendMessage(String.format(HELP_FORM_1, MCChatForm.ORANGE, rcmd.name(), rcmd.usage()));
                 caller.sendMessage(String.format(HELP_FORM_2, rcmd.desc()));
             }
             else if (args[0].toLowerCase().equals("all")) {
                 Collection<RealmsCommand> cmds = RealmsCommandHandler.getRealmsSubCommands();
                 for (RealmsCommand command : cmds) {
                     RCommand rcmd = command.getClass().getAnnotation(RCommand.class);
-                    caller.sendMessage(String.format(HELP_FORM_1, ChatColors.ORANGE, rcmd.name(), rcmd.usage()));
+                    caller.sendMessage(String.format(HELP_FORM_1, MCChatForm.ORANGE, rcmd.name(), rcmd.usage()));
                     caller.sendMessage(String.format(HELP_FORM_2, rcmd.desc()));
                 }
             }
@@ -61,7 +61,7 @@ final class HelpCommand extends RealmsCommand {
                     printHelpPage(caller, show);
                 }
                 catch (NumberFormatException nfe) {
-                    caller.sendError("No Realms subcommand with the Name: ".concat(ChatColors.ORANGE).concat(args[0]));
+                    caller.sendError("No Realms subcommand with the Name: ".concat(MCChatForm.ORANGE.toString()).concat(args[0]));
                 }
             }
         }
@@ -84,7 +84,7 @@ final class HelpCommand extends RealmsCommand {
         caller.sendMessage(String.format(HELP_TITLE, show, total));
         for (int index = start; index < line && index < cmdarray.length; index++) {
             RCommand rcmd = cmdarray[index].getClass().getAnnotation(RCommand.class);
-            caller.sendMessage(String.format(HELP_FORM_1, ChatColors.ORANGE, rcmd.name(), rcmd.usage()));
+            caller.sendMessage(String.format(HELP_FORM_1, MCChatForm.ORANGE, rcmd.name(), rcmd.usage()));
             caller.sendMessage(String.format(HELP_FORM_2, rcmd.desc()));
         }
     }

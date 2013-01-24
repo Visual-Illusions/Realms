@@ -22,7 +22,7 @@ package net.visualillusionsent.mcplugin.realms.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
@@ -41,9 +41,9 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.Permission;
  */
 @RCommand(desc = "Gets the List of Permissions for a Zone", name = "permlist", usage = "<zone|*> [page#|all]", minParam = 1, maxParam = 2)
 final class PermissionsListCommand extends RealmsCommand {
-    private final String LIST = ChatColors.CYAN.concat("List all Permissions attached to Zone: ").concat(ChatColors.BLUE).concat("%s");
-    private final String PAGE = ChatColors.CYAN.concat(" Page ").concat(ChatColors.PINK).concat("%d").concat(ChatColors.CYAN).concat(" of ").concat(ChatColors.PURPLE).concat("%d");
-    private final String INFO_LINE = ChatColors.ORANGE.concat("PLAYER/GROUP ").concat(ChatColors.YELLOW).concat("PERMISSION").concat(ChatColors.GREEN).concat(" GRANTED").concat(ChatColors.CYAN).concat("/").concat(ChatColors.RED).concat("DENIED ").concat(ChatColors.TURQUOISE).concat("OVERRIDDEN");
+    private final String LIST = MCChatForm.CYAN.concat("List all Permissions attached to Zone: ").concat(MCChatForm.BLUE.toString()).concat("%s");
+    private final String PAGE = MCChatForm.CYAN.concat(" Page ").concat(MCChatForm.PINK.toString()).concat("%d").concat(MCChatForm.CYAN.toString()).concat(" of ").concat(MCChatForm.PURPLE.toString()).concat("%d");
+    private final String INFO_LINE = MCChatForm.ORANGE.concat("PLAYER/GROUP ").concat(MCChatForm.YELLOW.toString()).concat("PERMISSION").concat(MCChatForm.GREEN.toString()).concat(" GRANTED").concat(MCChatForm.CYAN.toString()).concat("/").concat(MCChatForm.RED.toString()).concat("DENIED ").concat(MCChatForm.TURQUOISE.toString()).concat("OVERRIDDEN");
 
     final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
@@ -67,15 +67,15 @@ final class PermissionsListCommand extends RealmsCommand {
                 for (int index = 0; index < permsplit.length; index++) {
                     StringBuilder toSend = new StringBuilder();
                     String[] permission = permsplit[index].split(",");
-                    toSend.append(ChatColors.ORANGE).append(permission[0]).append(ChatColors.YELLOW).append(permission[1].toUpperCase());
+                    toSend.append(MCChatForm.ORANGE).append(permission[0]).append(MCChatForm.YELLOW).append(permission[1].toUpperCase());
                     if (permission[3].equals("0")) {
-                        toSend.append(ChatColors.LIGHT_RED).append(" DENIED ");
+                        toSend.append(MCChatForm.LIGHT_RED).append(" DENIED ");
                     }
                     else {
-                        toSend.append(ChatColors.GREEN).append(" GRANTED ");
+                        toSend.append(MCChatForm.GREEN).append(" GRANTED ");
                     }
                     if (permission[4].equals("1")) {
-                        toSend.append(ChatColors.TURQUOISE).append(" TRUE");
+                        toSend.append(MCChatForm.TURQUOISE).append(" TRUE");
                     }
                     caller.sendMessage(toSend.toString());
                 }
@@ -102,15 +102,15 @@ final class PermissionsListCommand extends RealmsCommand {
                 for (int index = start; index < page && index < permsplit.length; index++) {
                     StringBuilder toSend = new StringBuilder();
                     String[] permission = permsplit[index].split(",");
-                    toSend.append(ChatColors.ORANGE).append(permission[0]).append(" ").append(ChatColors.YELLOW).append(permission[1].toUpperCase());
+                    toSend.append(MCChatForm.ORANGE).append(permission[0]).append(" ").append(MCChatForm.YELLOW).append(permission[1].toUpperCase());
                     if (permission[2].equals("false")) {
-                        toSend.append(ChatColors.RED).append(" DENIED ");
+                        toSend.append(MCChatForm.RED).append(" DENIED ");
                     }
                     else {
-                        toSend.append(ChatColors.GREEN).append(" GRANTED ");
+                        toSend.append(MCChatForm.GREEN).append(" GRANTED ");
                     }
                     if (permission[3].equals("true")) {
-                        toSend.append(ChatColors.TURQUOISE).append(" TRUE");
+                        toSend.append(MCChatForm.TURQUOISE).append(" TRUE");
                     }
                     caller.sendMessage(toSend.toString());
                 }

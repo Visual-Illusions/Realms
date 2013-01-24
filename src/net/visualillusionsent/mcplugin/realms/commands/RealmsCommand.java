@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 
 /**
@@ -31,7 +31,7 @@ import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
  * @author Jason (darkdiplomat)
  */
 abstract class RealmsCommand {
-    private final String USAGE = ChatColors.CYAN.concat("Usage: /realms %s %s");
+    private final String USAGE = MCChatForm.CYAN.concat("Usage: /realms %s %s");
 
     protected RealmsCommand() {
         RealmsCommandHandler.register(getClass().getAnnotation(RCommand.class).name(), this);

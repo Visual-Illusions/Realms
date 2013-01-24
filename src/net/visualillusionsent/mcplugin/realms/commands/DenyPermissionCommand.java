@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsBase;
@@ -81,7 +81,7 @@ final class DenyPermissionCommand extends RealmsCommand {
 
             // Made it past all the checks!
             zone.setPermission(args[0], type, false, override);
-            caller.sendMessage(RealmsTranslate.transformMessage("delegate.perm", ChatColors.RED.concat("Denied"), args[0], type.name(), zone.getName()));
+            caller.sendMessage(RealmsTranslate.transformMessage("delegate.perm", MCChatForm.RED.concat("Denied"), args[0], type.name(), zone.getName()));
         }
         catch (ZoneNotFoundException znfe) {
             caller.sendError(znfe.getMessage());

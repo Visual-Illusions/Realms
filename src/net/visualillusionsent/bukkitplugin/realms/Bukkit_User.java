@@ -22,7 +22,7 @@ package net.visualillusionsent.bukkitplugin.realms;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Item;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 
@@ -57,7 +57,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
 
     @Override
     public final void sendError(String msg) {
-        player.sendMessage(ChatColors.LIGHT_RED.concat(msg));
+        player.sendMessage(MCChatForm.LIGHT_RED.concat(msg));
     }
 
     @Override

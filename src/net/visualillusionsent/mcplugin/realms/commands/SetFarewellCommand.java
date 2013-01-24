@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
@@ -59,7 +59,7 @@ final class SetFarewellCommand extends RealmsCommand {
             }
             String msg = farewell.toString().trim();
             zone.setFarewell(msg.isEmpty() ? null : msg);
-            caller.sendMessage(msg.isEmpty() ? RealmsTranslate.transformMessage("msg.rvm", "FAREWELL") : RealmsTranslate.transformMessage("msg.set", "FAREWELL", msg.replaceAll("@", ChatColors.MARKER)));
+            caller.sendMessage(msg.isEmpty() ? RealmsTranslate.transformMessage("msg.rvm", "FAREWELL") : RealmsTranslate.transformMessage("msg.set", "FAREWELL", msg.replaceAll("@", MCChatForm.MARKER.toString())));
 
         }
         catch (ZoneNotFoundException znfe) {

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Block;
 import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
@@ -788,12 +788,12 @@ public final class Zone {
     }
 
     private String formatFlag(String flag, boolean absolute, boolean on, boolean pad) {
-        StringBuffer tempRet = new StringBuffer(ChatColors.ORANGE);
+        StringBuffer tempRet = new StringBuffer(MCChatForm.ORANGE.toString());
         tempRet.append(flag);
-        tempRet.append(ChatColors.CYAN);
+        tempRet.append(MCChatForm.CYAN);
         tempRet.append("= ");
         if (absolute) {
-            tempRet.append(ChatColors.PINK);
+            tempRet.append(MCChatForm.PINK);
             if (on) {
                 tempRet.append("ON");
             }
@@ -802,11 +802,11 @@ public final class Zone {
             }
         }
         else if (on) {
-            tempRet.append(ChatColors.GREEN);
+            tempRet.append(MCChatForm.GREEN);
             tempRet.append("ON");
         }
         else {
-            tempRet.append(ChatColors.RED);
+            tempRet.append(MCChatForm.RED);
             tempRet.append("OFF");
         }
         String toRet = tempRet.toString();

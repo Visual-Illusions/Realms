@@ -188,7 +188,6 @@ public final class Canary_Server implements net.visualillusionsent.mcmod.interfa
         return etc.getServer().getDefaultWorld().getName();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public final List<String> getAdminGroups() {
         List<String> adminGroups = new ArrayList<String>();

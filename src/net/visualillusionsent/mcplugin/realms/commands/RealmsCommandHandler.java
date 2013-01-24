@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
@@ -102,7 +102,7 @@ public class RealmsCommandHandler {
     private static String getRealmsCommandsList() {
         StringBuilder builder = new StringBuilder();
         for (String rc : commands.keySet()) {
-            builder.append(ChatColors.BLUE);
+            builder.append(MCChatForm.BLUE);
             builder.append(rc);
             builder.append(" ");
         }

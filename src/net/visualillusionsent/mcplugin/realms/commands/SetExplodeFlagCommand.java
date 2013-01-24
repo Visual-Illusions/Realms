@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
@@ -64,7 +64,7 @@ final class SetExplodeFlagCommand extends RealmsCommand {
             }
 
             zone.setExplode(theFlag);
-            caller.sendMessage(RealmsTranslate.transformMessage("zoneflag.set", "EXPLODE", (zone.getExplode() ? ChatColors.GREEN.concat("ON") : ChatColors.RED.concat("OFF")).concat(zone.getAbsoluteExplode().equals(ZoneFlag.INHERIT) ? ChatColors.PINK.concat("(INHERITED)") : ""), zone.getName()));
+            caller.sendMessage(RealmsTranslate.transformMessage("zoneflag.set", "EXPLODE", (zone.getExplode() ? MCChatForm.GREEN.concat("ON") : MCChatForm.RED.concat("OFF")).concat(zone.getAbsoluteExplode().equals(ZoneFlag.INHERIT) ? MCChatForm.PINK.concat("(INHERITED)") : ""), zone.getName()));
 
         }
         catch (InvaildZoneFlagException ife) {

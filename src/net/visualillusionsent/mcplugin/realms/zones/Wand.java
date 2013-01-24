@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Block;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsBase;
@@ -178,11 +178,11 @@ public final class Wand {
 
             switch (command.length) {
                 case 1:
-                    user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                    user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                     return true;
                 case 2:
                     if (!mode.equalsIgnoreCase("polygon")) {
-                        user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                        user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     else {
@@ -224,12 +224,12 @@ public final class Wand {
                         }
                     }
 
-                    user.sendMessage(ChatColors.CYAN + "Using bounding coords of: (" + ChatColors.ORANGE + x1 + ChatColors.CYAN + "," + ChatColors.ORANGE + z1 + ChatColors.CYAN + ") (" + ChatColors.ORANGE + x2 + ChatColors.CYAN + "," + ChatColors.ORANGE + z2 + ChatColors.CYAN + ")");
+                    user.sendMessage(MCChatForm.CYAN + "Using bounding coords of: (" + MCChatForm.ORANGE + x1 + MCChatForm.CYAN + "," + MCChatForm.ORANGE + z1 + MCChatForm.CYAN + ") (" + MCChatForm.ORANGE + x2 + MCChatForm.CYAN + "," + MCChatForm.ORANGE + z2 + MCChatForm.CYAN + ")");
 
                     break;
                 case 4:
                     if (mode.equalsIgnoreCase("default")) {
-                        user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                        user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     else {
@@ -240,7 +240,7 @@ public final class Wand {
                         String[] coord1 = command[1].split(",");
                         String[] coord2 = command[2].split(",");
                         if (coord1.length < 2 || coord2.length < 2) {
-                            user.sendMessage(ChatColors.CYAN.concat("Usage: / realms wand show <x1,z1 x2,z2> <zone>"));
+                            user.sendMessage(MCChatForm.CYAN.concat("Usage: / realms wand show <x1,z1 x2,z2> <zone>"));
                             return true;
                         }
                         x1 = Integer.parseInt(coord1[0]);
@@ -249,7 +249,7 @@ public final class Wand {
                         z2 = Integer.parseInt(coord2[1]);
                     }
                     catch (NumberFormatException e) {
-                        user.sendMessage(ChatColors.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                        user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     if (thePolygon == null) {
@@ -284,10 +284,10 @@ public final class Wand {
             }
 
             if (scalex > 1) {
-                user.sendMessage(ChatColors.CYAN + "Using x scaling factor of " + ChatColors.YELLOW + scalex);
+                user.sendMessage(MCChatForm.CYAN + "Using x scaling factor of " + MCChatForm.YELLOW + scalex);
             }
             if (scalez > 1) {
-                user.sendMessage(ChatColors.CYAN + "Using z scaling factor of " + ChatColors.YELLOW + scalez);
+                user.sendMessage(MCChatForm.CYAN + "Using z scaling factor of " + MCChatForm.YELLOW + scalez);
             }
 
             int i, j = 0;
@@ -297,7 +297,7 @@ public final class Wand {
                 boolean first = false;
 
                 int zcoord = i * scalez + z1 + (int) Math.floor(scalez / 2);
-                StringBuilder messageString = new StringBuilder(ChatColors.GREEN);
+                StringBuilder messageString = new StringBuilder(MCChatForm.GREEN.toString());
 
                 if (i == -1) {
                     messageString.append(" ");
@@ -317,7 +317,7 @@ public final class Wand {
 
                     if (PolygonArea.contains(thePolygon.getVertices(), new Point(xcoord, 64, zcoord), 0, 256)) {
                         if (!color || !first) {
-                            messageString.append(ChatColors.GRAY);
+                            messageString.append(MCChatForm.GRAY);
                             color = true;
                             first = true;
                         }
@@ -325,7 +325,7 @@ public final class Wand {
                     }
                     else {
                         if (color || !first) {
-                            messageString.append(ChatColors.WHITE);
+                            messageString.append(MCChatForm.WHITE);
                             color = false;
                             first = true;
                         }
@@ -463,7 +463,7 @@ public final class Wand {
         // By default wand is in get info mode
         if (mode.equalsIgnoreCase("default")) {
             Zone zone = ZoneLists.getInZone(block);
-            user.sendMessage(ChatColors.CYAN + "---" + ChatColors.YELLOW + zone.getName() + ChatColors.CYAN + "---");
+            user.sendMessage(MCChatForm.CYAN + "---" + MCChatForm.YELLOW + zone.getName() + MCChatForm.CYAN + "---");
 
             if (zone.getPolygon() != null) {
                 StringBuilder points = new StringBuilder();
@@ -476,10 +476,10 @@ public final class Wand {
                         break;
                     }
                 }
-                user.sendMessage(ChatColors.ORANGE + "POINTS: " + ChatColors.LIGHT_GRAY + points.toString());
+                user.sendMessage(MCChatForm.ORANGE + "POINTS: " + MCChatForm.LIGHT_GRAY + points.toString());
             }
             else {
-                user.sendMessage(ChatColors.ORANGE + "POINTS: " + ChatColors.LIGHT_GRAY + "NO POLYGON");
+                user.sendMessage(MCChatForm.ORANGE + "POINTS: " + MCChatForm.LIGHT_GRAY + "NO POLYGON");
             }
             String[] flags = zone.getFlags(true, true);
             for (String mess : flags) {

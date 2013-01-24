@@ -22,7 +22,7 @@ package net.visualillusionsent.bukkitplugin.realms;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcplugin.realms.RealmsBase;
 import net.visualillusionsent.mcplugin.realms.logging.RLevel;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
@@ -243,7 +243,7 @@ public final class Realms_BukkitListener implements Listener {
             if (cmd != null) {
                 if (!cmd[0].matches("/realms") || RealmsBase.getProperties().isCommandAllowed(cmd[0])) {
                     if (!zone.permissionCheck(user, PermissionType.COMMAND)) {
-                        event.getPlayer().sendMessage(ChatColors.LIGHT_RED.concat("You are not allowed to execute commands in this area!"));
+                        event.getPlayer().sendMessage(MCChatForm.LIGHT_RED.concat("You are not allowed to execute commands in this area!"));
                         allow = false;
                     }
                 }

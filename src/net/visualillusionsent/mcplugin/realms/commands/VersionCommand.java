@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcplugin.realms.RealmsBase;
 
@@ -33,9 +33,9 @@ import net.visualillusionsent.mcplugin.realms.RealmsBase;
  */
 @RCommand(desc = "Checks the current version and if it's the latest", name = "version", usage = "")
 final class VersionCommand extends RealmsCommand {
-    private final String VER = ChatColors.PURPLE.concat("----- ").concat(ChatColors.BLUE).concat("Realms v%s by ").concat(ChatColors.LIGHT_GREEN).concat("DarkDiplomat").concat(ChatColors.PURPLE).concat(" -----"), //
-            NOT_LATEST = ChatColors.PURPLE.concat("----- ").concat(ChatColors.LIGHT_GRAY).concat("Update Availible: v%s").concat(ChatColors.PURPLE).concat(" -----"), //
-            LATEST = ChatColors.PURPLE.concat("----- ").concat(ChatColors.BLUE).concat("Latest Version is Installed").concat(ChatColors.PURPLE).concat(" -----");
+    private final String VER = MCChatForm.PURPLE.concat("----- ").concat(MCChatForm.BLUE.concat("Realms v%s by ").concat(MCChatForm.LIGHT_GREEN.concat("DarkDiplomat").concat(MCChatForm.PURPLE.concat(" -----")))), //
+            NOT_LATEST = MCChatForm.PURPLE.concat("----- ").concat(MCChatForm.LIGHT_GRAY.concat("Update Availible: v%s".concat(MCChatForm.PURPLE.concat(" -----")))), //
+            LATEST = MCChatForm.PURPLE.concat("----- ").concat(MCChatForm.BLUE.concat("Latest Version is Installed".concat(MCChatForm.PURPLE.concat(" -----"))));
 
     @Override
     final void execute(Mod_Caller caller, String[] args) {

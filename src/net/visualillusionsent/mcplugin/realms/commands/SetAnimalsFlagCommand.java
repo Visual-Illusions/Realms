@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms.commands;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
@@ -64,7 +64,7 @@ final class SetAnimalsFlagCommand extends RealmsCommand {
             }
 
             zone.setAnimals(theFlag);
-            caller.sendMessage(RealmsTranslate.transformMessage("zoneflag.set", "ANIMALS", (zone.getAnimals() ? ChatColors.GREEN.concat("ON") : ChatColors.RED.concat("OFF")).concat(zone.getAbsoluteAnimals().equals(ZoneFlag.INHERIT) ? ChatColors.PINK.concat("(INHERITED)") : ""), zone.getName()));
+            caller.sendMessage(RealmsTranslate.transformMessage("zoneflag.set", "ANIMALS", (zone.getAnimals() ? MCChatForm.GREEN.concat("ON") : MCChatForm.RED.concat("OFF")).concat(zone.getAbsoluteAnimals().equals(ZoneFlag.INHERIT) ? MCChatForm.PINK.concat("(INHERITED)") : ""), zone.getName()));
         }
         catch (InvaildZoneFlagException ife) {
             caller.sendError(RealmsTranslate.transformMessage("zoneflag.invalid", "ANIMALS"));

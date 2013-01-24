@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.mcplugin.realms;
 
-import net.visualillusionsent.mcmod.interfaces.ChatColors;
+import net.visualillusionsent.mcmod.interfaces.MCChatForm;
 import net.visualillusionsent.utils.LocaleHelper;
 
 /**
@@ -47,7 +47,7 @@ public class RealmsTranslate extends LocaleHelper {
     }
 
     private final static String colorize(String msg) {
-        return msg.replaceAll("\\$c", ChatColors.MARKER);
+        return msg.replaceAll("\\$c", MCChatForm.MARKER.stringValue());
     }
 
     public static String herp() { //Just meant to help initialize the class so there isnt a delay later
