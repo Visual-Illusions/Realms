@@ -8,6 +8,7 @@
     <property name="lib" location="lib" />
     <property name="build" location="build" />
     <property name="dist" location="dist" />
+	<property name="resources" location="src/resources" />
 
     <path id="classpath">
         <fileset dir="lib">
@@ -18,6 +19,7 @@
         	<include name="sqlite.jar" />
         	<include name="bukkit-api.jar" />
         	<include name="CanaryMod.jar" />
+        	<include name="minecraft_servero.jar" />
         </fileset>
     </path>
 
@@ -38,6 +40,9 @@
     <target name="jar" depends="compile" description="Create the jar file">
         <jar destfile="${dist}/Realms.jar">
             <fileset dir="${build}/classes" />
+        	<fileset dir="${src}">
+        	    <exclude name="*.java"/>
+        	</fileset>
             <manifest>
             	<attribute name="Title" value="Realms" />
             	<attribute name="Version" value="7.0" />
@@ -58,7 +63,6 @@
             	<include name="jdom2.jar" />
             	<include name="viutils-1.0.0.jar" />
             	<include name="sqlite.jar" />
-            	<include name="*.lib" />
             </fileset>
         </copy>
         <zip destfile="${dist}/Realms.zip" basedir="${dist}" />
