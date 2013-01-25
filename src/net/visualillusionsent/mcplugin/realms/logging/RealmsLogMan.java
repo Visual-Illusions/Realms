@@ -61,7 +61,12 @@ public final class RealmsLogMan {
             }
 
             if (RealmsBase.getServer().isCanary()) {
-                logRecord.setMessage(" [" + lvl.getName() + "] [Realms] " + message);
+                if (lvl instanceof RLevel) {
+                    logRecord.setMessage(" [" + lvl.getName() + "] [Realms] " + message);
+                }
+                else {
+                    logRecord.setMessage(" [Realms] ".concat(message));
+                }
             }
             else {
                 logRecord.setMessage("[Realms] ".concat(message));

@@ -219,8 +219,18 @@ public class RealmsProps {
         return (Boolean) null;
     }
 
-    public final boolean isCommandAllowed(String command) {
-        return commandOverride.contains(command);
+    public final boolean isCommandAllowed(String[] args) {
+        int argc = 0;
+        StringBuilder verify = new StringBuilder();
+        while (argc < args.length) {
+            verify.append(args[argc]);
+            if (commandOverride.contains(verify.toString())) {
+                return true;
+            }
+            verify.append(" ");
+            argc++;
+        }
+        return false;
     }
 
     public final boolean isInteractBlock(int id) {

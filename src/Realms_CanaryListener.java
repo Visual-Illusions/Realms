@@ -231,14 +231,14 @@ public final class Realms_CanaryListener extends PluginListener {
                 cmd = command.split(" ");
             }
             if (cmd != null) {
-                if (!cmd[0].matches("/realms") || RealmsBase.getProperties().isCommandAllowed(cmd[0]) && allow) {
+                if (!cmd[0].matches("/realms") || RealmsBase.getProperties().isCommandAllowed(cmd) && allow) {
                     if (!zone.permissionCheck(user, PermissionType.COMMAND)) {
                         player.notify("You are not allowed to execute commands in this area!");
                         allow = false;
                     }
                 }
             }
-            RealmsLogMan.log(RLevel.COMMAND_CHECK, "Player: '" + player.getName() + "' Command: '" + (cmd != null ? cmd[0] : "NULL") + "' Zone: '" + zone.getName() + "' Result: " + (allow ? "'Allowed'" : "'Denied'"));
+            RealmsLogMan.log(RLevel.COMMAND_CHECK, "Player: '" + player.getName() + "' Command: '" + (command != null ? command : "NULL") + "' Zone: '" + zone.getName() + "' Result: " + (allow ? "'Allowed'" : "'Denied'"));
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ COMMAND_CHECK. Caused by: " + ex.getClass().getName());
@@ -255,14 +255,19 @@ public final class Realms_CanaryListener extends PluginListener {
         }
 
         boolean toRet = false;
-        Zone zone;
         Canary_User user = new Canary_User(player);
+        Zone zone = ZoneLists.getInZone(user);
         try {
             if (args[0].equals("/realms")) {
                 RealmsCommandHandler.parseRealmsCommand(user, args.length > 1 ? args[1] : "INVALID", RealmsBase.commandAdjustment(args, 2));
                 return true;
             }
-            else if (args[0].equals("/mode") && args.length > 2) {
+            else if (!RealmsBase.getProperties().isCommandAllowed(args) && !zone.permissionCheck(user, PermissionType.COMMAND)) {
+                player.notify("You are not allowed to execute commands in this area!");
+                return true;
+            }
+
+            if (args[0].equals("/mode") && args.length > 2) {
                 Player p = etc.getServer().matchPlayer(args[2]);
                 Canary_User mUser = new Canary_User(p);
                 if (args[1].equals("0")) {
@@ -967,19 +972,34 @@ public final class Realms_CanaryListener extends PluginListener {
     }
 
     @Override
-    public final boolean onPortalUse(Player player, World from) {
+    public final boolean onPortalUse(Player player, Location to) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
         boolean deny = false;
         try {
             Canary_User user = new Canary_User(player);
-            Zone zone = ZoneLists.getInZone(user);
-            deny = !zone.permissionCheck(user, PermissionType.TELEPORT) || !zone.permissionCheck(user, PermissionType.ENTER);
-            RealmsLogMan.log(RLevel.PORTAL_USE, "Player: '" + player.getName() + "' Zone: '" + zone.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
+            Canary_Block block = new Canary_Block(new Block(1, (int) to.x, (int) to.y, (int) to.z));
+            Zone zFrom = ZoneLists.getInZone(user);
+            Zone zTo = ZoneLists.getInZone(block);
+            deny = !zFrom.permissionCheck(user, PermissionType.TELEPORT);
             if (deny) {
-                player.notify("You do not have permission to enter that zone!");
+                player.notify("You do not have permission to teleport out of this zone!");
             }
+            else {
+                deny = !zTo.permissionCheck(user, PermissionType.TELEPORT);
+                if (deny) {
+                    player.notify("You do not have permission to teleport into that zone!");
+                }
+                else {
+                    deny = !zTo.permissionCheck(user, PermissionType.ENTER);
+                    if (deny) {
+                        player.notify("You do not have permission to enter that zone!");
+                    }
+                }
+            }
+            RealmsLogMan.log(RLevel.PORTAL_USE, "Player: '" + player.getName() + "' Zone From: '" + zFrom.getName() + "' Zone To: '" + zTo.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
+
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ PORTAL_USE. Caused by: " + ex.getClass().getName());
@@ -1010,7 +1030,7 @@ public final class Realms_CanaryListener extends PluginListener {
     }
 
     @Override
-    public final void onVehicleEnter(BaseVehicle vehicle, HumanEntity humEnt) {
+    public final void onVehicleEnter(BaseVehicle vehicle, HumanEntity humEnt) { //For somereason this is called when opening a StorageCart
         if (!RealmsBase.isLoaded()) {
             return;
         }

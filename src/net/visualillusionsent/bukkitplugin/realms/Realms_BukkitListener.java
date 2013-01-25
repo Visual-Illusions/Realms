@@ -71,6 +71,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
@@ -90,7 +91,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onBlockBreak(BlockBreakEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -100,9 +101,7 @@ public final class Realms_BukkitListener implements Listener {
             Zone zone = ZoneLists.getInZone(block);
             deny = !zone.permissionCheck(user, PermissionType.DESTROY);
             RealmsLogMan.log(RLevel.BLOCK_BREAK, "Player: '" + event.getPlayer().getName() + "' Block: '" + (block != null ? block.toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ BLOCK_BREAK. Caused by: " + ex.getMessage());
@@ -112,7 +111,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onBlockDestroy(BlockDamageEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -126,9 +125,7 @@ public final class Realms_BukkitListener implements Listener {
                 }
             }
             RealmsLogMan.log(RLevel.BLOCK_DESTROY, "Player: '" + event.getPlayer().getName() + "' Block: '" + (block != null ? block.toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ BLOCK_DESTORY. Caused by: " + ex.getMessage());
@@ -138,7 +135,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onBlockPhysics(BlockPhysicsEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -148,9 +145,7 @@ public final class Realms_BukkitListener implements Listener {
                 Zone zone = ZoneLists.getInZone(block);
                 deny = !zone.getPhysics();
                 RealmsLogMan.log(RLevel.BLOCK_PHYSICS, "Block: '" + block.toString() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-                if (deny) {
-                    event.setCancelled(true);
-                }
+                event.setCancelled(deny);
             }
         }
         catch (Exception ex) {
@@ -161,7 +156,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onBlockPlace(BlockPlaceEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -180,9 +175,7 @@ public final class Realms_BukkitListener implements Listener {
             zone = ZoneLists.getInZone(block);
             deny = !zone.permissionCheck(user, PermissionType.CREATE);
             RealmsLogMan.log(RLevel.BLOCK_PLACE, "Player: '" + event.getPlayer().getName() + "'" + " BlockPlaced: '" + (blockP != null ? blockP.toString() : "NULL") + "'" + " BlockClicked: '" + (blockC != null ? blockC.toString() : "NULL") + "'" + " ItemInHand: '" + (event.getItemInHand() != null ? event.getItemInHand().toString() : "NULL") + "'" + " Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PLACE. Caused by: " + ex.getMessage());
@@ -192,7 +185,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onBlockRightClick(PlayerInteractEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         try {
@@ -215,9 +208,7 @@ public final class Realms_BukkitListener implements Listener {
                         }
                     }
                     RealmsLogMan.log(RLevel.BLOCK_RIGHTCLICK, "Player: '" + user.getName() + "'" + " BlockClicked: '" + (block != null ? block.toString() : "NULL") + "'" + " ItemInHand: '" + (event.getItem() != null ? event.getItem().toString() : "NULL") + "'" + " Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-                    if (deny) {
-                        event.setCancelled(true);
-                    }
+                    event.setCancelled(deny);
                 }
             }
         }
@@ -229,7 +220,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void canPlayerUseCommand(PlayerCommandPreprocessEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean allow = true;
@@ -241,7 +232,7 @@ public final class Realms_BukkitListener implements Listener {
                 cmd = event.getMessage().split(" ");
             }
             if (cmd != null) {
-                if (!cmd[0].matches("/realms") || RealmsBase.getProperties().isCommandAllowed(cmd[0])) {
+                if (!cmd[0].matches("/realms") || RealmsBase.getProperties().isCommandAllowed(cmd)) {
                     if (!zone.permissionCheck(user, PermissionType.COMMAND)) {
                         event.getPlayer().sendMessage(MCChatForm.LIGHT_RED.concat("You are not allowed to execute commands in this area!"));
                         allow = false;
@@ -249,9 +240,7 @@ public final class Realms_BukkitListener implements Listener {
                 }
             }
             RealmsLogMan.log(RLevel.COMMAND_CHECK, "Player: '" + event.getPlayer().getName() + "' Command: '" + (cmd != null ? cmd[0] : "NULL") + "' Zone: '" + zone.getName() + "' Result: " + (allow ? "'Allowed'" : "'Denied'"));
-            if (!allow) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(!allow);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ COMMAND_CHECK. Caused by: " + ex.getMessage());
@@ -261,7 +250,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onDamageFromEntity(EntityDamageByEntityEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -285,9 +274,7 @@ public final class Realms_BukkitListener implements Listener {
                         }
                 }
                 RealmsLogMan.log(RLevel.DAMAGE, "Player: " + ((Player) event.getEntity()).getName() + "Damage: " + event.getCause().name() + " Zone: '" + zone.getName() + "' Result: '" + (deny ? "Took Damage'" : "Didn't Take Damage'"));
-                if (deny) {
-                    event.setCancelled(true);
-                }
+                event.setCancelled(deny);
             }
         }
         catch (Exception ex) {
@@ -298,7 +285,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onDamageFromEnvironment(EntityDamageEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -337,9 +324,7 @@ public final class Realms_BukkitListener implements Listener {
                 }
 
                 RealmsLogMan.log(RLevel.DAMAGE, "Player: " + ((Player) event.getEntity()).getName() + "Damage: " + event.getCause().name() + " Zone: '" + zone.getName() + "' Result: '" + (deny ? "Took Damage'" : "Didn't Take Damage'"));
-                if (deny) {
-                    event.setCancelled(true);
-                }
+                event.setCancelled(deny);
             }
         }
         catch (Exception ex) {
@@ -384,7 +369,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onDispense(BlockDispenseEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -393,9 +378,7 @@ public final class Realms_BukkitListener implements Listener {
             Zone zone = ZoneLists.getInZone(block);
             deny = !zone.getDispensers();
             RealmsLogMan.log(RLevel.DISPENSE, "Block: '" + block.toString() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ DISPENSE. Caused by: " + ex.getMessage());
@@ -405,7 +388,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onEat(PlayerInteractEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -417,9 +400,7 @@ public final class Realms_BukkitListener implements Listener {
                         Zone zone = ZoneLists.getInZone(user);
                         deny = !zone.permissionCheck(user, PermissionType.EAT);
                         RealmsLogMan.log(RLevel.EAT, "Player: '" + event.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
-                        if (deny) {
-                            event.setCancelled(true);
-                        }
+                        event.setCancelled(deny);
                     }
                 }
             }
@@ -432,7 +413,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onEndermanMoveBlock(EntityChangeBlockEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -442,9 +423,7 @@ public final class Realms_BukkitListener implements Listener {
                 Zone zone = ZoneLists.getInZone(bent);
                 deny = !zone.getEnderman();
                 RealmsLogMan.log(RLevel.ENDERMAN, "Block: '" + (event.getBlock() != null ? event.getBlock().toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
-                if (deny) {
-                    event.setCancelled(true);
-                }
+                event.setCancelled(deny);
             }
         }
         catch (Exception ex) {
@@ -455,7 +434,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onEntityRightClick(PlayerInteractEntityEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -477,9 +456,7 @@ public final class Realms_BukkitListener implements Listener {
                 }
             }
             RealmsLogMan.log(RLevel.ENTITY_RIGHTCLICK, "Player: '" + event.getPlayer().getName() + "' Entity: '" + event.getRightClicked().getType().name() + "' Zone: '" + zone.getName() + "' Result: " + (!deny ? "Allowed" : "Denied"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ ENTITY_RIGHTCLICK. Cause by: " + ex.getMessage());
@@ -488,9 +465,9 @@ public final class Realms_BukkitListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public final boolean onExplosion(EntityExplodeEvent event) {
-        if (!RealmsBase.isLoaded()) {
-            return false;
+    public final void onExplosion(EntityExplodeEvent event) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
+            return;
         }
         try {
             Bukkit_Block block;
@@ -508,13 +485,12 @@ public final class Realms_BukkitListener implements Listener {
             RealmsLogMan.severe("An unexpected exception occured @ EXPLOSION. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
-        return false;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public final boolean onFlow(BlockFromToEvent event) {
-        if (!RealmsBase.isLoaded()) {
-            return false;
+    public final void onFlow(BlockFromToEvent event) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
+            return;
         }
         boolean deny = false;
         try {
@@ -528,21 +504,18 @@ public final class Realms_BukkitListener implements Listener {
             else if (!zone2.getFlow()) {
                 deny = true;
             }
-            RealmsLogMan.log(RLevel.FLOW, "Zone1: " + zone1.getName() + " Result: '" + (!zone1.getFlow() ? "Denied'" : "Allowed' Zone2: " + zone2.getName() + " Result: '" + (zone2.getFlow() ? "Allowed'" : "Denied'")));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            RealmsLogMan.log(RLevel.FLOW, "Zone From: " + zone1.getName() + " Result: '" + (!zone1.getFlow() ? "Denied'" : "Allowed' Zone To: " + zone2.getName() + " Result: '" + (zone2.getFlow() ? "Allowed'" : "Denied'")));
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ FLOW. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
-        return deny;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -554,9 +527,7 @@ public final class Realms_BukkitListener implements Listener {
                     deny = true;
                 }
                 RealmsLogMan.log(RLevel.STARVATION, "Player: '" + event.getEntity().getName() + "' Zone: '" + zone.getName() + "' Result: " + (zone.getStarve() ? "'Allowed'" : "'Denied'"));
-                if (deny) {
-                    event.setCancelled(true);
-                }
+                event.setCancelled(deny);
             }
             catch (Exception ex) {
                 RealmsLogMan.severe("An unexpected exception occured @ FOOD_LEVELCHANGE. Caused by: " + ex.getMessage());
@@ -566,9 +537,9 @@ public final class Realms_BukkitListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public final boolean onIgnite(BlockIgniteEvent event) {
-        if (!RealmsBase.isLoaded()) {
-            return false;
+    public final void onIgnite(BlockIgniteEvent event) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
+            return;
         }
         boolean deny = false;
         try {
@@ -596,20 +567,17 @@ public final class Realms_BukkitListener implements Listener {
                     RealmsLogMan.log(RLevel.BURN, "Type: 'BURN' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
                     break;
             }
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ IGNITE. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
-        return false;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onItemDrop(PlayerDropItemEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -618,9 +586,7 @@ public final class Realms_BukkitListener implements Listener {
             Zone zone = ZoneLists.getInZone(user);
             deny = (zone.getCreative() && (event.getPlayer().getGameMode() == GameMode.CREATIVE));
             RealmsLogMan.log(RLevel.ITEM_DROP, "Player: '" + event.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Drop Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ ITEM_DROP. Caused by: " + ex.getClass().getName());
@@ -630,7 +596,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onItemUse(PlayerInteractEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -648,9 +614,7 @@ public final class Realms_BukkitListener implements Listener {
                     }
                     deny = !zone.permissionCheck(user, PermissionType.INTERACT);
                     RealmsLogMan.log(RLevel.ITEM_USE, "Player: '" + event.getPlayer().getName() + "' Zone: '" + zone.getName() + "' PermType: 'INTERACT' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-                    if (deny) {
-                        event.setCancelled(true);
-                    }
+                    event.setCancelled(deny);
                 }
             }
         }
@@ -662,7 +626,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onMobSpawn(CreatureSpawnEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -675,10 +639,8 @@ public final class Realms_BukkitListener implements Listener {
             else if (isAnimal(event.getEntityType()) && !zone.getAnimals()) {
                 deny = true;
             }
-            if (deny) {
-                event.setCancelled(true);
-            }
             RealmsLogMan.log(RLevel.MOB_SPAWN, "Mob: '" + event.getEntityType().getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ MOB_SPAWN. Caused by: " + ex.getClass().getName());
@@ -688,7 +650,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onMobTarget(EntityTargetLivingEntityEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -698,6 +660,7 @@ public final class Realms_BukkitListener implements Listener {
                 Zone zone = ZoneLists.getInZone(user);
                 deny = zone.getSanctuary();
                 RealmsLogMan.log(RLevel.MOB_TARGET, "Mob: '" + event.getEntityType().getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
+                event.setCancelled(deny);
             }
         }
         catch (Exception ex) {
@@ -708,7 +671,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onPistonExtend(BlockPistonExtendEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -719,9 +682,7 @@ public final class Realms_BukkitListener implements Listener {
             Zone pushzone = ZoneLists.getInZone(pushing);
             deny = !piszone.getPistons() || !pushzone.getPistons();
             RealmsLogMan.log(RLevel.PISTONS, "Zone: '" + piszone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ PISTON_EXTEND. Caused by: " + ex.getClass().getName());
@@ -731,7 +692,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onPistonRetract(BlockPistonRetractEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
         boolean deny = false;
@@ -742,9 +703,7 @@ public final class Realms_BukkitListener implements Listener {
             Zone pushzone = ZoneLists.getInZone(pushing);
             deny = !piszone.getPistons() || !pushzone.getPistons();
             RealmsLogMan.log(RLevel.PISTONS, "Zone: '" + piszone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
-            if (deny) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(deny);
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ PISTON_RETRACT Caused by: " + ex.getClass().getName());
@@ -754,6 +713,9 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
+            return;
+        }
         try {
             if (!event.getPlayer().hasPermission("bukkit.command.gamemode")) {
                 if (event.getNewGameMode() != GameMode.SURVIVAL) {
@@ -774,7 +736,7 @@ public final class Realms_BukkitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public final void onPlayerMove(PlayerMoveEvent event) {
-        if (!RealmsBase.isLoaded()) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
             return;
         }
 
@@ -862,6 +824,44 @@ public final class Realms_BukkitListener implements Listener {
             RealmsLogMan.stacktrace(ex);
         }
     }
+
+    public final void onPortalUse(PlayerPortalEvent event) {
+        if (!RealmsBase.isLoaded() || event.isCancelled()) {
+            return;
+        }
+        boolean deny = false;
+        try {
+            Player player = event.getPlayer();
+            Bukkit_User user = new Bukkit_User(player);
+            Bukkit_Block block = new Bukkit_Block(event.getTo().getBlock());
+            Zone zFrom = ZoneLists.getInZone(user);
+            Zone zTo = ZoneLists.getInZone(block);
+            deny = !zFrom.permissionCheck(user, PermissionType.TELEPORT);
+            if (deny) {
+                player.sendMessage(MCChatForm.RED.concat("You do not have permission to teleport out of this zone!"));
+            }
+            else {
+                deny = !zTo.permissionCheck(user, PermissionType.TELEPORT);
+                if (deny) {
+                    player.sendMessage(MCChatForm.RED.concat("You do not have permission to teleport into that zone!"));
+                }
+                else {
+                    deny = !zTo.permissionCheck(user, PermissionType.ENTER);
+                    if (deny) {
+                        player.sendMessage(MCChatForm.RED.concat("You do not have permission to enter that zone!"));
+                    }
+                }
+            }
+            RealmsLogMan.log(RLevel.PORTAL_USE, "Player: '" + player.getName() + "' Zone From: '" + zFrom.getName() + "' Zone To: '" + zTo.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
+            event.setCancelled(deny);
+        }
+        catch (Exception ex) {
+            RealmsLogMan.severe("An unexpected exception occured @ PORTAL_USE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.stacktrace(ex);
+        }
+    }
+
+    //public final void onPotionEffect(IfBukkitHadAnEvent itWouldGoHere){ }
 
     private final Block getPistonTouch(Block piston, BlockFace facing) {
         Block pushing = null;
