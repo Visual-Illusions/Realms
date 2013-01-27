@@ -406,22 +406,22 @@ public final class Realms_CanaryListener extends PluginListener {
                         }
                         break;
                     case FALL:
-                        deny = !zone.getFall() || zone.getSanctuary();
+                        deny = (!zone.getFall()) || zone.getSanctuary();
                         break;
                     case STARVATION:
-                        deny = zone.getStarve() || zone.getSanctuary();
+                        deny = (!zone.getStarve()) || zone.getSanctuary();
                         break;
                     case SUFFOCATION:
                     case WATER:
-                        deny = !zone.getSuffocate() || zone.getSanctuary();
+                        deny = (!zone.getSuffocate()) || zone.getSanctuary();
                         break;
                     case FIRE:
                     case LAVA:
                     case FIRE_TICK:
-                        deny = !zone.getFire() || zone.getSanctuary();
+                        deny = (!zone.getFire()) || zone.getSanctuary();
                         break;
                     case POTION:
-                        deny = !zone.getPotion() || zone.getSanctuary();
+                        deny = (!zone.getPotion()) || zone.getSanctuary();
                         break;
                     case EXPLOSION:
                     case CREEPER_EXPLOSION:

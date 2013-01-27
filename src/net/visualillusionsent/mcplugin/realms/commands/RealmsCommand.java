@@ -34,7 +34,7 @@ abstract class RealmsCommand {
     private final String USAGE = MCChatForm.CYAN.concat("Usage: /realms %s %s");
 
     protected RealmsCommand() {
-        RealmsCommandHandler.register(getClass().getAnnotation(RCommand.class).name(), this);
+        RealmsCommandHandler.register(this);
     }
 
     abstract void execute(Mod_Caller caller, String[] args);

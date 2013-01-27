@@ -80,21 +80,27 @@ public class RealmsCommandHandler {
     private RealmsCommandHandler() {}
 
     static RealmsCommand getCommand(String cmd) {
-        if (commands.containsKey(cmd)) {
-            return commands.get(cmd);
-        }
-        return null;
+        return commands.get(cmd);
     }
 
     static Collection<RealmsCommand> getRealmsSubCommands() {
         return Collections.unmodifiableCollection(commands.values());
     }
 
-    static void register(String name, RealmsCommand cmd) {
-        if (name != null && cmd != null) {
-            if (!commands.containsValue(cmd)) {
-                commands.put(name, cmd);
-                RealmsLogMan.log(RLevel.GENERAL, "Registering SubCommand: ".concat(name));
+    static void register(RealmsCommand cmd) {
+        if (cmd != null) {
+            try {
+                RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
+                if (!commands.containsValue(cmd)) {
+                    commands.put(rcmd.name(), cmd);
+                    RealmsLogMan.log(RLevel.GENERAL, "Registered subcommand: ".concat(rcmd.name()));
+                }
+                else {
+                    RealmsLogMan.log(RLevel.GENERAL, "Failed to register SubCommand: ".concat(rcmd.name()));
+                }
+            }
+            catch (NullPointerException npe) {
+                RealmsLogMan.log(RLevel.GENERAL, "Realms Command was missing it's annotation: ".concat(cmd.getClass().getName()), npe);
             }
         }
     }

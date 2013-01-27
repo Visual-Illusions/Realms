@@ -160,7 +160,7 @@ public final class ZoneLists {
     }
 
     public final static List<String> getInHealing() {
-        return new ArrayList<String>(inHealing);
+        return Collections.unmodifiableList(inHealing);
     }
 
     public final static boolean isInCreative(Mod_User user) {
