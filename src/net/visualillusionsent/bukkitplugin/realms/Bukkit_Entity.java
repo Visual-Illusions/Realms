@@ -22,6 +22,7 @@ package net.visualillusionsent.bukkitplugin.realms;
 import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
 import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 /**
@@ -57,6 +58,21 @@ public class Bukkit_Entity implements Mod_Entity {
     @Override
     public final double getZ() {
         return entity.getLocation().getZ();
+    }
+
+    @Override
+    public final float getRotation() {
+        return entity.getLocation().getYaw();
+    }
+
+    @Override
+    public final float getPitch() {
+        return entity.getLocation().getPitch();
+    }
+
+    @Override
+    public final void teleportTo(double x, double y, double z, float rotation, float pitch) {
+        entity.teleport(new Location(entity.getWorld(), x, y, z, rotation, pitch));
     }
 
     @Override

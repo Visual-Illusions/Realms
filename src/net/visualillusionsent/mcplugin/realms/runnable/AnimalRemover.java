@@ -28,6 +28,7 @@ import net.visualillusionsent.mcplugin.realms.logging.RLevel;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.
@@ -37,10 +38,11 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class AnimalDestructor implements Runnable {
-    private final String debug = "Killed Animal - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
+public final class AnimalRemover implements Runnable {
+    private final String debugDestroy = "Killed Animal - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
+    private final String debugMove = "Moved Animal - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
 
-    public AnimalDestructor(RealmsBase base) {}
+    public AnimalRemover(RealmsBase base) {}
 
     @Override
     public final void run() {
@@ -55,17 +57,26 @@ public final class AnimalDestructor implements Runnable {
                     Zone theZone = ZoneLists.getInZone(theAnimal);
                     //Check if Animal is in a Animal Disabled Zone
                     if (!theZone.getAnimals()) {
-                        //Animal is in Animal Disable Zone and needs Destroyed
-                        theAnimal.destroy();
-
-                        //Debugging
-                        RealmsLogMan.log(RLevel.ANIMAL_DESTROY, String.format(debug, theAnimal.getName(), theZone.getName(), theAnimal.getWorld(), theAnimal.getDimension(), theAnimal.getX(), theAnimal.getY(), theAnimal.getZ()));
+                        if (RealmsBase.getProperties().getBooleanVal("sanctuary.animals.die")) {
+                            //Destroy Animal
+                            theAnimal.destroy();
+                            RealmsLogMan.log(RLevel.ANIMAL_DESTROY, String.format(debugDestroy, theAnimal.getName(), theZone.getName(), theAnimal.getWorld(), theAnimal.getDimension(), theAnimal.getX(), theAnimal.getY(), theAnimal.getZ()));
+                        }
+                        else {
+                            //Move Animal
+                            Point thrown = RealmsBase.throwBack(theZone, theAnimal.getLocationPoint());
+                            theAnimal.teleportTo(thrown.x + 0.5D, thrown.y + 0.5D, thrown.z + 0.5D, theAnimal.getRotation(), theAnimal.getPitch());
+                            RealmsLogMan.log(RLevel.MOB_REMOVER, String.format(debugMove, theZone.getName(), theAnimal.getName(), theAnimal.getWorld(), theAnimal.getDimension(), theAnimal.getX(), theAnimal.getY(), theAnimal.getZ()));
+                        }
                     }
                 }
             }
         }
         catch (ConcurrentModificationException CME) {
             RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in AnimalsDestructor. (Don't worry Not a major issue)");
+        }
+        catch (Exception ex) {
+
         }
     }
 }

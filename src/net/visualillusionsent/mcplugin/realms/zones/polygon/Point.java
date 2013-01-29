@@ -27,7 +27,7 @@ package net.visualillusionsent.mcplugin.realms.zones.polygon;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Point {
+public final class Point implements Cloneable {
     public int x;
     public int y;
     public int z;
@@ -52,5 +52,13 @@ public final class Point {
 
     public final static int isLeft2D(Point p1, Point p2, Point p3) {
         return (p2.x - p1.x) * (p3.z - p1.z) - (p3.x - p1.x) * (p2.z - p1.z);
+    }
+
+    public final Point clone() {
+        try {
+            return (Point) super.clone();
+        }
+        catch (CloneNotSupportedException e) {}
+        return null;
     }
 }

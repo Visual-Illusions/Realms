@@ -436,6 +436,21 @@ public final class PolygonArea {
         return true;
     }
 
+    public final Point getClosestPoint(Point temp) {
+        Iterator<Point> pointIt = vertices.iterator();
+        Point closest = null;
+        while (pointIt.hasNext()) {
+            Point check = pointIt.next();
+            if (closest == null) {
+                closest = check;
+            }
+            else if (check.distance2D(temp) < closest.distance2D(temp)) {
+                closest = check;
+            }
+        }
+        return closest;
+    }
+
     private final LinkedList<Point> reorgPoints(List<Point> points) {
         List<Point> tempPoints = new LinkedList<Point>(points);
         LinkedList<Point> toRet = new LinkedList<Point>();

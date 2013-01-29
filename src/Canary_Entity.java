@@ -61,6 +61,21 @@ public class Canary_Entity implements Mod_Entity {
     }
 
     @Override
+    public final float getRotation() {
+        return entity.getRotation();
+    }
+
+    @Override
+    public final float getPitch() {
+        return entity.getPitch();
+    }
+
+    @Override
+    public final void teleportTo(double x, double y, double z, float rotation, float pitch) {
+        entity.teleportTo(x, y, z, rotation, pitch);
+    }
+
+    @Override
     public final Point getLocationPoint() {
         return new Point((int) Math.floor(getX()), (int) Math.floor(getY()), (int) Math.floor(getZ()));
     }

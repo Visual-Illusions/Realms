@@ -35,9 +35,9 @@ import net.visualillusionsent.mcplugin.realms.data.DataSourceType;
 import net.visualillusionsent.mcplugin.realms.data.OutputAction;
 import net.visualillusionsent.mcplugin.realms.data.RealmsProps;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
-import net.visualillusionsent.mcplugin.realms.runnable.AnimalDestructor;
+import net.visualillusionsent.mcplugin.realms.runnable.AnimalRemover;
 import net.visualillusionsent.mcplugin.realms.runnable.Healer;
-import net.visualillusionsent.mcplugin.realms.runnable.MobDestructor;
+import net.visualillusionsent.mcplugin.realms.runnable.MobRemover;
 import net.visualillusionsent.mcplugin.realms.runnable.RestrictionDamager;
 import net.visualillusionsent.mcplugin.realms.zones.Wand;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
@@ -72,8 +72,8 @@ public class RealmsBase {
     private final VersionChecker vc;
     private final Updater updater;
 
-    private final MobDestructor mobdes = new MobDestructor(this);
-    private final AnimalDestructor animaldes = new AnimalDestructor(this);
+    private final MobRemover mobdes = new MobRemover(this);
+    private final AnimalRemover animaldes = new AnimalRemover(this);
     private final Healer healer = new Healer(this);
     private final RestrictionDamager restrictdam = new RestrictionDamager(this);
 
@@ -334,25 +334,25 @@ public class RealmsBase {
         return newArgs;
     }
 
-    public final static Point throwBack(Zone zone, Point pPoint, Point oPoint) {
+    public final static Point throwBack(Zone zone, Point oPoint) {
         PolygonArea area = zone.getPolygon();
+        Point temp = oPoint.clone();
         if (area != null) {
-            while (area.contains(pPoint)) {
-                if (pPoint.x > oPoint.x) {
-                    pPoint.x -= 1;
-                }
-                else if (pPoint.x < oPoint.x) {
-                    pPoint.x += 1;
-                }
-                if (pPoint.z > oPoint.z) {
-                    pPoint.z -= 1;
-                }
-                else if (pPoint.z < oPoint.z) {
-                    pPoint.z += 1;
+            temp = area.getClosestPoint(temp);
+            temp.x += 1;
+            if (area.contains(temp)) {
+                temp.x -= 2;
+                if (area.contains(temp)) {
+                    temp.x += 1;
+                    temp.z += 1;
+                    if (area.contains(temp)) {
+                        temp.z -= 2;
+                    }
                 }
             }
+
+            temp.y = $.server.getHighestY(temp.x, temp.z, zone.getWorld(), zone.getDimension());
         }
-        pPoint.y = $.server.getHighestY(pPoint.x, pPoint.z, zone.getWorld(), zone.getDimension());
-        return pPoint;
+        return temp;
     }
 }

@@ -75,5 +75,8 @@ public final class RestrictionDamager implements Runnable {
         catch (ConcurrentModificationException CME) {
             RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in RestrictedDamager. (Don't worry Not a major issue)");
         }
+        catch (Exception ex) {
+
+        }
     }
 }

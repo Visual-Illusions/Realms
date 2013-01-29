@@ -748,8 +748,7 @@ public final class Realms_BukkitListener implements Listener {
             //Start Enter Zone Checks
             if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                 player.sendMessage(ChatColor.RED + "You do not have permission to enter that zone!");
-                Location from = event.getFrom();
-                Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint(), new Point((int) from.getX(), (int) from.getY(), (int) from.getZ()));
+                Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint());
                 Location loc = player.getLocation();
                 loc.setX(thrown.x);
                 loc.setY(thrown.y);

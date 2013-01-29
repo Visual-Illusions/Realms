@@ -37,6 +37,12 @@ public interface Mod_Entity {
 
     double getZ();
 
+    float getRotation();
+
+    float getPitch();
+
+    void teleportTo(double x, double y, double z, float rotation, float pitch);
+
     Point getLocationPoint();
 
     int getDimension();

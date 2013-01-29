@@ -899,7 +899,7 @@ public final class Realms_CanaryListener extends PluginListener {
             //Start Enter Zone Checks
             if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                 player.notify("You do not have permission to enter that zone!");
-                Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint(), new Point((int) from.x, (int) from.y, (int) from.z));
+                Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint());
                 player.teleportTo(thrown.x + 0.5D, thrown.y + 0.5D, thrown.z + 0.5D, player.getRotation(), player.getPitch());
                 return;
             }
@@ -1062,7 +1062,7 @@ public final class Realms_CanaryListener extends PluginListener {
                 //Start Enter Zone Checks
                 if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                     player.dismount();
-                    Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint(), new Canary_Entity(vehicle).getLocationPoint());
+                    Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint());
                     player.teleportTo(thrown.x, thrown.y, thrown.z, player.getRotation(), player.getPitch());
                     if (vehicle.getName().equals("Boat")) {
                         player.sendMessage("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your boat! Need some help?");

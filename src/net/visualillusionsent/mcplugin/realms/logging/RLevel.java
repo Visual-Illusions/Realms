@@ -54,7 +54,7 @@ public final class RLevel extends Level {
             ITEM_DROP = new RLevel(RD.concat("ITEM_DROP"), genLevel()), //
             ITEM_PICKUP = new RLevel(RD.concat("ITEM_PICKUP"), genLevel()), //
             ITEM_USE = new RLevel(RD.concat("ITEM_USE"), genLevel()), //
-            MOB_DESTROY = new RLevel(RD.concat("MOB_DESTROY"), genLevel()), //
+            MOB_REMOVER = new RLevel(RD.concat("MOB_REMOVER"), genLevel()), //
             MOB_TARGET = new RLevel(RD.concat("MOB_TARGET"), genLevel()), //
             MOB_SPAWN = new RLevel(RD.concat("MOB_SPAWN"), genLevel()), //
             PISTONS = new RLevel(RD.concat("PISTONS"), genLevel()), //

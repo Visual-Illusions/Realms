@@ -28,6 +28,7 @@ import net.visualillusionsent.mcplugin.realms.logging.RLevel;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
+import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.
@@ -37,10 +38,11 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class MobDestructor implements Runnable {
-    private final String debug = "Killed Mob - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%s' X: '%.2f' Y: '%.2f' Z: '%.2f')";
+public final class MobRemover implements Runnable {
+    private final String debugDestroy = "Killed Mob - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
+    private final String debugMove = "Moved Mob - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
 
-    public MobDestructor(RealmsBase realmsBase) {}
+    public MobRemover(RealmsBase realmsBase) {}
 
     @Override
     public final void run() {
@@ -54,18 +56,18 @@ public final class MobDestructor implements Runnable {
                     for (Mod_Entity theMob : mobList) {
                         //Get Zone Mob is in
                         Zone theZone = ZoneLists.getInZone(theMob);
-
-                        boolean destroyed = false;
-
                         if (theZone.getSanctuary()) {
-                            //Mob is in Mob Disable Zone and needs Destroyed
-                            theMob.destroy();
-                            destroyed = true;
-                        }
-
-                        if (destroyed) {
-                            //Debugging
-                            RealmsLogMan.log(RLevel.MOB_DESTROY, String.format(debug, theZone.getName(), theMob.getName(), theMob.getWorld(), theMob.getDimension(), theMob.getX(), theMob.getY(), theMob.getZ()));
+                            if (RealmsBase.getProperties().getBooleanVal("sanctuary.mobs.die")) {
+                                //Destory mob
+                                theMob.destroy();
+                                RealmsLogMan.log(RLevel.MOB_REMOVER, String.format(debugDestroy, theZone.getName(), theMob.getName(), theMob.getWorld(), theMob.getDimension(), theMob.getX(), theMob.getY(), theMob.getZ()));
+                            }
+                            else {
+                                //Move Mob
+                                Point thrown = RealmsBase.throwBack(theZone, theMob.getLocationPoint());
+                                theMob.teleportTo(thrown.x + 0.5D, thrown.y + 0.5D, thrown.z + 0.5D, theMob.getRotation(), theMob.getPitch());
+                                RealmsLogMan.log(RLevel.MOB_REMOVER, String.format(debugMove, theZone.getName(), theMob.getName(), theMob.getWorld(), theMob.getDimension(), theMob.getX(), theMob.getY(), theMob.getZ()));
+                            }
                         }
                     }
                 }
@@ -73,6 +75,9 @@ public final class MobDestructor implements Runnable {
         }
         catch (ConcurrentModificationException CME) {
             RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in MobDestructor. (Don't worry Not a major issue)");
+        }
+        catch (Exception ex) {
+            //TODO Message
         }
     }
 }

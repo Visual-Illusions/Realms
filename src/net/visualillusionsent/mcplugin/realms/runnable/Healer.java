@@ -51,17 +51,17 @@ public final class Healer implements Runnable {
                 for (String userName : userList) {
                     Mod_User theUser = RealmsBase.getServer().getUser(userName);
                     if (theUser != null) {
-                        int health = theUser.getHealth();
-                        if (health < theUser.getMaxHealth()) { //Need Healing
-                            theUser.heal(1); //Heal
-                            RealmsLogMan.log(RLevel.PLAYER_HEAL, String.format(debug, userName, theUser.getWorld(), theUser.getDimension(), theUser.getX(), theUser.getY(), theUser.getZ())); //Debugging
-                        }
+                        theUser.heal(1); //Heal
+                        RealmsLogMan.log(RLevel.PLAYER_HEAL, String.format(debug, userName, theUser.getWorld(), theUser.getDimension(), theUser.getX(), theUser.getY(), theUser.getZ())); //Debugging
                     }
                 }
             }
         }
         catch (ConcurrentModificationException CME) {
             RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in Healer. (Don't worry Not a major issue)");
+        }
+        catch (Exception ex) {
+
         }
     }
 }
