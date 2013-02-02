@@ -75,7 +75,7 @@ public class RealmsProps{
                 FileUtils.cloneFileFromJar(new File("plugins/Realms.jar").getAbsolutePath(), "resources/default_config.ini", props_Path);
             }
             catch(UtilityException ue){
-                RealmsLogMan.severe("Failed to create Properties...", ue);
+                RealmsLogMan.severe("Failed to create Properties..." + ue.getMessage());
                 return false;
             }
         }
@@ -116,7 +116,7 @@ public class RealmsProps{
             RealmsLogMan.info("Properties tests passed!");
         }
         catch(UtilityException ue){
-            RealmsLogMan.severe("Failed to load Properties...", ue);
+            RealmsLogMan.severe("Failed to load Properties..." + ue.getMessage());
             return false;
         }
         catch(IllegalArgumentException iae){

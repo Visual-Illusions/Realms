@@ -190,7 +190,8 @@ public final class PolygonArea{
         this.mode = Mode.EDIT;
         workingFloor = floor;
         workingCeiling = ceiling;
-        workingVertices = new LinkedList<Point>(vertices);
+        workingVertices.clear();
+        workingVertices.addAll(vertices);
         return workingVertices;
     }
 
