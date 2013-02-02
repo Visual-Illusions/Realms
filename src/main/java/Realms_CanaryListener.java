@@ -699,7 +699,7 @@ public final class Realms_CanaryListener extends PluginListener{
                     RealmsLogMan.log(RLevel.BURN, "Type: 'BURN' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
                 }
                 else if(player != null && (bs == 2 || bs == 6)){
-                    deny = zone.permissionCheck(new Canary_User(player), PermissionType.IGNITE);
+                    deny = !zone.permissionCheck(new Canary_User(player), PermissionType.IGNITE);
                     RealmsLogMan.log(RLevel.BURN, "Type: 'IGNITE' Player: '" + player.getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
                 }
             }

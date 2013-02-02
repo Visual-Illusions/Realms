@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Title: Realms
 Version: 7.0
-Build: 20130201
+Build: 20130202
 Beta: true
 Release-Canidate: false
 Vendor: Visual Illusions Entertainment

@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.visualillusionsent.mcplugin</groupId>
+  <artifactId>realms</artifactId>
+  <version>7.0</version>
+  <name>Realms</name>
+  <description>Polygonal Heirarchy Area Ownership</description>
+  <url>http://visualillusionsent.net</url>
+  <inceptionYear>2012</inceptionYear>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <organization>
+   <name>Visual Illusions Entertainment</name>
+   <url>http://visualillusionsent.net</url>
+  </organization>
+  <developers>
+    <developer>
+      <id>darkdiplomat</id>
+      <name>Jason Jones</name>
+      <email>darkdiplomat@visualillusionsent.net</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git@github.com/Visual-Illusions/Realms.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/Visual-Illusions/Realms.git</developerConnection>
+    <url>https://github.com/Visual-Illusions/Realms</url>
+  </scm>
+  <issueManagement>
+    <url>https://github.com/Visual-Illusions/viutils/issues</url>
+    <system>GitHub Issue Tracker</system>
+  </issueManagement>
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>http://ci.visualillusionsent.net</url>
+  </ciManagement>
+  <repositories>
+    <repository>
+      <id>CodeBukkit</id>
+      <name>Bukkit Public Repository</name>
+      <url>http://repo.bukkit.org/content/groups/public</url>
+    </repository>
+  </repositories>
+  <dependencies>
+   <dependency>
+    <groupId>net.visualillusionsent</groupId>
+    <artifactId>viutils</artifactId>
+    <version>1.0.0</version>
+   </dependency>
+   <dependency>
+    <groupId>org.bukkit</groupId>
+    <artifactId>bukkit</artifactId>
+    <version>1.4.7-R1.0</version>
+   </dependency>
+   <dependency>
+    <groupId>org.jdom</groupId>
+    <artifactId>jdom2</artifactId>
+    <version>2.0.4</version>
+   </dependency>
+   <!-- CanaryMod isn't a Maven project so System Scope the dependancies -->
+   <dependency>
+    <groupId>net.canarymod</groupId>
+    <artifactId>crow</artifactId>
+    <version>5.7.11</version>
+    <scope>system</scope>
+    <systemPath>${basedir}/lib/CanaryMod.jar</systemPath>
+   </dependency>
+   <dependency>
+    <groupId>net.canarymod</groupId>
+    <artifactId>minecraft_servero</artifactId>
+    <version>1.4.7</version>
+    <scope>system</scope>
+    <systemPath>${basedir}/lib/minecraft_servero.jar</systemPath>
+   </dependency>
+   <!-- End: CanaryMod -->
+  </dependencies>
+  <build>
+    <plugins>
+      <!-- Start: Generate Timestamp -->
+      <plugin>
+        <groupId>com.github.goldin</groupId>
+        <artifactId>timestamp-maven-plugin</artifactId>
+        <version>0.2.5</version>
+        <executions>
+          <execution>
+            <id>set-build-timestamp</id>
+            <goals>
+              <goal>timestamp</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <timestamp>
+                <property>timestamp</property>
+                <pattern>yyyyMMdd</pattern>
+                <timezone>GMT-6</timezone>
+                <locale>US</locale>
+              </timestamp>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- End: Generate Timestamp -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>false</addClasspath>
+            </manifest>
+            <manifestEntries>
+                <Title>Realms</Title>
+                <Version>7.0</Version>
+                <Build>${timestamp}</Build>
+                <Beta>true</Beta>
+                <Release-Canidate>false</Release-Canidate>
+                <Vendor>Visual Illusions Entertainment</Vendor>
+                <Built-By>${user.name}</Built-By>
+                <Class-Path>../lib/viutils-1.0.0.jar ../lib/jdom2.jar ../lib/sqlite.jar</Class-Path>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

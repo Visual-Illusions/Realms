@@ -15,15 +15,27 @@ Be sure to include as much information about the issue as possible, including Se
 
 ## Compiling ##
 Create a new project in the IDE of your choice<br>
+Add a current CanaryMod.jar, minecraft_servero.jar (Canary generated), Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
+
+Maven:<br>
+Place CanaryMod.jar and minecraft_servero.jar in a folder named 'lib' in your main project directory<br>
+Run the pom.xml<br>
+
+Ant:<br>
+Place CanaryMod.jar, minecraft_servero.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom2.jar in a folder named 'lib' in your main project directory<br>
+Right click the realms_ant_build.xml and select Run As -> Ant Build<br>
+Files will be located in a dist folder in your project area<br>
+
+Normal:<br>
 Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
-You may also need a reference to minecraft_servero.jar from CanaryMod for compliation.
-Export with the provide MANIFEST.MF file!
+You may also need a reference to minecraft_servero.jar from CanaryMod for compliation.<br>
+Export with the provide MANIFEST.MF file!<br>
 
 You can find VIUtils by visiting [ci.visualillusionsent.net](http://ci.visualillusionsent.net/job/VIUtils/lastBuild/net.visualillusionsent$viutils/ "jenkins")<br>
 JDOM2 can be found by visiting [jdom.org](http://www.jdom.org/downloads/index.html "jdom")<br>
-SQLite3-JDBC can be found by visiting [xerial.org](http://www.xerial.org/maven/repository/artifact/org/xerial/sqlite-jdbc/3.7.2/)<br>
-Bukkit API Jars can be found on the [Bukkit Wiki](http://wiki.bukkit.org/Main_Page) (Requires bukkit-1.4.5-R1.0.jar or greater)<br>
-CanaryMod can be found at [CanaryMod.net](http://www.canarymod.net/download)  (Requires Crow 5.7.11 or greater)
+SQLite3-JDBC can be found by visiting [xerial.org](http://www.xerial.org/maven/repository/artifact/org/xerial/sqlite-jdbc/3.7.2/ "sqlite-jdbc")<br>
+Bukkit API Jars can be found at [dl.bukkit.org](http://dl.bukkit.org/downloads/bukkit/ "bukkit-api") (Requires bukkit-1.4.5-R1.0.jar or greater [untested with anything below 1.4.5])<br>
+CanaryMod can be found at [CanaryMod.net](http://www.canarymod.net/download "canary")  (Requires Crow 5.7.11 or greater)
 
 ## License ##
 Realms v7

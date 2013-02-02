@@ -30,27 +30,30 @@ import net.visualillusionsent.utils.LocaleHelper;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsTranslate extends LocaleHelper {
-    private final static RealmsTranslate instance;
+public class RealmsTranslate extends LocaleHelper{
 
-    static {
+    private final static RealmsTranslate instance;
+    static{
         instance = new RealmsTranslate();
+    }
+
+    private RealmsTranslate(){
         localeCodeOverride = RealmsBase.getProperties().getStringVal("lang.locale");
     }
 
-    public final static String transMessage(String key) {
+    public final static String transMessage(String key){
         return colorize(instance.localeTranslate(key));
     }
 
-    public final static String transformMessage(String key, String... args) {
+    public final static String transformMessage(String key, String... args){
         return colorize(instance.localeTranslateFormat(key, args));
     }
 
-    private final static String colorize(String msg) {
+    private final static String colorize(String msg){
         return msg.replaceAll("\\$c", MCChatForm.MARKER.stringValue());
     }
 
-    public static String herp() { //Just meant to help initialize the class so there isnt a delay later
+    public static String herp(){ //Just meant to help initialize the class so there isnt a delay later
         return "derp";
     }
 }
