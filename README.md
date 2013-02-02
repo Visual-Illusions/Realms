@@ -15,6 +15,7 @@ Be sure to include as much information about the issue as possible, including Se
 
 ## Compiling ##
 Create a new project in the IDE of your choice<br>
+Change the source folder to be src/main/java<br>
 Add a current CanaryMod.jar, minecraft_servero.jar (Canary generated), Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
 
 Maven:<br>
