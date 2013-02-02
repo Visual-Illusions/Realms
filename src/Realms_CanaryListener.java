@@ -869,7 +869,7 @@ public final class Realms_CanaryListener extends PluginListener{
             RealmsLogMan.log(RLevel.PISTONS, "Zone: '" + piszone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch(Exception ex){
-            RealmsLogMan.severe("An unexpected exception occured @ PISTON_EXTEND. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occured @ PISTON_RETRACT. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         return deny;
@@ -961,7 +961,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try{
             Canary_User user = new Canary_User(player);
-            Canary_Block block = new Canary_Block(new Block(1, (int)to.x, (int)to.y, (int)to.z));
+            Canary_Block block = new Canary_Block(to.getWorld().getBlockAt((int)to.x, (int)to.y, (int)to.z));
             Zone zFrom = ZoneLists.getInZone(user);
             Zone zTo = ZoneLists.getInZone(block);
             deny = !zFrom.permissionCheck(user, PermissionType.TELEPORT);
@@ -1107,19 +1107,32 @@ public final class Realms_CanaryListener extends PluginListener{
     private final Block getPistonTouch(Block piston){
         Block pushing = null;
         int x = piston.getX(), y = piston.getY(), z = piston.getZ();
+        RealmsLogMan.log(RLevel.GENERAL, String.valueOf(piston.getData()));
         switch(piston.getData()){
             case 0: //DOWN
+            case 8:
                 pushing = piston.getWorld().getBlockAt(x, (y - 1), z);
+                break;
             case 1: //UP
+            case 9:
                 pushing = piston.getWorld().getBlockAt(x, (y + 1), z);
+                break;
             case 2: //NORTH (-Z)
+            case 10:
                 pushing = piston.getWorld().getBlockAt(x, y, (z - 1));
+                break;
             case 3: //SOUTH (+Z)
+            case 11:
                 pushing = piston.getWorld().getBlockAt(x, y, (z + 1));
+                break;
             case 4: //WEST (-X)
+            case 12:
                 pushing = piston.getWorld().getBlockAt((x - 1), y, z);
+                break;
             case 5: //EAST (+X)
+            case 13:
                 pushing = piston.getWorld().getBlockAt((x + 1), y, z);
+                break;
             default:
                 break;
         }
