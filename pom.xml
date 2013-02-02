@@ -97,7 +97,7 @@
             <configuration>
               <timestamp>
                 <property>timestamp</property>
-                <pattern>yyyyMMdd</pattern>
+                <pattern>yyyyMMddHHmm</pattern>
                 <timezone>GMT-6</timezone>
                 <locale>US</locale>
               </timestamp>
