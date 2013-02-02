@@ -35,11 +35,11 @@ import net.visualillusionsent.utils.UtilityException;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsProps {
+public class RealmsProps{
+
     private final String dir_Path = "plugins/Realms/";
     private final String props_Path = dir_Path.concat("Realms.ini");
     private PropertiesFile props_File;
-
     private static ArrayList<Integer> interact_Block = new ArrayList<Integer>();
     private static ArrayList<Integer> interact_Item = new ArrayList<Integer>();
     private static ArrayList<String> commandOverride = new ArrayList<String>();
@@ -50,38 +50,36 @@ public class RealmsProps {
      * 
      * @param rhandle
      */
-    public RealmsProps() {}
+    public RealmsProps(){}
 
-    public synchronized boolean initialize() {
+    public synchronized boolean initialize(){
         RealmsLogMan.info("Initializing properties...");
-        if (isInitialized) {
+        if(isInitialized){
             RealmsLogMan.severe("HERP DERP...");
             return false;
         }
         /* Check Storage Directory */
         File dir = new File(dir_Path);
-        if (!dir.exists()) {
+        if(!dir.exists()){
             RealmsLogMan.info("Creating directories...");
-            if (!dir.mkdirs()) {
+            if(!dir.mkdirs()){
                 RealmsLogMan.severe("Failed to create directories...");
                 return false;
             }
         }
-
         /* Check Properties File */
         File props = new File(props_Path);
-        if (!props.exists()) { //Create a new one if non-existent
+        if(!props.exists()){ //Create a new one if non-existent
             RealmsLogMan.info("Creating default properties...");
-            try {
-                FileUtils.cloneFileFromJar(new File("plugins/Realms.jar").getAbsolutePath(), "resources/DefaultProp.ini", props_Path);
+            try{
+                FileUtils.cloneFileFromJar(new File("plugins/Realms.jar").getAbsolutePath(), "resources/default_config.ini", props_Path);
             }
-            catch (UtilityException ue) {
+            catch(UtilityException ue){
                 RealmsLogMan.severe("Failed to create Properties...", ue);
                 return false;
             }
         }
-
-        try {
+        try{
             RealmsLogMan.info("Loading properties...");
             props_File = new PropertiesFile(props_Path); //Initialize Properties
             RealmsLogMan.info("Testing properties...");
@@ -89,6 +87,7 @@ public class RealmsProps {
             props_File.getInt("wand.type");
             props_File.getInt("pylon.type");
             props_File.getInt("pylon.height");
+            props_File.getBoolean("zone.case.sensitive");
             props_File.getLong("sanctuary.timeout");
             props_File.getLong("healing.timeout");
             props_File.getLong("animals.timeout");
@@ -100,19 +99,14 @@ public class RealmsProps {
             props_File.getBoolean("tnt.activate");
             props_File.getBoolean("restrict.kill");
             props_File.getString("restrict.message");
-
             String opBlocks = props_File.getString("interact.blocks");
             addInteractBlock(opBlocks.split(","));
-
             String opItem = props_File.getString("interact.items");
             addInteractItem(opItem.split(","));
-
             String WC = props_File.getString("command.override");
             addOverrideCommands(WC.split(","));
-
             String source = props_File.getString("datasource").toUpperCase();
             DataSourceType.valueOf(source);
-
             props_File.getString("sql.user");
             props_File.getString("sql.password");
             props_File.getString("sql.database.url");
@@ -121,11 +115,11 @@ public class RealmsProps {
             props_File.getString("lang.locale");
             RealmsLogMan.info("Properties tests passed!");
         }
-        catch (UtilityException ue) {
+        catch(UtilityException ue){
             RealmsLogMan.severe("Failed to load Properties...", ue);
             return false;
         }
-        catch (IllegalArgumentException iae) {
+        catch(IllegalArgumentException iae){
             RealmsLogMan.severe("Failed to understand datasource type...");
             return false;
         }
@@ -137,14 +131,14 @@ public class RealmsProps {
      * 
      * @param ids
      */
-    private void addInteractBlock(String[] ids) {
-        if (ids != null) {
+    private void addInteractBlock(String[] ids){
+        if(ids != null){
             int bid = 0;
-            for (String id : ids) {
-                try {
+            for(String id : ids){
+                try{
                     bid = Integer.parseInt(id.trim());
                 }
-                catch (NumberFormatException NFE) {
+                catch(NumberFormatException NFE){
                     RealmsLogMan.warning("Interact Block ID: " + id + " is invalid!");
                     continue;
                 }
@@ -158,14 +152,14 @@ public class RealmsProps {
      * 
      * @param ids
      */
-    private void addInteractItem(String[] ids) {
-        if (ids != null) {
+    private void addInteractItem(String[] ids){
+        if(ids != null){
             int bid = 0;
-            for (String id : ids) {
-                try {
+            for(String id : ids){
+                try{
                     bid = Integer.parseInt(id.trim());
                 }
-                catch (NumberFormatException NFE) {
+                catch(NumberFormatException NFE){
                     RealmsLogMan.warning("Interact Item ID: " + id + " is invalid!");
                     continue;
                 }
@@ -179,52 +173,52 @@ public class RealmsProps {
      * 
      * @param cmds
      */
-    private void addOverrideCommands(String[] cmds) {
-        if (cmds != null) {
-            for (String cmd : cmds) {
+    private void addOverrideCommands(String[] cmds){
+        if(cmds != null){
+            for(String cmd : cmds){
                 commandOverride.add(cmd.trim());
             }
         }
     }
 
-    public final String getStringVal(String key) {
-        try {
+    public final String getStringVal(String key){
+        try{
             return props_File.getString(key);
         }
-        catch (UtilityException e) {}
+        catch(UtilityException e){}
         return null;
     }
 
-    public final int getIntVal(String key) {
-        try {
+    public final int getIntVal(String key){
+        try{
             return props_File.getInt(key);
         }
-        catch (UtilityException e) {}
-        return (int) Double.NaN; //will probably blow up
+        catch(UtilityException e){}
+        return (int)Double.NaN; //will probably blow up
     }
 
-    public final long getLongVal(String key) {
-        try {
+    public final long getLongVal(String key){
+        try{
             return props_File.getInt(key);
         }
-        catch (UtilityException e) {}
-        return (long) Double.NaN; //will probably blow up
+        catch(UtilityException e){}
+        return (long)Double.NaN; //will probably blow up
     }
 
-    public final boolean getBooleanVal(String key) {
-        try {
+    public final boolean getBooleanVal(String key){
+        try{
             return props_File.getBoolean(key);
         }
-        catch (UtilityException e) {}
-        return (Boolean) null;
+        catch(UtilityException e){}
+        return (Boolean)null;
     }
 
-    public final boolean isCommandAllowed(String[] args) {
+    public final boolean isCommandAllowed(String[] args){
         int argc = 0;
         StringBuilder verify = new StringBuilder();
-        while (argc < args.length) {
+        while(argc < args.length){
             verify.append(args[argc]);
-            if (commandOverride.contains(verify.toString())) {
+            if(commandOverride.contains(verify.toString())){
                 return true;
             }
             verify.append(" ");
@@ -233,11 +227,11 @@ public class RealmsProps {
         return false;
     }
 
-    public final boolean isInteractBlock(int id) {
+    public final boolean isInteractBlock(int id){
         return interact_Block.contains(id);
     }
 
-    public final boolean isInteractItem(int id) {
+    public final boolean isInteractItem(int id){
         return interact_Item.contains(id);
     }
 }
