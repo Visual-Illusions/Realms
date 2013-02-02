@@ -73,8 +73,14 @@
     <systemPath>${basedir}/lib/minecraft_servero.jar</systemPath>
    </dependency>
    <!-- End: CanaryMod -->
+   <dependency>
+    <groupId>org.xerial</groupId>
+    <artifactId>sqlite-jdbc</artifactId>
+    <version>3.7.2</version>
+   </dependency>
   </dependencies>
   <build>
+    <finalName>Realms</finalName>
     <plugins>
       <!-- Start: Generate Timestamp -->
       <plugin>
@@ -105,13 +111,14 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
         <configuration>
+          <finalName>${project.build.finalName}</finalName>
           <archive>
             <manifest>
               <addClasspath>false</addClasspath>
             </manifest>
             <manifestEntries>
                 <Title>Realms</Title>
-                <Version>7.0</Version>
+                <Version>${project.version}</Version>
                 <Build>${timestamp}</Build>
                 <Beta>true</Beta>
                 <Release-Canidate>false</Release-Canidate>
