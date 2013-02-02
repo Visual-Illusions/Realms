@@ -38,10 +38,11 @@ import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsCommandHandler {
-    private final static LinkedHashMap<String, RealmsCommand> commands = new LinkedHashMap<String, RealmsCommand>();
+public class RealmsCommandHandler{
 
-    static {
+    private final static LinkedHashMap<String, RealmsCommand> commands = new LinkedHashMap<String, RealmsCommand>();
+    static{
+        new ConfigReloadCommand();
         new CreateZoneCommand();
         new DeletePermissionCommand();
         new DeleteZoneCommand();
@@ -77,37 +78,37 @@ public class RealmsCommandHandler {
         new ZoneListCommand();
     }
 
-    private RealmsCommandHandler() {}
+    private RealmsCommandHandler(){}
 
-    static RealmsCommand getCommand(String cmd) {
+    static RealmsCommand getCommand(String cmd){
         return commands.get(cmd);
     }
 
-    static Collection<RealmsCommand> getRealmsSubCommands() {
+    static Collection<RealmsCommand> getRealmsSubCommands(){
         return Collections.unmodifiableCollection(commands.values());
     }
 
-    static void register(RealmsCommand cmd) {
-        if (cmd != null) {
-            try {
+    static void register(RealmsCommand cmd){
+        if(cmd != null){
+            try{
                 RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
-                if (!commands.containsValue(cmd)) {
+                if(!commands.containsValue(cmd)){
                     commands.put(rcmd.name(), cmd);
                     RealmsLogMan.log(RLevel.GENERAL, "Registered subcommand: ".concat(rcmd.name()));
                 }
-                else {
+                else{
                     RealmsLogMan.log(RLevel.GENERAL, "Failed to register SubCommand: ".concat(rcmd.name()));
                 }
             }
-            catch (NullPointerException npe) {
+            catch(NullPointerException npe){
                 RealmsLogMan.log(RLevel.GENERAL, "Realms Command was missing it's annotation: ".concat(cmd.getClass().getName()), npe);
             }
         }
     }
 
-    private static String getRealmsCommandsList() {
+    private static String getRealmsCommandsList(){
         StringBuilder builder = new StringBuilder();
-        for (String rc : commands.keySet()) {
+        for(String rc : commands.keySet()){
             builder.append(MCChatForm.BLUE);
             builder.append(rc);
             builder.append(" ");
@@ -115,21 +116,24 @@ public class RealmsCommandHandler {
         return builder.toString();
     }
 
-    public static final void parseRealmsCommand(Mod_Caller caller, String command, String[] args) {
+    public static final void parseRealmsCommand(Mod_Caller caller, String command, String[] args){
         RealmsCommand cmd = commands.get(command);
-
-        if (cmd != null) {
+        if(cmd != null){
             RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
-            if (rcmd.noConsole() && !(caller instanceof Mod_User)) {
+            if(rcmd.noConsole() && caller.isConsole()){
                 caller.sendError(RealmsTranslate.transMessage("no.console"));
                 return;
             }
-            else if (rcmd.bukkitOnly() && !caller.isBukkit()) {
+            else if(rcmd.bukkitOnly() && !caller.isBukkit()){
                 caller.sendError(RealmsTranslate.transMessage("no.bukkit"));
                 return;
             }
-            else if (rcmd.canaryOnly() && !caller.isCanary()) {
+            else if(rcmd.canaryOnly() && !caller.isCanary()){
                 caller.sendError(RealmsTranslate.transMessage("no.canary"));
+                return;
+            }
+            else if(rcmd.adminReq() && !caller.isConsole() && !((Mod_User)caller).hasPermission("realms.admin")){
+                caller.sendError(RealmsTranslate.transMessage("realms.admin.fail"));
                 return;
             }
             cmd.parseCommand(caller, command, args);
@@ -139,7 +143,7 @@ public class RealmsCommandHandler {
         caller.sendError(RealmsTranslate.transformMessage("cmd.specify", getRealmsCommandsList()));
     }
 
-    public static String herp() { //Just meant to help initialize the class so there isnt a delay later
+    public static String herp(){ //Just meant to help initialize the class so there isnt a delay later
         return "derp";
     }
 }

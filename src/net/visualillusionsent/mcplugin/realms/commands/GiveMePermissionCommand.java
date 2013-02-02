@@ -34,16 +34,12 @@ import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "Gives all permission to zone", name = "givemepermission", usage = "", noConsole = true)
-final class GiveMePermissionCommand extends RealmsCommand {
+@RCommand(desc = "Gives all permission to zone", name = "givemepermission", usage = "", noConsole = true, adminReq = true)
+final class GiveMePermissionCommand extends RealmsCommand{
 
     @Override
-    final void execute(Mod_Caller caller, String[] args) {
-        Mod_User user = (Mod_User) caller;
-        if (!user.hasPermission("realms.admin")) {
-            user.sendError(RealmsTranslate.transMessage("realms.admin.fail"));
-            return;
-        }
+    final void execute(Mod_Caller caller, String[] args){
+        Mod_User user = (Mod_User)caller;
         Zone zone = ZoneLists.getInZone(user);
         zone.setPermission(user.getName(), PermissionType.ALL, true, true);
         user.sendMessage(RealmsTranslate.transformMessage("grant.all.perms", zone.getName()));

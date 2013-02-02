@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(TYPE)
-public @interface RCommand {
+public @interface RCommand{
 
     String name();
 
@@ -52,4 +52,6 @@ public @interface RCommand {
     boolean bukkitOnly() default false;
 
     boolean canaryOnly() default false;
+
+    boolean adminReq() default false;
 }

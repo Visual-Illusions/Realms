@@ -234,4 +234,8 @@ public class RealmsProps{
     public final boolean isInteractItem(int id){
         return interact_Item.contains(id);
     }
+
+    public final void reload(){
+        props_File.reload();
+    }
 }

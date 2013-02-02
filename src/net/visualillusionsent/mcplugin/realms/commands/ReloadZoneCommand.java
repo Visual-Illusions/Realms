@@ -35,14 +35,14 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneNotFoundException;
  * 
  * @author Jason (darkdiplomat)
  */
-@RCommand(desc = "Reloads the specified Zone", name = "reloadzone", usage = "<zone|*>", minParam = 1, maxParam = 1)
-final class ReloadZoneCommand extends RealmsCommand {
+@RCommand(desc = "Reloads the specified Zone", name = "reloadzone", usage = "<zone|*>", minParam = 1, maxParam = 1, adminReq = true)
+final class ReloadZoneCommand extends RealmsCommand{
 
     @Override
-    final void execute(Mod_Caller caller, String[] args) {
-        Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
-        try {
-            if (args[0].equals("*") && user == null) {
+    final void execute(Mod_Caller caller, String[] args){
+        Mod_User user = caller.isConsole() ? null : (Mod_User)caller;
+        try{
+            if(args[0].equals("*") && user == null){
                 caller.sendError(RealmsTranslate.transMessage("star.invalid"));
                 return;
             }
@@ -50,21 +50,22 @@ final class ReloadZoneCommand extends RealmsCommand {
             caller.sendMessage(RealmsTranslate.transMessage("zone.reload.wait"));
             new ReloadHandler(caller, zone).start();
         }
-        catch (ZoneNotFoundException znfe) {
+        catch(ZoneNotFoundException znfe){
             caller.sendError(znfe.getMessage());
         }
     }
 
-    private final class ReloadHandler extends Thread {
+    private final class ReloadHandler extends Thread{
+
         private final Mod_Caller caller;
         private final Zone zone;
 
-        public ReloadHandler(Mod_Caller caller, Zone zone) {
+        public ReloadHandler(Mod_Caller caller, Zone zone){
             this.caller = caller;
             this.zone = zone;
         }
 
-        public void run() {
+        public void run(){
             RealmsBase.getDataSourceHandler().reloadZone(caller, zone);
         }
     }
