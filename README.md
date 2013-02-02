@@ -5,12 +5,12 @@
 #### Realms originally developed by Impact and durron597 (versions before v3) ####
 
 ## About ##
-See the [Realms Usage File](https://github.com/darkdiplomat/Realms/blob/v7/src/resources/usage.txt "realms_usage") for more information
+See the [Realms Usage File](https://github.com/Visual-Illusions/Realms/blob/v7/src/resources/usage.txt "realms_usage") for more information
 
 [CanaryMod Forums Realms Topic](http://forums.canarymod.net/?topic=1142 "realms_topic")
 
 ## Bug Reporting ##
-Please use the [GitHub issue tracker](https://github.com/darkdiplomat/Realms/issues "issues") associated with this repository.<br>
+Please use the [GitHub issue tracker](https://github.com/Visual-Illusions/Realms/issues "issues") associated with this repository.<br>
 Be sure to include as much information about the issue as possible, including Server Mod info
 
 ## Compiling ##

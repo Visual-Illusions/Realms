@@ -180,6 +180,8 @@ Realms SubCommands:
     |        wand               | /realms wand <sub wand command> (see below)       | See below                                                             |
     |---------------------------|---------------------------------------------------|-----------------------------------------------------------------------|
     |        zonelist           | /realms zonelist [page#|all]                      | Gets a list of Zones                                                  |
+    |---------------------------|---------------------------------------------------|-----------------------------------------------------------------------|
+    |        configreload       | /realms configreload                              | Reloads the Configuration without restarting the server               |
     \-------------------------------------------------------------------------------------------------------------------------------------------------------/
         
     Realms Wand Subcommands:  //cancel, reset, save, show, edit, setfloor, setceiling
@@ -255,11 +257,11 @@ Realms API:
         NOT YET IMPLEMENTED
         
 Bug Reporting:
-    Please report bugs on GitHub @ https://github.com/darkdiplomat/Realms/issues
+    Please report bugs on GitHub @ https://github.com/Visual-Illusions/Realms/issues
     Be sure to include as much information about the issue as possible, including Server Mod info
     
 Change Log:
-    __Jan2013 - 7.0.0 Beta  \-    Redone Datasource
+    XX XXX 2013 - 7.0 Beta  \-    Redone Datasource
                             |-    Added SQLite Support
                             |-    Began adding Message Locale support
                             |-    Began adding Bukkit Support
@@ -274,4 +276,5 @@ Change Log:
                             |-    Redone Realms-API
                             |-    Redone Properties File
                             |-    Added changing zone/inventories table name
-                            \-    Added /realms help command
+                            |-    Added /realms help command
+                            \-    Added /realms configreload command
