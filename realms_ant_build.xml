@@ -39,6 +39,7 @@
     </target>
 
     <target name="jar" depends="compile" description="Create the jar file">
+    	<tstamp/>
         <jar destfile="${dist}/Realms.jar">
             <fileset dir="${build}/classes" />
         	<fileset dir="src">
@@ -47,7 +48,7 @@
             <manifest>
             	<attribute name="Title" value="Realms" />
             	<attribute name="Version" value="7.0" />
-            	<attribute name="Build" value="0" />
+            	<attribute name="Build" value="${DSTAMP}" />
             	<attribute name="Beta" value="true" />
             	<attribute name="Release-Canidate" value="false" />
             	<attribute name="Vendor" value="Visual Illusions Entertainment" />
