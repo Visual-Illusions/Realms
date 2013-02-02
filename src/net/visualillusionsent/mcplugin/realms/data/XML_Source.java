@@ -59,7 +59,8 @@ import org.jdom2.output.XMLOutputter;
  * 
  * @author Jason (darkdiplomat)
  */
-final class XML_Source implements DataSource {
+final class XML_Source implements DataSource{
+
     private final Format xmlform = Format.getPrettyFormat().setExpandEmptyElements(true).setOmitDeclaration(true).setOmitEncoding(true).setLineSeparator(SystemUtils.LINE_SEP);
     private final XMLOutputter outputter = new XMLOutputter(xmlform);
     private final SAXBuilder builder = new SAXBuilder();
@@ -68,53 +69,53 @@ final class XML_Source implements DataSource {
     private FileWriter writer;
 
     @Override
-    public final DataSourceType getType() {
+    public final DataSourceType getType(){
         return DataSourceType.XML;
     }
 
     @Override
-    public final boolean load() {
+    public final boolean load(){
         RealmsLogMan.info("Loading Zones...");
         File zoneFile = new File(zone_Path);
         Exception ex = null;
         int load = 0;
-        if (!zoneFile.exists()) {
+        if(!zoneFile.exists()){
             RealmsLogMan.info("Zones file not found. Creating...");
             Element zones = new Element("zones");
             Document root = new Document(zones);
             zones.addContent(new Comment("Modifing this file while server is running may cause issues!"));
             zones.addContent(new Comment("Use either the modify command or shut down the server."));
-            try {
+            try{
                 writer = new FileWriter(zone_Path);
                 outputter.output(root, writer);
             }
-            catch (IOException e) {
+            catch(IOException e){
                 ex = e;
             }
-            finally {
-                try {
-                    if (writer != null) {
+            finally{
+                try{
+                    if(writer != null){
                         writer.close();
                     }
                 }
-                catch (IOException e) {}
+                catch(IOException e){}
                 writer = null;
-                if (ex != null) {
+                if(ex != null){
                     RealmsLogMan.severe("Failed to create new Zones file...", ex);
                 }
-                else {
+                else{
                     return true;
                 }
             }
         }
-        else {
+        else{
             List<Object[]> delayLoad = new ArrayList<Object[]>();
             List<String> knownZones = new ArrayList<String>();
-            try {
+            try{
                 Document doc = builder.build(zoneFile);
                 Element root = doc.getRootElement();
                 List<Element> zones = root.getChildren();
-                for (Element zone : zones) {
+                for(Element zone : zones){
                     String name = zone.getChildText("name");
                     knownZones.add(name);
                     String world = zone.getChild("world") != null ? zone.getChildText("world") : "world";
@@ -142,66 +143,63 @@ final class XML_Source implements DataSource {
                     String starve = parseZoneFlagElement(zone.getChild("starve"));
                     String suffocate = parseZoneFlagElement(zone.getChild("suffocate"));
                     String testPoly = zone.getChildText("polygon");
-
                     String[] poly = null;
-                    if (!testPoly.equals("null")) {
+                    if(!testPoly.equals("null")){
                         poly = testPoly.split(",");
                     }
                     String testPerm = zone.getChildText("permissions");
                     String[] perms = null;
-                    if (!testPerm.trim().isEmpty()) {
+                    if(!testPerm.trim().isEmpty()){
                         perms = testPerm.split(":");
                     }
-
-                    if (!name.startsWith("EVERYWHERE")) {
-                        try {
+                    if(!name.startsWith("EVERYWHERE")){
+                        try{
                             ZoneLists.getZoneByName(parent);
                         }
-                        catch (ZoneNotFoundException e) {
+                        catch(ZoneNotFoundException e){
                             //save zone for delay load
-                            delayLoad.add(new Object[] { name, world, dimension, parent, greeting, farewell, //
+                            delayLoad.add(new Object[]{ name, world, dimension, parent, greeting, farewell, //
                             adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate, //
                             poly, perms });
                             continue;
                         }
                     }
-                    try {
+                    try{
                         Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
                         adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
                         load++;
-                        if (poly != null) {
+                        if(poly != null){
                             temp.setPolygon(new PolygonArea(temp, poly));
                         }
-                        if (perms != null) {
-                            for (String perm : perms) {
-                                try {
+                        if(perms != null){
+                            for(String perm : perms){
+                                try{
                                     Permission permTemp = new Permission(perm.split(","));
                                     temp.setPermission(permTemp);
                                 }
-                                catch (PermissionConstructException e) {
+                                catch(PermissionConstructException e){
                                     RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
                                 }
                             }
                         }
                     }
-                    catch (ZoneConstructException e) {
+                    catch(ZoneConstructException e){
                         RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage(), e);
                     }
-                    catch (PolygonConstructException e) {
+                    catch(PolygonConstructException e){
                         RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
                     }
                 }
-
                 Iterator<Object[]> objIter = delayLoad.iterator();
-                while (!delayLoad.isEmpty()) {
-                    while (objIter.hasNext()) {
+                while(!delayLoad.isEmpty()){
+                    while(objIter.hasNext()){
                         Object[] obj = objIter.next();
-                        try {
-                            if (knownZones.contains((String) obj[3])) {
-                                try {
-                                    ZoneLists.getZoneByName((String) obj[3]);
+                        try{
+                            if(knownZones.contains((String)obj[3])){
+                                try{
+                                    ZoneLists.getZoneByName((String)obj[3]);
                                 }
-                                catch (ZoneNotFoundException e1) {
+                                catch(ZoneNotFoundException e1){
                                     //Parent doesnt appear to have been loaded yet...
                                     continue;
                                 }
@@ -209,41 +207,41 @@ final class XML_Source implements DataSource {
                                 System.arraycopy(obj, 0, zoneCon, 0, zoneCon.length);
                                 Zone temp = new Zone(zoneCon);
                                 load++;
-                                if (obj[25] != null) {
-                                    temp.setPolygon(new PolygonArea(temp, (String[]) obj[25]));
+                                if(obj[25] != null){
+                                    temp.setPolygon(new PolygonArea(temp, (String[])obj[25]));
                                 }
-                                if (obj[26] != null) {
-                                    for (String perm : (String[]) obj[26]) {
-                                        try {
+                                if(obj[26] != null){
+                                    for(String perm : (String[])obj[26]){
+                                        try{
                                             Permission permTemp = new Permission(perm.split(","));
                                             temp.setPermission(permTemp);
                                         }
-                                        catch (PermissionConstructException e) {
-                                            RealmsLogMan.warning("Invaild permission for Zone: ".concat((String) obj[0]).concat(" Perm: ").concat(perm));
+                                        catch(PermissionConstructException e){
+                                            RealmsLogMan.warning("Invaild permission for Zone: ".concat((String)obj[0]).concat(" Perm: ").concat(perm));
                                         }
                                     }
                                 }
                             }
-                            else {
+                            else{
                                 //OH NOES - Orphaned Zone, removed
                                 objIter.remove();
                             }
                         }
-                        catch (ZoneConstructException e) {
-                            RealmsLogMan.warning("Failed to construct Zone:".concat((String) obj[0]));
+                        catch(ZoneConstructException e){
+                            RealmsLogMan.warning("Failed to construct Zone:".concat((String)obj[0]));
                         }
-                        catch (PolygonConstructException e) {
-                            RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat((String) obj[0]));
+                        catch(PolygonConstructException e){
+                            RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat((String)obj[0]));
                         }
                     }
                 }
                 RealmsLogMan.info("Loaded ".concat(String.valueOf(load)).concat(" zones."));
                 return true;
             }
-            catch (JDOMException jdome) {
+            catch(JDOMException jdome){
                 RealmsLogMan.severe("Failed to read Zones file", jdome);
             }
-            catch (IOException ioe) {
+            catch(IOException ioe){
                 RealmsLogMan.severe("Failed to read Zones file", ioe);
             }
         }
@@ -251,15 +249,15 @@ final class XML_Source implements DataSource {
     }
 
     @Override
-    public synchronized final boolean reloadZone(Zone reloading) {
+    public synchronized final boolean reloadZone(Zone reloading){
         File zoneFile = new File(zone_Path);
-        try {
+        try{
             Document doc = builder.build(zoneFile);
             Element root = doc.getRootElement();
             List<Element> zones = root.getChildren();
-            for (Element zone : zones) {
+            for(Element zone : zones){
                 String name = zone.getChildText("name");
-                if (name.equals(reloading.getName())) {
+                if(name.equals(reloading.getName())){
                     String world = zone.getChild("world") != null ? zone.getChildText("world") : "world";
                     String dimension = zone.getChild("dimension") != null ? zone.getChildText("dimension") : "0";
                     String parent = zone.getChild("parent") != null ? zone.getChildText("parent") : genParent(name, world, dimension);
@@ -285,39 +283,37 @@ final class XML_Source implements DataSource {
                     String starve = parseZoneFlagElement(zone.getChild("starve"));
                     String suffocate = parseZoneFlagElement(zone.getChild("suffocate"));
                     String testPoly = zone.getChildText("polygon");
-
                     String[] poly = null;
-                    if (!testPoly.equals("null")) {
+                    if(!testPoly.equals("null")){
                         poly = testPoly.split(",");
                     }
                     String testPerm = zone.getChildText("permissions");
                     String[] perms = null;
-                    if (!testPerm.trim().isEmpty()) {
+                    if(!testPerm.trim().isEmpty()){
                         perms = testPerm.split(":");
                     }
-
-                    try {
+                    try{
                         Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
                         adventure, animals, burn, creative, dispensers, enderman, entityexplode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
-                        if (poly != null) {
+                        if(poly != null){
                             temp.setPolygon(new PolygonArea(temp, poly));
                         }
-                        if (perms != null) {
-                            for (String perm : perms) {
-                                try {
+                        if(perms != null){
+                            for(String perm : perms){
+                                try{
                                     Permission permTemp = new Permission(perm.split(","));
                                     temp.setPermission(permTemp);
                                 }
-                                catch (PermissionConstructException e) {
+                                catch(PermissionConstructException e){
                                     RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
                                 }
                             }
                         }
                     }
-                    catch (ZoneConstructException e) {
+                    catch(ZoneConstructException e){
                         RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage(), e);
                     }
-                    catch (PolygonConstructException e) {
+                    catch(PolygonConstructException e){
                         RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
                     }
                 }
@@ -325,29 +321,29 @@ final class XML_Source implements DataSource {
             RealmsLogMan.info("Zone ".concat(reloading.getName()).concat(" reloaded."));
             return true;
         }
-        catch (JDOMException jdome) {
+        catch(JDOMException jdome){
             RealmsLogMan.severe("Failed to read Zones file", jdome);
         }
-        catch (IOException ioe) {
+        catch(IOException ioe){
             RealmsLogMan.severe("Failed to read Zones file", ioe);
         }
         return false;
     }
 
     @Override
-    public synchronized final boolean saveZone(Zone zone) {
+    public synchronized final boolean saveZone(Zone zone){
         RealmsLogMan.info("Saving Zone: ".concat(zone.getName()));
-        synchronized (lock) {
+        synchronized(lock){
             File zoneFile = new File(zone_Path);
             Exception ex = null;
-            try {
+            try{
                 Document doc = builder.build(zoneFile);
                 Element root = doc.getRootElement();
                 List<Element> zones = root.getChildren();
                 boolean found = false;
-                for (Element zoneEl : zones) {
+                for(Element zoneEl : zones){
                     String name = zoneEl.getChildText("name");
-                    if (name.equals(zone.getName())) {
+                    if(name.equals(zone.getName())){
                         setElement(zoneEl, "world", zone.getWorld());
                         setElement(zoneEl, "dimension", String.valueOf(zone.getDimension()));
                         setElement(zoneEl, "parent", zone.getParent() == null ? "null" : zone.getParent().getName());
@@ -363,7 +359,7 @@ final class XML_Source implements DataSource {
                         setElement(zoneEl, "fall", zone.getAbsoluteFall().toString());
                         setElement(zoneEl, "fire", zone.getAbsoluteFire().toString());
                         setElement(zoneEl, "flow", zone.getAbsoluteFlow().toString());
-                        setElement(zoneEl, "healing", zone.getAbsoluteFlow().toString());
+                        setElement(zoneEl, "healing", zone.getAbsoluteHealing().toString());
                         setElement(zoneEl, "physics", zone.getAbsolutePhysics().toString());
                         setElement(zoneEl, "pistons", zone.getAbsolutePistons().toString());
                         setElement(zoneEl, "potion", zone.getAbsolutePotion().toString());
@@ -373,9 +369,8 @@ final class XML_Source implements DataSource {
                         setElement(zoneEl, "starve", zone.getAbsoluteStarve().toString());
                         setElement(zoneEl, "suffocate", zone.getAbsoluteSuffocate().toString());
                         setElement(zoneEl, "polygon", zone.isEmpty() ? "null" : zone.getPolygon().toString());
-
                         StringBuilder permBuild = new StringBuilder();
-                        for (Permission perm : zone.getPerms()) {
+                        for(Permission perm : zone.getPerms()){
                             permBuild.append(perm);
                             permBuild.append(":");
                         }
@@ -384,7 +379,7 @@ final class XML_Source implements DataSource {
                         break;
                     }
                 }
-                if (!found) {
+                if(!found){
                     Element newZone = new Element("zone");
                     Element child = new Element("name").setText(zone.getName());
                     newZone.addContent(child);
@@ -403,7 +398,7 @@ final class XML_Source implements DataSource {
                     setElement(newZone, "fall", zone.getAbsoluteFall().toString());
                     setElement(newZone, "fire", zone.getAbsoluteFire().toString());
                     setElement(newZone, "flow", zone.getAbsoluteFlow().toString());
-                    setElement(newZone, "healing", zone.getAbsoluteFlow().toString());
+                    setElement(newZone, "healing", zone.getAbsoluteHealing().toString());
                     setElement(newZone, "physics", zone.getAbsolutePhysics().toString());
                     setElement(newZone, "pistons", zone.getAbsolutePistons().toString());
                     setElement(newZone, "potion", zone.getAbsolutePotion().toString());
@@ -413,45 +408,43 @@ final class XML_Source implements DataSource {
                     setElement(newZone, "starve", zone.getAbsoluteStarve().toString());
                     setElement(newZone, "suffocate", zone.getAbsoluteSuffocate().toString());
                     setElement(newZone, "polygon", zone.isEmpty() ? "null" : zone.getPolygon().toString());
-
                     StringBuilder permBuild = new StringBuilder();
-                    for (Permission perm : zone.getPerms()) {
+                    for(Permission perm : zone.getPerms()){
                         permBuild.append(perm);
                         permBuild.append(":");
                     }
                     child = new Element("permissions").setText(permBuild.toString());
                     newZone.addContent(child);
-
                     root.addContent(newZone);
                 }
-                try {
+                try{
                     writer = new FileWriter(zone_Path);
                     outputter.output(root, writer);
                 }
-                catch (IOException e) {
+                catch(IOException e){
                     ex = e;
                 }
-                finally {
-                    try {
-                        if (writer != null) {
+                finally{
+                    try{
+                        if(writer != null){
                             writer.close();
                         }
                     }
-                    catch (IOException e) {}
+                    catch(IOException e){}
                     writer = null;
-                    if (ex != null) {
+                    if(ex != null){
                         RealmsLogMan.severe("Failed to write to Zones file...", ex);
                     }
-                    else {
+                    else{
                         return true;
                     }
                 }
                 RealmsLogMan.info("Zone: ".concat(zone.getName()) + " saved!");
             }
-            catch (JDOMException e) {
+            catch(JDOMException e){
                 RealmsLogMan.severe("Failed to write to Zones file...", ex);
             }
-            catch (IOException e) {
+            catch(IOException e){
                 RealmsLogMan.severe("Failed to write to Zones file...", ex);
             }
         }
@@ -459,47 +452,47 @@ final class XML_Source implements DataSource {
     }
 
     @Override
-    public synchronized final boolean deleteZone(Zone zone) {
+    public synchronized final boolean deleteZone(Zone zone){
         RealmsLogMan.info("Deleting Zone: ".concat(zone.getName()));
-        synchronized (lock) {
+        synchronized(lock){
             File zoneFile = new File(zone_Path);
             Exception ex = null;
-            try {
+            try{
                 Document doc = builder.build(zoneFile);
                 Element root = doc.getRootElement();
                 List<Element> zones = root.getChildren();
                 Content child = null;
-                for (Element zoneEl : zones) {
+                for(Element zoneEl : zones){
                     String name = zoneEl.getChildText("name");
-                    if (name.equals(zone.getName())) {
+                    if(name.equals(zone.getName())){
                         child = zoneEl.detach();
                     }
                 }
-                if (child != null) {
-                    if (root.removeContent(child)) {
+                if(child != null){
+                    if(root.removeContent(child)){
                         writer = new FileWriter(zone_Path);
                         outputter.output(root, writer);
                     }
                 }
             }
-            catch (JDOMException e) {
+            catch(JDOMException e){
                 ex = e;
             }
-            catch (IOException e) {
+            catch(IOException e){
                 ex = e;
             }
-            finally {
-                try {
-                    if (writer != null) {
+            finally{
+                try{
+                    if(writer != null){
                         writer.close();
                     }
                 }
-                catch (IOException e) {}
+                catch(IOException e){}
                 writer = null;
-                if (ex != null) {
+                if(ex != null){
                     RealmsLogMan.severe("Failed to write to Zones file...", ex);
                 }
-                else {
+                else{
                     return true;
                 }
             }
@@ -508,59 +501,59 @@ final class XML_Source implements DataSource {
     }
 
     @Override
-    public boolean loadInventories() {
+    public boolean loadInventories(){
         RealmsLogMan.info("Loading Inventories...");
         File invFile = new File(inv_Path);
         Exception ex = null;
-        if (!invFile.exists()) {
+        if(!invFile.exists()){
             RealmsLogMan.info("Inventories file not found. Creating...");
             Element invs = new Element("inventories");
             Document root = new Document(invs);
             invs.addContent(new Comment("Modifing this file while server is running may cause issues!"));
             invs.addContent(new Comment("Use either the modify command or shut down the server."));
-            try {
+            try{
                 writer = new FileWriter(inv_Path);
                 outputter.output(root, writer);
             }
-            catch (IOException e) {
+            catch(IOException e){
                 ex = e;
             }
-            finally {
-                try {
-                    if (writer != null) {
+            finally{
+                try{
+                    if(writer != null){
                         writer.close();
                     }
                 }
-                catch (IOException e) {}
+                catch(IOException e){}
                 writer = null;
-                if (ex != null) {
+                if(ex != null){
                     RealmsLogMan.severe("Failed to create new Inventories file...", ex);
                 }
-                else {
+                else{
                     return true;
                 }
             }
         }
-        else {
-            try {
+        else{
+            try{
                 Document doc = builder.build(invFile);
                 Element root = doc.getRootElement();
                 List<Element> invs = root.getChildren();
-                for (Element inv : invs) {
+                for(Element inv : invs){
                     String name = inv.getChildText("name");
                     Mod_Item[] items = new Mod_Item[40];
                     Arrays.fill(items, null);
-                    for (int index = 0; index < 40; index++) {
+                    for(int index = 0; index < 40; index++){
                         items[index] = constructFromString(inv.getChildText("item".concat(String.valueOf(index))));
                     }
                     RealmsBase.storeInventory(name, items);
                 }
                 return true;
             }
-            catch (JDOMException jdome) {
+            catch(JDOMException jdome){
                 RealmsLogMan.severe("Failed to read Inventories file", jdome);
             }
-            catch (IOException ioe) {
+            catch(IOException ioe){
                 RealmsLogMan.severe("Failed to read Inventories file", ioe);
             }
         }
@@ -568,62 +561,62 @@ final class XML_Source implements DataSource {
     }
 
     @Override
-    public boolean saveInventory(Mod_User user, Mod_Item[] items) {
+    public boolean saveInventory(Mod_User user, Mod_Item[] items){
         RealmsLogMan.info("Saving inventory for User: ".concat(user.getName()));
-        synchronized (lock) {
+        synchronized(lock){
             File invFile = new File(inv_Path);
             Exception ex = null;
-            try {
+            try{
                 Document doc = builder.build(invFile);
                 Element root = doc.getRootElement();
                 List<Element> invs = root.getChildren();
                 boolean found = false;
-                for (Element inv : invs) {
+                for(Element inv : invs){
                     String name = inv.getChildText("name");
-                    if (name.equals(user.getName())) {
-                        for (int index = 0; index < 40; index++) {
+                    if(name.equals(user.getName())){
+                        for(int index = 0; index < 40; index++){
                             setElement(inv, "item".concat(String.valueOf(index)), items[index] != null ? items[index].toString() : "null");
                         }
                         found = true;
                         break;
                     }
                 }
-                if (!found) {
+                if(!found){
                     Element newInv = new Element("inventory");
                     Element child = new Element("name").setText(user.getName());
                     newInv.addContent(child);
-                    for (int index = 0; index < 40; index++) {
+                    for(int index = 0; index < 40; index++){
                         setElement(newInv, "item".concat(String.valueOf(index)), items[index].toString());
                     }
                 }
-                try {
+                try{
                     writer = new FileWriter(zone_Path);
                     outputter.output(root, writer);
                 }
-                catch (IOException e) {
+                catch(IOException e){
                     ex = e;
                 }
-                finally {
-                    try {
-                        if (writer != null) {
+                finally{
+                    try{
+                        if(writer != null){
                             writer.close();
                         }
                     }
-                    catch (IOException e) {}
+                    catch(IOException e){}
                     writer = null;
-                    if (ex != null) {
+                    if(ex != null){
                         RealmsLogMan.severe("Failed to write to Zones file...", ex);
                     }
-                    else {
+                    else{
                         return true;
                     }
                 }
                 RealmsLogMan.info("Inventory for User: ".concat(user.getName()) + " saved!");
             }
-            catch (JDOMException e) {
+            catch(JDOMException e){
                 RealmsLogMan.severe("Failed to write to inventories file...", ex);
             }
-            catch (IOException e) {
+            catch(IOException e){
                 RealmsLogMan.severe("Failed to write to inventories file...", ex);
             }
         }
@@ -631,47 +624,47 @@ final class XML_Source implements DataSource {
     }
 
     @Override
-    public boolean deleteInventory(Mod_User user) {
+    public boolean deleteInventory(Mod_User user){
         RealmsLogMan.info("Deleting Inventory for User: ".concat(user.getName()));
-        synchronized (lock) {
+        synchronized(lock){
             File zoneFile = new File(inv_Path);
             Exception ex = null;
-            try {
+            try{
                 Document doc = builder.build(zoneFile);
                 Element root = doc.getRootElement();
                 List<Element> zones = root.getChildren();
                 Content child = null;
-                for (Element zoneEl : zones) {
+                for(Element zoneEl : zones){
                     String name = zoneEl.getChildText("name");
-                    if (name.equals(user.getName())) {
+                    if(name.equals(user.getName())){
                         child = zoneEl.detach();
                     }
                 }
-                if (child != null) {
-                    if (root.removeContent(child)) {
+                if(child != null){
+                    if(root.removeContent(child)){
                         writer = new FileWriter(inv_Path);
                         outputter.output(root, writer);
                     }
                 }
             }
-            catch (JDOMException e) {
+            catch(JDOMException e){
                 ex = e;
             }
-            catch (IOException e) {
+            catch(IOException e){
                 ex = e;
             }
-            finally {
-                try {
-                    if (writer != null) {
+            finally{
+                try{
+                    if(writer != null){
                         writer.close();
                     }
                 }
-                catch (IOException e) {}
+                catch(IOException e){}
                 writer = null;
-                if (ex != null) {
+                if(ex != null){
                     RealmsLogMan.severe("Failed to write to inventories file...", ex);
                 }
-                else {
+                else{
                     return true;
                 }
             }
@@ -679,37 +672,37 @@ final class XML_Source implements DataSource {
         return false;
     }
 
-    private final String genParent(String name, String world, String dimension) {
-        if (!name.startsWith("EVERYWHERE")) {
+    private final String genParent(String name, String world, String dimension){
+        if(!name.startsWith("EVERYWHERE")){
             return "EVERYWHERE-" + world.toUpperCase() + "-DIM" + dimension;
         }
         return "null";
     }
 
-    private final String parseZoneFlagElement(Element element) {
-        if (element != null) {
-            if (element.getText().matches("on|off|inherit")) {
+    private final String parseZoneFlagElement(Element element){
+        if(element != null){
+            if(element.getText().matches("on|off|inherit")){
                 return element.getText();
             }
         }
         return "inherit";
     }
 
-    private final void setElement(Element element, String child, String text) {
-        if (element.getChild(child) != null) {
+    private final void setElement(Element element, String child, String text){
+        if(element.getChild(child) != null){
             element.getChild(child).setText(text);
         }
-        else {
+        else{
             Element newChild = new Element(child).setText(text);
             element.addContent(newChild);
         }
     }
 
-    private final Mod_Item constructFromString(String item) {
-        if (item.equals("null")) {
+    private final Mod_Item constructFromString(String item){
+        if(item.equals("null")){
             return null;
         }
-        try {
+        try{
             String[] it = item.split(",");
             List<Mod_ItemEnchantment> enchants = new ArrayList<Mod_ItemEnchantment>();
             List<String> lore = new ArrayList<String>();
@@ -717,14 +710,14 @@ final class XML_Source implements DataSource {
             int amount = Integer.parseInt(it[1]);
             int damage = Integer.parseInt(it[2]);
             String name = it[3].equals("NO_NAME_FOR_THIS_ITEM") ? null : it[4];
-            for (int index = 4; index < it.length; index++) {
-                if (it[index].contains(":")) {
+            for(int index = 4; index < it.length; index++){
+                if(it[index].contains(":")){
                     String[] ench = it[index].split(":");
                     int enchId = Integer.parseInt(ench[0]);
                     int enchLvl = Integer.parseInt(ench[1]);
                     enchants.add(RealmsBase.getServer().constructEnchantment(enchId, enchLvl));
                 }
-                else {
+                else{
                     lore.add(it[index]);
                 }
             }
@@ -732,7 +725,7 @@ final class XML_Source implements DataSource {
             String[] lores = lore.isEmpty() ? null : lore.toArray(new String[0]);
             return RealmsBase.getServer().constructItem(id, amount, damage, name, enchs, lores);
         }
-        catch (Exception ex) {} //FAIL!
+        catch(Exception ex){} //FAIL!
         return null;
     }
 }

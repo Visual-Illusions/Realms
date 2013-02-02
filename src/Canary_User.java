@@ -28,79 +28,85 @@ import net.visualillusionsent.mcmod.interfaces.Mod_User;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_User extends Canary_Entity implements Mod_User {
+public final class Canary_User extends Canary_Entity implements Mod_User{
+
     private final Player player;
 
-    public Canary_User(Player player) {
+    public Canary_User(Player player){
         super(player);
         this.player = player;
     }
 
     @Override
-    public final void sendError(String msg) {
+    public final void sendError(String msg){
         player.notify(msg);
     }
 
     @Override
-    public final void sendMessage(String msg) {
+    public final void sendMessage(String msg){
         player.sendMessage(msg);
     }
 
     @Override
-    public final int getHealth() {
+    public final int getHealth(){
         return player.getHealth();
     }
 
     @Override
-    public final int getMaxHealth() {
+    public final int getMaxHealth(){
         return player.getMaxHealth();
     }
 
     @Override
-    public final void heal(int amount) {
+    public final void heal(int amount){
         int newHealth = getHealth() + amount;
-        if (newHealth > player.getMaxHealth()) {
+        if(newHealth > player.getMaxHealth()){
             newHealth = player.getMaxHealth();
         }
         player.setHealth(newHealth);
     }
 
     @Override
-    public final void causeDamage(int amount) {
+    public final void causeDamage(int amount){
         player.applyDamage(PluginLoader.DamageType.SUFFOCATION, amount);
     }
 
     @Override
-    public final boolean isCreative() {
+    public final boolean isDead(){
+        return player.isDead() || player.getHealth() <= 0;
+    }
+
+    @Override
+    public final boolean isCreative(){
         return player.getCreativeMode() == 1;
     }
 
     @Override
-    public final boolean isAdventure() {
+    public final boolean isAdventure(){
         return player.getCreativeMode() == 2;
     }
 
     @Override
-    public final boolean isDamageDisabled() {
+    public final boolean isDamageDisabled(){
         return player.isDamageDisabled();
     }
 
     @Override
-    public final boolean isInGroup(String group) {
+    public final boolean isInGroup(String group){
         return player.isInGroup(group);
     }
 
     @Override
-    public final boolean hasPermission(String perm) {
+    public final boolean hasPermission(String perm){
         return player.canUseCommand(perm);
     }
 
     @Override
-    public final Mod_Item[] getInventoryContents() {
+    public final Mod_Item[] getInventoryContents(){
         Item[] items = player.getInventory().getContents();
         Mod_Item[] its = new Mod_Item[40];
-        for (int index = 0; index < 40; index++) {
-            if (items[index] != null) {
+        for(int index = 0; index < 40; index++){
+            if(items[index] != null){
                 its[index] = new Canary_Item(items[index].clone());
             }
         }
@@ -108,52 +114,52 @@ public final class Canary_User extends Canary_Entity implements Mod_User {
     }
 
     @Override
-    public final void setInventoryContents(Mod_Item[] items) {
+    public final void setInventoryContents(Mod_Item[] items){
         Item[] cIt = new Item[40];
-        for (int index = 0; index < 40; index++) {
-            cIt[index] = items[index] != null ? ((Canary_Item) items[index]).getBaseItem() : null;
+        for(int index = 0; index < 40; index++){
+            cIt[index] = items[index] != null ? ((Canary_Item)items[index]).getBaseItem() : null;
         }
         player.getInventory().setContents(cIt);
     }
 
     @Override
-    public final void clearInventoryContents() {
+    public final void clearInventoryContents(){
         player.getInventory().clearContents();
     }
 
     @Override
-    public final boolean isConsole() {
+    public final boolean isConsole(){
         return false;
     }
 
     @Override
-    public final boolean isBukkit() {
+    public final boolean isBukkit(){
         return false;
     }
 
     @Override
-    public final boolean isCanary() {
+    public final boolean isCanary(){
         return true;
     }
 
     @Override
-    public final Player getPlayer() {
+    public final Player getPlayer(){
         return player;
     }
 
     @Override
-    public final boolean equals(Object obj) {
-        if (obj instanceof Canary_User) {
-            return ((Canary_User) obj).getPlayer().equals(player);
+    public final boolean equals(Object obj){
+        if(obj instanceof Canary_User){
+            return ((Canary_User)obj).getPlayer().equals(player);
         }
-        else if (obj instanceof Player) {
+        else if(obj instanceof Player){
             return player.equals(obj);
         }
         return false;
     }
 
     @Override
-    public final int hashCode() {
+    public final int hashCode(){
         return player.hashCode();
     }
 }

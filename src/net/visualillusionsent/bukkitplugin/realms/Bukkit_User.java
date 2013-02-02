@@ -38,138 +38,144 @@ import org.bukkit.inventory.ItemStack;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
-    private final Player player;
-    private final net.visualillusionsent.mcmod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.mcmod.interfaces.Mod_Item[] {};
+public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
 
-    public Bukkit_User(Player player) {
+    private final Player player;
+    private final net.visualillusionsent.mcmod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.mcmod.interfaces.Mod_Item[]{};
+
+    public Bukkit_User(Player player){
         super(player);
         this.player = player;
     }
 
     @Override
-    public final String getName() {
+    public final String getName(){
         return player.getName();
     }
 
     @Override
-    public final void destroy() {}
+    public final void destroy(){}
 
     @Override
-    public final void sendError(String msg) {
+    public final void sendError(String msg){
         player.sendMessage(MCChatForm.LIGHT_RED.concat(msg));
     }
 
     @Override
-    public final void sendMessage(String msg) {
+    public final void sendMessage(String msg){
         player.sendMessage(msg);
     }
 
     @Override
-    public final boolean isInGroup(String group) {
-        if (group.equals("NO_GROUP")) {
+    public final boolean isInGroup(String group){
+        if(group.equals("NO_GROUP")){
             return true;
         }
         return false;
     }
 
     @Override
-    public final int getHealth() {
+    public final int getHealth(){
         return player.getHealth();
     }
 
     @Override
-    public final int getMaxHealth() {
+    public final int getMaxHealth(){
         return player.getMaxHealth();
     }
 
     @Override
-    public final void heal(int amount) {
+    public final void heal(int amount){
         int newHealth = getHealth() + amount;
-        if (newHealth > player.getMaxHealth()) {
+        if(newHealth > player.getMaxHealth()){
             newHealth = player.getMaxHealth();
         }
         player.setHealth(newHealth);
     }
 
     @Override
-    public final void causeDamage(int amount) {
+    public final void causeDamage(int amount){
         player.damage(amount);
     }
 
     @Override
-    public final boolean isCreative() {
+    public final boolean isDead(){
+        return player.isDead() || player.getHealth() <= 0;
+    }
+
+    @Override
+    public final boolean isCreative(){
         return player.getGameMode() == GameMode.CREATIVE;
     }
 
     @Override
-    public final boolean isAdventure() {
+    public final boolean isAdventure(){
         return player.getGameMode() == GameMode.ADVENTURE;
     }
 
     @Override
-    public final boolean isDamageDisabled() {
+    public final boolean isDamageDisabled(){
         return false;
     }
 
     @Override
-    public final boolean hasPermission(String perm) {
+    public final boolean hasPermission(String perm){
         return player.hasPermission(perm);
     }
 
     @Override
-    public final Mod_Item[] getInventoryContents() {
+    public final Mod_Item[] getInventoryContents(){
         List<Mod_Item> items = new ArrayList<Mod_Item>();
-        for (ItemStack item : player.getInventory().getContents()) {
+        for(ItemStack item : player.getInventory().getContents()){
             items.add(new Bukkit_Item(item));
         }
         return items.toArray(itemArray);
     }
 
     @Override
-    public final void setInventoryContents(Mod_Item[] items) {
-        for (Mod_Item item : items) {
-            player.getInventory().addItem(((Bukkit_Item) item).getBaseItem());
+    public final void setInventoryContents(Mod_Item[] items){
+        for(Mod_Item item : items){
+            player.getInventory().addItem(((Bukkit_Item)item).getBaseItem());
         }
     }
 
     @Override
-    public final void clearInventoryContents() {
+    public final void clearInventoryContents(){
         player.getInventory().clear();
     }
 
     @Override
-    public final boolean isConsole() {
+    public final boolean isConsole(){
         return false;
     }
 
     @Override
-    public final boolean isBukkit() {
+    public final boolean isBukkit(){
         return true;
     }
 
     @Override
-    public final boolean isCanary() {
+    public final boolean isCanary(){
         return false;
     }
 
     @Override
-    public final Player getPlayer() {
+    public final Player getPlayer(){
         return player;
     }
 
     @Override
-    public final int hashCode() {
+    public final int hashCode(){
         return player.hashCode();
     }
 
     @Override
-    public final boolean equals(Object obj) {
-        if (obj instanceof Bukkit_User) {
-            return player.equals(((Bukkit_User) obj).getPlayer());
+    public final boolean equals(Object obj){
+        if(obj instanceof Bukkit_User){
+            return player.equals(((Bukkit_User)obj).getPlayer());
         }
-        else if (obj instanceof Player) {
-            return player.equals((Player) obj);
+        else if(obj instanceof Player){
+            return player.equals((Player)obj);
         }
         return false;
     }

@@ -36,32 +36,30 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Healer implements Runnable {
+public final class Healer implements Runnable{
+
     private final String debug = "Healing User - Name: '%s' in World: '%s' Dimension: '%d' @ Location: X: '%.2f' Y: '%.2f' Z: '%.2f'";
 
-    public Healer(RealmsBase base) {}
+    public Healer(RealmsBase base){}
 
     @Override
-    public final void run() {
-        try {
+    public final void run(){
+        try{
             List<String> userList = ZoneLists.getInHealing();
-
             /* Check Player List */
-            if (!userList.isEmpty()) {
-                for (String userName : userList) {
+            if(!userList.isEmpty()){
+                for(String userName : userList){
                     Mod_User theUser = RealmsBase.getServer().getUser(userName);
-                    if (theUser != null) {
+                    if(theUser != null && !theUser.isDead() && ZoneLists.getInZone(theUser).getHealing()){
                         theUser.heal(1); //Heal
                         RealmsLogMan.log(RLevel.PLAYER_HEAL, String.format(debug, userName, theUser.getWorld(), theUser.getDimension(), theUser.getX(), theUser.getY(), theUser.getZ())); //Debugging
                     }
                 }
             }
         }
-        catch (ConcurrentModificationException CME) {
+        catch(ConcurrentModificationException CME){
             RealmsLogMan.log(RLevel.GENERAL, "Concurrent Modification Exception in Healer. (Don't worry Not a major issue)");
         }
-        catch (Exception ex) {
-
-        }
+        catch(Exception ex){}
     }
 }

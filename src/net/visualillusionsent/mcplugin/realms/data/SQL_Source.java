@@ -51,17 +51,18 @@ import net.visualillusionsent.mcplugin.realms.zones.polygon.PolygonConstructExce
  * 
  * @author Jason (darkdiplomat)
  */
-public abstract class SQL_Source implements DataSource {
+public abstract class SQL_Source implements DataSource{
+
     protected Connection conn;
     protected String zone_table = RealmsBase.getProperties().getStringVal("sql.zones.table");
     protected String inv_table = RealmsBase.getProperties().getStringVal("sql.inventories.table");
 
-    public boolean load() {
+    public boolean load(){
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         int load = 0;
-        try {
+        try{
             RealmsLogMan.info("Testing Zone table and creating if needed...");
             ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `" + zone_table + "` " + //
             "(`name` VARCHAR(30) NOT NULL," + //
@@ -98,13 +99,12 @@ public abstract class SQL_Source implements DataSource {
             ps.close();
             List<Object[]> delayLoad = new ArrayList<Object[]>();
             List<String> knownZones = new ArrayList<String>();
-
             RealmsLogMan.log(RLevel.GENERAL, "Preparing to read table...");
             ps = conn.prepareStatement("SELECT * FROM `" + zone_table + "`");
             RealmsLogMan.log(RLevel.GENERAL, "Executing statement to read table...");
             rs = ps.executeQuery();
             RealmsLogMan.log(RLevel.GENERAL, "Reading Zones...");
-            while (rs.next()) {
+            while(rs.next()){
                 String name = rs.getString("name");
                 knownZones.add(name);
                 String world = rs.getString("world");
@@ -112,7 +112,6 @@ public abstract class SQL_Source implements DataSource {
                 String parent = rs.getString("parent");
                 String greeting = rs.getString("greeting").trim().isEmpty() ? null : rs.getString("greeting");
                 String farewell = rs.getString("farewell").trim().isEmpty() ? null : rs.getString("farewell");
-
                 String adventure = parseZoneFlagElement(rs.getString("adventure"));
                 String animals = parseZoneFlagElement(rs.getString("animals"));
                 String burn = parseZoneFlagElement(rs.getString("burn"));
@@ -133,71 +132,68 @@ public abstract class SQL_Source implements DataSource {
                 String starve = parseZoneFlagElement(rs.getString("starve"));
                 String suffocate = parseZoneFlagElement(rs.getString("suffocate"));
                 String testPoly = rs.getString("polygon");
-
                 String[] poly = null;
-                if (!testPoly.equals("null")) {
+                if(!testPoly.equals("null")){
                     poly = testPoly.split(",");
                 }
                 String testPerm = rs.getString("permissions");
                 String[] perms = null;
-                if (!testPerm.trim().isEmpty()) {
+                if(!testPerm.trim().isEmpty()){
                     perms = testPerm.split(":");
                 }
-
-                if (!name.startsWith("EVERYWHERE")) {
-                    try {
+                if(!name.startsWith("EVERYWHERE")){
+                    try{
                         ZoneLists.getZoneByName(parent);
                     }
-                    catch (ZoneNotFoundException e) {
+                    catch(ZoneNotFoundException e){
                         //save zone for delay load
-                        delayLoad.add(new Object[] { name, world, dimension, parent, greeting, farewell, //
+                        delayLoad.add(new Object[]{ name, world, dimension, parent, greeting, farewell, //
                         adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate, //
                         poly, perms });
                         continue;
                     }
                 }
                 RealmsLogMan.log(RLevel.GENERAL, "Creating Zone: " + name);
-                try {
+                try{
                     Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
                     adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
                     load++;
-                    if (poly != null) {
+                    if(poly != null){
                         temp.setPolygon(new PolygonArea(temp, poly));
                     }
-                    if (perms != null) {
-                        for (String perm : perms) {
-                            try {
+                    if(perms != null){
+                        for(String perm : perms){
+                            try{
                                 Permission permTemp = new Permission(perm.split(","));
                                 temp.setPermission(permTemp);
                             }
-                            catch (PermissionConstructException e) {
+                            catch(PermissionConstructException e){
                                 RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
                             }
                         }
                     }
                 }
-                catch (ZoneConstructException e) {
+                catch(ZoneConstructException e){
                     RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage());
                     RealmsLogMan.stacktrace(e);
                 }
-                catch (PolygonConstructException e) {
+                catch(PolygonConstructException e){
                     RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
                     //RealmsLogMan.stacktrace(e);
                 }
                 RealmsLogMan.log(RLevel.GENERAL, "Zone created.");
             }
-
             RealmsLogMan.log(RLevel.GENERAL, "Checking delayed load Zones...");
             Iterator<Object[]> objIter = delayLoad.iterator();
-            while (!delayLoad.isEmpty()) {
-                while (objIter.hasNext()) {
+            while(!delayLoad.isEmpty()){
+                while(objIter.hasNext()){
                     Object[] obj = objIter.next();
-                    try {
-                        if (knownZones.contains((String) obj[3])) {
-                            try {
-                                ZoneLists.getZoneByName((String) obj[3]);
+                    try{
+                        if(knownZones.contains((String)obj[3])){
+                            try{
+                                ZoneLists.getZoneByName((String)obj[3]);
                             }
-                            catch (ZoneNotFoundException e1) {
+                            catch(ZoneNotFoundException e1){
                                 //Parent doesnt appear to have been loaded yet...
                                 continue;
                             }
@@ -205,68 +201,67 @@ public abstract class SQL_Source implements DataSource {
                             System.arraycopy(obj, 0, zoneCon, 0, zoneCon.length);
                             Zone temp = new Zone(zoneCon);
                             load++;
-                            if (obj[25] != null) {
-                                temp.setPolygon(new PolygonArea(temp, (String[]) obj[25]));
+                            if(obj[25] != null){
+                                temp.setPolygon(new PolygonArea(temp, (String[])obj[25]));
                             }
-                            if (obj[26] != null) {
-                                for (String perm : (String[]) obj[26]) {
-                                    try {
+                            if(obj[26] != null){
+                                for(String perm : (String[])obj[26]){
+                                    try{
                                         Permission permTemp = new Permission(perm.split(","));
                                         temp.setPermission(permTemp);
                                     }
-                                    catch (PermissionConstructException e) {
-                                        RealmsLogMan.warning("Invaild permission for Zone: ".concat((String) obj[0]).concat(" Perm: ").concat(perm));
+                                    catch(PermissionConstructException e){
+                                        RealmsLogMan.warning("Invaild permission for Zone: ".concat((String)obj[0]).concat(" Perm: ").concat(perm));
                                     }
                                 }
                             }
                             objIter.remove();
                         }
-                        else {
+                        else{
                             //OH NOES - Orphaned Zone, removed
-                            RealmsLogMan.log(RLevel.GENERAL, "Zone: " + (String) obj[0] + " Does not have a vaild parent... Skipping...");
+                            RealmsLogMan.log(RLevel.GENERAL, "Zone: " + (String)obj[0] + " Does not have a vaild parent... Skipping...");
                             objIter.remove();
                         }
                     }
-                    catch (ZoneConstructException e) {
-                        RealmsLogMan.warning("Failed to construct Zone:".concat((String) obj[0]));
+                    catch(ZoneConstructException e){
+                        RealmsLogMan.warning("Failed to construct Zone:".concat((String)obj[0]));
                     }
-                    catch (PolygonConstructException e) {
-                        RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat((String) obj[0]));
+                    catch(PolygonConstructException e){
+                        RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat((String)obj[0]));
                     }
                 }
             }
             RealmsLogMan.info("Loaded ".concat(String.valueOf(load)).concat(" zones."));
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (rs != null && !rs.isClosed()) {
+        finally{
+            try{
+                if(rs != null && !rs.isClosed()){
                     rs.close();
                 }
-                if (ps != null && !ps.isClosed()) {
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (AbstractMethodError e) {} //SQLite weird stuff
-            catch (Exception e) {}
-
-            if (sqlex != null) {
+            catch(AbstractMethodError e){} //SQLite weird stuff
+            catch(Exception e){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to load Zones...", sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
         return false;
     }
 
-    public boolean reloadZone(Zone zone) {
+    public boolean reloadZone(Zone zone){
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try {
+        try{
             ps = conn.prepareStatement("SELECT * FROM `" + zone_table + "` WHERE name=?");
             ps.setString(1, zone.getName());
             rs = ps.executeQuery();
@@ -297,79 +292,76 @@ public abstract class SQL_Source implements DataSource {
             String starve = parseZoneFlagElement(rs.getString("starve"));
             String suffocate = parseZoneFlagElement(rs.getString("suffocate"));
             String testPoly = rs.getString("polygon");
-
             String[] poly = null;
-            if (!testPoly.equals("null")) {
+            if(!testPoly.equals("null")){
                 poly = testPoly.split(",");
             }
             String testPerm = rs.getString("permissions");
             String[] perms = null;
-            if (!testPerm.trim().isEmpty()) {
+            if(!testPerm.trim().isEmpty()){
                 perms = testPerm.split(":");
             }
-
-            try {
+            try{
                 Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
                 adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
-                if (poly != null) {
+                if(poly != null){
                     temp.setPolygon(new PolygonArea(temp, poly));
                 }
-                if (perms != null) {
-                    for (String perm : perms) {
-                        try {
+                if(perms != null){
+                    for(String perm : perms){
+                        try{
                             Permission permTemp = new Permission(perm.split(","));
                             temp.setPermission(permTemp);
                         }
-                        catch (PermissionConstructException e) {
+                        catch(PermissionConstructException e){
                             RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
                         }
                     }
                 }
                 RealmsLogMan.info("Zone ".concat(zone.getName()).concat(" reloaded."));
             }
-            catch (ZoneConstructException e) {
+            catch(ZoneConstructException e){
                 RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage(), e);
             }
-            catch (PolygonConstructException e) {
+            catch(PolygonConstructException e){
                 RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
             }
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (rs != null && !rs.isClosed()) {
+        finally{
+            try{
+                if(rs != null && !rs.isClosed()){
                     rs.close();
                 }
-                if (ps != null && !ps.isClosed()) {
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (AbstractMethodError e) {} //SQLite weird stuff
-            catch (Exception e) {}
-
-            if (sqlex != null) {
+            catch(AbstractMethodError e){} //SQLite weird stuff
+            catch(Exception e){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to reload Zone:".concat(zone.getName()), sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
         return false;
     }
 
-    public boolean saveZone(Zone zone) {
+    public boolean saveZone(Zone zone){
         RealmsLogMan.info("Saving Zone: ".concat(zone.getName()));
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try {
+        try{
             ps = conn.prepareStatement("SELECT * FROM " + zone_table + " WHERE name=?");
             ps.setString(1, zone.getName());
             rs = ps.executeQuery();
             boolean found = rs.next();
-            if (found) {
+            if(found){
                 ps = conn.prepareStatement(//
                 "UPDATE " + zone_table + " SET" + //
                 " world=?," + // 1
@@ -399,7 +391,6 @@ public abstract class SQL_Source implements DataSource {
                 " polygon=?," + // 25
                 " permissions=?" + // 26
                 " WHERE name=?"); //27
-
                 ps.setString(1, zone.getWorld());
                 ps.setInt(2, zone.getDimension());
                 ps.setString(3, zone.getParent() != null ? zone.getParent().getName() : "null");
@@ -415,7 +406,7 @@ public abstract class SQL_Source implements DataSource {
                 ps.setString(13, zone.getAbsoluteFall().toString());
                 ps.setString(14, zone.getAbsoluteFire().toString());
                 ps.setString(15, zone.getAbsoluteFlow().toString());
-                ps.setString(16, zone.getAbsoluteFlow().toString());
+                ps.setString(16, zone.getAbsoluteHealing().toString());
                 ps.setString(17, zone.getAbsolutePhysics().toString());
                 ps.setString(18, zone.getAbsolutePistons().toString());
                 ps.setString(19, zone.getAbsolutePotion().toString());
@@ -425,18 +416,16 @@ public abstract class SQL_Source implements DataSource {
                 ps.setString(23, zone.getAbsoluteStarve().toString());
                 ps.setString(24, zone.getAbsoluteSuffocate().toString());
                 ps.setString(25, zone.isEmpty() ? "null" : zone.getPolygon().toString());
-
                 StringBuilder permBuild = new StringBuilder();
-                for (Permission perm : zone.getPerms()) {
+                for(Permission perm : zone.getPerms()){
                     permBuild.append(perm);
                     permBuild.append(":");
                 }
-
                 ps.setString(26, permBuild.toString());
                 ps.setString(27, zone.getName());
                 ps.execute();
             }
-            else {
+            else{
                 ps.close();
                 ps = conn.prepareStatement("INSERT INTO `" + zone_table + "`" + //
                 " (name," + // 1
@@ -483,7 +472,7 @@ public abstract class SQL_Source implements DataSource {
                 ps.setString(14, zone.getAbsoluteFall().toString());
                 ps.setString(15, zone.getAbsoluteFire().toString());
                 ps.setString(16, zone.getAbsoluteFlow().toString());
-                ps.setString(17, zone.getAbsoluteFlow().toString());
+                ps.setString(17, zone.getAbsoluteHealing().toString());
                 ps.setString(18, zone.getAbsolutePhysics().toString());
                 ps.setString(19, zone.getAbsolutePistons().toString());
                 ps.setString(20, zone.getAbsolutePotion().toString());
@@ -493,67 +482,63 @@ public abstract class SQL_Source implements DataSource {
                 ps.setString(24, zone.getAbsoluteStarve().toString());
                 ps.setString(25, zone.getAbsoluteSuffocate().toString());
                 ps.setString(26, zone.isEmpty() ? "null" : zone.getPolygon().toString());
-
                 StringBuilder permBuild = new StringBuilder();
-                for (Permission perm : zone.getPerms()) {
+                for(Permission perm : zone.getPerms()){
                     permBuild.append(perm);
                     permBuild.append(":");
                 }
-
                 ps.setString(27, permBuild.toString());
                 ps.execute();
             }
             RealmsLogMan.info("Zone saved!");
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (rs != null && !rs.isClosed()) {
+        finally{
+            try{
+                if(rs != null && !rs.isClosed()){
                     rs.close();
                 }
-                if (ps != null && !ps.isClosed()) {
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (AbstractMethodError e) {} //SQLite weird stuff
-            catch (Exception e) {}
-
-            if (sqlex != null) {
+            catch(AbstractMethodError e){} //SQLite weird stuff
+            catch(Exception e){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to save Zone...", sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
         return false;
     }
 
-    public boolean deleteZone(Zone zone) {
+    public boolean deleteZone(Zone zone){
         SQLException sqlex = null;
         PreparedStatement ps = null;
-        try {
+        try{
             ps = conn.prepareStatement("DELETE FROM " + zone_table + " WHERE name=?");
             ps.setString(1, zone.getName());
             ps.execute();
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (ps != null && !ps.isClosed()) {
+        finally{
+            try{
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (AbstractMethodError e) {} //SQLite weird stuff
-            catch (Exception e) {}
-
-            if (sqlex != null) {
+            catch(AbstractMethodError e){} //SQLite weird stuff
+            catch(Exception e){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to delete Zone...", sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
@@ -561,11 +546,11 @@ public abstract class SQL_Source implements DataSource {
     }
 
     @Override
-    public boolean loadInventories() {
+    public boolean loadInventories(){
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try {
+        try{
             RealmsLogMan.info("Testing Inventory table and creating if needed...");
             ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `" + inv_table + "` " + //
             "(`name` VARCHAR(16) NOT NULL," + //
@@ -612,40 +597,38 @@ public abstract class SQL_Source implements DataSource {
             " PRIMARY KEY (`name`))");
             ps.execute();
             ps.close();
-
             RealmsLogMan.info("Loading inventories...");
             ps = conn.prepareStatement("SELECT * FROM `" + inv_table + "`");
             rs = ps.executeQuery();
-            while (rs.next()) {
+            while(rs.next()){
                 String name = rs.getString("name");
                 Mod_Item[] items = new Mod_Item[40];
                 Arrays.fill(items, null);
-                for (int index = 0; index < 40; index++) {
+                for(int index = 0; index < 40; index++){
                     items[index] = constructFromString(rs.getString("item".concat(String.valueOf(index))));
                 }
                 RealmsBase.storeInventory(name, items);
             }
             RealmsLogMan.info("Loaded inventories.");
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (rs != null && !rs.isClosed()) {
+        finally{
+            try{
+                if(rs != null && !rs.isClosed()){
                     rs.close();
                 }
-                if (ps != null && !ps.isClosed()) {
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (AbstractMethodError e) {} //SQLite weird stuff
-            catch (Exception e) {}
-
-            if (sqlex != null) {
+            catch(AbstractMethodError e){} //SQLite weird stuff
+            catch(Exception e){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to load inventories...", sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
@@ -654,17 +637,17 @@ public abstract class SQL_Source implements DataSource {
 
     @SuppressWarnings("resource")
     @Override
-    public boolean saveInventory(Mod_User user, Mod_Item[] items) {
+    public boolean saveInventory(Mod_User user, Mod_Item[] items){
         RealmsLogMan.info("Saving inventory for User: ".concat(user.getName()));
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try {
+        try{
             ps = conn.prepareStatement("SELECT * FROM " + inv_table + " WHERE name=?");
             ps.setString(1, user.getName());
             rs = ps.executeQuery();
             boolean found = rs.next();
-            if (found) {
+            if(found){
                 RealmsLogMan.log(RLevel.GENERAL, "Inventory exists in database. Updating...");
                 ps = conn.prepareStatement(//
                 "UPDATE " + inv_table + " SET" + //
@@ -709,15 +692,13 @@ public abstract class SQL_Source implements DataSource {
                 " item38=?," + // 39
                 " item39=?" + // 40
                 " WHERE name=?"); //41
-
-                for (int index = 0; index < 40; index++) {
+                for(int index = 0; index < 40; index++){
                     ps.setString(index + 1, items[index] != null ? items[index].toString() : "null");
                 }
-
                 ps.setString(41, user.getName());
                 ps.execute();
             }
-            else {
+            else{
                 RealmsLogMan.log(RLevel.GENERAL, "Inventory does not exists in database. Inserting...");
                 ps = conn.prepareStatement("INSERT INTO `" + inv_table + "`" + //
                 " (name," + // 1
@@ -763,32 +744,31 @@ public abstract class SQL_Source implements DataSource {
                 "item39) " + // 41
                 "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 ps.setString(1, user.getName());
-                for (int index = 0; index < 40; index++) {
+                for(int index = 0; index < 40; index++){
                     ps.setString((index + 2), items[index] != null ? items[index].toString() : "null");
                 }
                 ps.execute();
             }
             RealmsLogMan.info("Inventory saved!");
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (rs != null && !rs.isClosed()) {
+        finally{
+            try{
+                if(rs != null && !rs.isClosed()){
                     rs.close();
                 }
-                if (ps != null && !ps.isClosed()) {
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (AbstractMethodError e) {} //SQLite weird stuff
-            catch (Exception e) {}
-
-            if (sqlex != null) {
+            catch(AbstractMethodError e){} //SQLite weird stuff
+            catch(Exception e){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to save Inventory...", sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
@@ -796,47 +776,46 @@ public abstract class SQL_Source implements DataSource {
     }
 
     @Override
-    public boolean deleteInventory(Mod_User user) {
+    public boolean deleteInventory(Mod_User user){
         SQLException sqlex = null;
         PreparedStatement ps = null;
-        try {
+        try{
             ps = conn.prepareStatement("DELETE FROM " + inv_table + " WHERE name=?");
             ps.setString(1, user.getName());
             ps.execute();
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (ps != null && !ps.isClosed()) {
+        finally{
+            try{
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (SQLException sqle) {}
-
-            if (sqlex != null) {
+            catch(SQLException sqle){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to delete inventory...", sqlex);
             }
-            else {
+            else{
                 return true;
             }
         }
         return false;
     }
 
-    private final String parseZoneFlagElement(String text) {
-        if (text.matches("on|off|inherit")) {
+    private final String parseZoneFlagElement(String text){
+        if(text.matches("on|off|inherit")){
             return text;
         }
         return "inherit";
     }
 
-    private final Mod_Item constructFromString(String item) {
-        if (item.equals("null")) {
+    private final Mod_Item constructFromString(String item){
+        if(item.equals("null")){
             return null;
         }
-        try {
+        try{
             String[] it = item.split(",");
             List<Mod_ItemEnchantment> enchants = new ArrayList<Mod_ItemEnchantment>();
             List<String> lore = new ArrayList<String>();
@@ -844,14 +823,14 @@ public abstract class SQL_Source implements DataSource {
             int amount = Integer.parseInt(it[1]);
             int damage = Integer.parseInt(it[2]);
             String name = it[3].equals("NO_NAME_FOR_THIS_ITEM") ? null : it[3];
-            for (int index = 4; index < it.length; index++) {
-                if (it[index].contains(":")) {
+            for(int index = 4; index < it.length; index++){
+                if(it[index].contains(":")){
                     String[] ench = it[index].split(":");
                     int enchId = Integer.parseInt(ench[0]);
                     int enchLvl = Integer.parseInt(ench[1]);
                     enchants.add(RealmsBase.getServer().constructEnchantment(enchId, enchLvl));
                 }
-                else {
+                else{
                     lore.add(it[index]);
                 }
             }
@@ -859,7 +838,7 @@ public abstract class SQL_Source implements DataSource {
             String[] lores = lore.isEmpty() ? null : lore.toArray(new String[0]);
             return RealmsBase.getServer().constructItem(id, amount, damage, name, enchs, lores);
         }
-        catch (Exception ex) {} //FAIL!
+        catch(Exception ex){} //FAIL!
         return null;
     }
 }

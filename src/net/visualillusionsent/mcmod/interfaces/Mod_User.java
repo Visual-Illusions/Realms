@@ -17,7 +17,6 @@
  */
 package net.visualillusionsent.mcmod.interfaces;
 
-
 /**
  * This file is part of VI-MCMIL.
  * Copyright 2013 Visual Illusions Entertainment.
@@ -25,7 +24,7 @@ package net.visualillusionsent.mcmod.interfaces;
  * 
  * @author Jason (darkdiplomat)
  */
-public interface Mod_User extends Mod_Entity, Mod_Caller {
+public interface Mod_User extends Mod_Entity, Mod_Caller{
 
     boolean isInGroup(String group);
 
@@ -36,6 +35,8 @@ public interface Mod_User extends Mod_Entity, Mod_Caller {
     void heal(int amount);
 
     void causeDamage(int amount);
+
+    boolean isDead();
 
     boolean isCreative();
 
