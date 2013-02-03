@@ -209,7 +209,7 @@ public final class Wand{
                         }
                     }
                     if(thePolygon == null || thePolygon.getVertices().isEmpty()){
-                        user.sendError(RealmsTranslate.transMessage("zone.no.vertices"));
+                        user.sendError(RealmsTranslate.transMessage("zone.no.verticies"));
                         return true;
                     }
                     x1 = thePolygon.getVertices().get(0).x;
