@@ -27,7 +27,7 @@
     <url>https://github.com/Visual-Illusions/Realms</url>
   </scm>
   <issueManagement>
-    <url>https://github.com/Visual-Illusions/viutils/issues</url>
+    <url>https://github.com/Visual-Illusions/Realms/issues</url>
     <system>GitHub Issue Tracker</system>
   </issueManagement>
   <ciManagement>
@@ -94,14 +94,14 @@
               <goal>timestamp</goal>
             </goals>
             <phase>validate</phase>
-            <configuration>
-              <timestamp>
-                <property>timestamp</property>
-                <pattern>yyyyMMddHHmm</pattern>
-                <timezone>GMT-6</timezone>
-                <locale>US</locale>
-              </timestamp>
-            </configuration>
+              <configuration>
+                <timestamp>
+                  <property>timestamp</property>
+                  <pattern>yyyyMMddHHmm</pattern>
+                  <timezone>GMT-6</timezone>
+                  <locale>US</locale>
+                </timestamp>
+              </configuration>
           </execution>
         </executions>
       </plugin>
