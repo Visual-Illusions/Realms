@@ -62,7 +62,7 @@ public final class ZoneLists{
     }
 
     public final static void removeZone(Zone zone){
-        zones.remove(zone);
+        zones.remove(zone.getName());
     }
 
     public final static Collection<Zone> getZones(){

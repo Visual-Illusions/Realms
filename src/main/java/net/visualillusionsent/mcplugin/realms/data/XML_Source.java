@@ -469,10 +469,8 @@ final class XML_Source implements DataSource{
                     }
                 }
                 if(child != null){
-                    if(root.removeContent(child)){
-                        writer = new FileWriter(zone_Path);
-                        outputter.output(root, writer);
-                    }
+                    writer = new FileWriter(zone_Path);
+                    outputter.output(root, writer);
                 }
             }
             catch(JDOMException e){
@@ -641,10 +639,8 @@ final class XML_Source implements DataSource{
                     }
                 }
                 if(child != null){
-                    if(root.removeContent(child)){
-                        writer = new FileWriter(inv_Path);
-                        outputter.output(root, writer);
-                    }
+                    writer = new FileWriter(inv_Path);
+                    outputter.output(root, writer);
                 }
             }
             catch(JDOMException e){

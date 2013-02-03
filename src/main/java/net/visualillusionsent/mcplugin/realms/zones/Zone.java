@@ -74,6 +74,8 @@ public final class Zone{
     private ZoneFlag sanctuary; // OFF = zone is not a sanctuary, ON = zone is a sanctuary
     private ZoneFlag starve; //OFF = no Starvation, ON = Starvation
     private ZoneFlag suffocate; //OFF = No Suffocation, ON = Suffocation
+    private boolean deleted = false;
+    private boolean saving = false;
 
     // Regular Constructor
     public Zone(String name, Zone parent, String world, int dimension){
@@ -632,6 +634,7 @@ public final class Zone{
 
     // Delete the zone
     public final void delete(){
+        this.deleted = true;
         ZoneLists.removeZonefromPlayerZoneList(this);
         ZoneLists.removeZone(this);
         RealmsBase.getDataSourceHandler().addToQueue(OutputAction.DELETE_ZONE, this);
@@ -923,6 +926,18 @@ public final class Zone{
         List<Permission> theperms = new ArrayList<Permission>(zoneperms);
         Collections.copy(theperms, zoneperms);
         return theperms;
+    }
+
+    public final boolean isPendingDeletion(){
+        return deleted;
+    }
+
+    public final boolean isSaving(){
+        return saving;
+    }
+
+    public final void setSaving(boolean save){
+        this.saving = save;
     }
 
     //End Permission checks

@@ -27,41 +27,48 @@ package net.visualillusionsent.mcplugin.realms.data;
  * 
  * @author Jason (darkdiplomat)
  */
-final class OutputThread extends Thread {
+final class OutputThread extends Thread{
+
     private final DataSourceHandler handler;
     private final DataSource source;
     private volatile boolean running = true;
 
-    public OutputThread(DataSourceHandler handler, DataSource source) {
+    public OutputThread(DataSourceHandler handler, DataSource source){
         this.handler = handler;
         this.source = source;
     }
 
-    public void run() {
-        while (running) {
-            try {
+    public void run(){
+        while(running){
+            try{
                 DataSourceActionContainer act = handler.getQueue().next();
-                if (act != null) {
+                if(act != null){
                     OutputAction action = act.getAction();
-                    if (action == OutputAction.SAVE_ZONE) {
-                        source.saveZone(act.getZone());
+                    if(action == OutputAction.SAVE_ZONE){
+                        if(!act.getZone().isPendingDeletion()){
+                            if(!act.getZone().isSaving()){
+                                act.getZone().setSaving(true);
+                                source.saveZone(act.getZone());
+                                act.getZone().setSaving(false);
+                            }
+                        }
                     }
-                    else if (action == OutputAction.DELETE_ZONE) {
+                    else if(action == OutputAction.DELETE_ZONE){
                         source.deleteZone(act.getZone());
                     }
-                    else if (action == OutputAction.SAVE_INVENTORY) {
+                    else if(action == OutputAction.SAVE_INVENTORY){
                         source.saveInventory(act.getUser(), act.getItems());
                     }
-                    else if (action == OutputAction.DELETE_INVENTORY) {
+                    else if(action == OutputAction.DELETE_INVENTORY){
                         source.deleteInventory(act.getUser());
                     }
                 }
             }
-            catch (Exception e) {}
+            catch(Exception e){}
         }
     }
 
-    public final void terminate() {
+    public final void terminate(){
         running = false;
         interrupt();
     }
