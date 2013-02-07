@@ -43,6 +43,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.StorageMinecart;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -73,6 +74,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 
 /**
  * This file is part of Realms.
@@ -814,6 +816,7 @@ public final class Realms_BukkitListener implements Listener{
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
     public final void onPortalUse(PlayerPortalEvent event){
         if(!RealmsBase.isLoaded() || event.isCancelled()){
             return;
@@ -850,7 +853,97 @@ public final class Realms_BukkitListener implements Listener{
         }
     }
 
-    //public final void onPotionEffect(IfBukkitHadAnEvent itWouldGoHere){ }
+    //public final void onPotionEffect(IfBukkitHadAnEvent itWouldGoHere){
+    //}
+    @EventHandler(priority = EventPriority.HIGH)
+    public final void onVehiclePositionChange(VehicleMoveEvent event){
+        if(!RealmsBase.isLoaded()){
+            return;
+        }
+        try{
+            Vehicle vehicle = event.getVehicle();
+            if(vehicle.getPassenger() != null && vehicle.getPassenger() instanceof Player){
+                Player player = (Player)vehicle.getPassenger();
+                Bukkit_User user = new Bukkit_User(player);
+                Zone zone = ZoneLists.getInZone(user);
+                //Start Enter Zone Checks
+                if(!zone.permissionCheck(user, PermissionType.ENTER)){
+                    vehicle.eject();
+                    Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint());
+                    Location toThrow = new Location(player.getWorld(), thrown.x, thrown.y, thrown.z, player.getLocation().getYaw(), player.getLocation().getPitch());
+                    player.teleport(toThrow);
+                    if(vehicle.getType() == EntityType.BOAT){
+                        player.sendMessage("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your boat! Need some help?");
+                    }
+                    else{
+                        player.sendMessage("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your minecart! Need some help?");
+                    }
+                    return;
+                }
+                //End Enter Zone Checks
+                //Start Creative/Adventure Zone Checks
+                if(!player.hasPermission("bukkit.command.gamemode") && !moded.contains(player)){
+                    if(zone.getCreative()){
+                        if(player.getGameMode() != GameMode.CREATIVE){
+                            RealmsBase.handleInventory(user, true);
+                            player.setGameMode(GameMode.CREATIVE);
+                        }
+                        if(!ZoneLists.isInCreative(user)){
+                            ZoneLists.addInCreative(user);
+                        }
+                    }
+                    else if(zone.getAdventure()){
+                        if(player.getGameMode() != GameMode.ADVENTURE){
+                            player.setGameMode(GameMode.ADVENTURE);
+                        }
+                        if(!ZoneLists.isInAdventure(user)){
+                            ZoneLists.addInAdventure(user);
+                        }
+                    }
+                    else if(player.getGameMode() != GameMode.SURVIVAL){
+                        if(player.getGameMode() == GameMode.CREATIVE && ZoneLists.isInCreative(user)){
+                            ZoneLists.removeInCreative(user);
+                            RealmsBase.handleInventory(user, false);
+                            player.setGameMode(GameMode.SURVIVAL);
+                        }
+                        else if(player.getGameMode() == GameMode.ADVENTURE && ZoneLists.isInAdventure(user)){
+                            ZoneLists.removeInAdventure(user);
+                            player.setGameMode(GameMode.SURVIVAL);
+                        }
+                    }
+                }
+                //End Creative/Adventure Zone Checks
+                //Start Healing Zone Checks
+                if(zone.getHealing()){
+                    ZoneLists.addInHealing(user);
+                }
+                else{
+                    ZoneLists.removeInHealing(user);
+                }
+                //End Healing Zone Checks
+                //Start Restricted Zone Checks
+                if(zone.getRestricted()){
+                    if(!zone.permissionCheck(user, PermissionType.AUTHED)){
+                        if(!ZoneLists.isInRestricted(user)){
+                            ZoneLists.addInRestricted(user);
+                            player.sendMessage(ChatColor.RED + RealmsBase.getProperties().getStringVal("restrict.message"));
+                        }
+                    }
+                }
+                else if(ZoneLists.isInRestricted(user)){
+                    ZoneLists.removeInRestricted(user);
+                }
+                //End Restricted Zone Checks
+                //Check if player should receive Welcome/Farewell Messages
+                RealmsBase.playerMessage(user);
+            }
+        }
+        catch(Exception ex){
+            RealmsLogMan.severe("An unexpected exception occured @ VEHICLE_MOVE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.stacktrace(ex);
+        }
+    }
+
     private final Block getPistonTouch(Block piston, BlockFace facing){
         Block pushing = null;
         int x = piston.getX(), y = piston.getY(), z = piston.getZ();
