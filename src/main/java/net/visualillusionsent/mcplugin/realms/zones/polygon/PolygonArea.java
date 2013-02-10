@@ -28,8 +28,6 @@ import net.visualillusionsent.mcmod.interfaces.Mod_Block;
 import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
 import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
-import net.visualillusionsent.mcplugin.realms.logging.RLevel;
-import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.mcplugin.realms.zones.Zone;
 
 /**
@@ -84,7 +82,7 @@ public final class PolygonArea{
             }
             centroid = calculateCentroid(vertices);
             radius = calculateRadius(vertices, centroid);
-            vertices = reorgPoints(vertices); //Redundancy and verification
+            reorganize(vertices); //Redundancy and verification
         }
         catch(NumberFormatException nfe){
             throw new PolygonConstructException();
@@ -334,7 +332,7 @@ public final class PolygonArea{
         }
         // Case #2: Reorder the points to make the polygon right
         workingVertices.add(newVertex);
-        workingVertices = reorgPoints(workingVertices);
+        reorganize(workingVertices);
         return removed;
     }
 
@@ -403,7 +401,7 @@ public final class PolygonArea{
         // The polygon must not contain intersecting lines
         if(intersects(workingVertices, workingVertices)){
             user.sendError(RealmsTranslate.transMessage("line.intersect"));
-            workingVertices = reorgPoints(workingVertices);
+            reorganize(workingVertices);
             if(intersects(workingVertices, workingVertices)){
                 user.sendError(RealmsTranslate.transMessage("reorg.fail"));
                 return false;
@@ -428,82 +426,9 @@ public final class PolygonArea{
         return closest;
     }
 
-    private final LinkedList<Point> reorgPoints(List<Point> points){
-        List<Point> tempPoints = new LinkedList<Point>(points);
-        LinkedList<Point> toRet = new LinkedList<Point>();
-        Collections.copy(tempPoints, points);
-        Point start = null;
-        Point negZ = null;
-        Point centroid = calculateCentroid(tempPoints);
-        for(Point point : tempPoints){
-            //Most Positive Z and Start point (North side)
-            if(start == null){
-                start = point;
-            }
-            else if(point.z > start.z){
-                start = point;
-            }
-            else if(point.z == start.z && point.x <= centroid.x && point.x > start.x){
-                start = point;
-            }
-            //Most Negative Z Point (South side)
-            if(negZ == null){
-                negZ = point;
-            }
-            else if(point.z < negZ.z){
-                negZ = point;
-            }
-            else if(point.z == negZ.z && point.x < negZ.x && point.x >= centroid.x){
-                negZ = point;
-            }
-        }
-        //Remove the start point from our temp list
-        tempPoints.remove(start);
-        //Add the start point to the returning list
-        toRet.add(start);
-        //Find point nearest to Start point going counter-clockwise (-x)
-        while(tempPoints.size() > 1){
-            Iterator<Point> pointIt = tempPoints.iterator();
-            Point next = null;
-            while(pointIt.hasNext()){
-                Point check = pointIt.next();
-                if(next == null){
-                    next = check;
-                }
-                else if(check.distance2D(start) < next.distance2D(start) && (check.x <= centroid.x)){
-                    next = check;
-                }
-            }
-            tempPoints.remove(next);
-            toRet.add(next);
-            start = next;
-            RealmsLogMan.log(RLevel.GENERAL, "Point Reorg Debug - X:" + start.x + " Z:" + start.z);
-            if(negZ == start){
-                //Current point is now the far side of the polygon, begin coming back around
-                break;
-            }
-        }
-        //Complete the oposite half of the polygon
-        while(tempPoints.size() > 1){
-            Iterator<Point> pointIt = tempPoints.iterator();
-            Point next = null;
-            while(pointIt.hasNext()){
-                Point check = pointIt.next();
-                if(next == null){
-                    next = check;
-                }
-                else if(check.distance2D(start) < next.distance2D(start) && (check.x >= centroid.x)){
-                    next = check;
-                }
-            }
-            tempPoints.remove(next);
-            toRet.add(next);
-            start = next;
-            RealmsLogMan.log(RLevel.GENERAL, "Point Reorg Debug - X:" + start.x + " Z:" + start.z);
-        }
-        toRet.add(tempPoints.get(0)); //And add the last point to our returning list
-        RealmsLogMan.log(RLevel.GENERAL, "Point Reorg Debug - X:" + tempPoints.get(0).x + " Z:" + tempPoints.get(0).z);
-        return toRet;
+    private final void reorganize(LinkedList<Point> points){
+        Point centroid = calculateCentroid(points);
+        Collections.sort(points, new PointComparator(centroid));
     }
 
     public static final int calculateArea(List<Point> points){
