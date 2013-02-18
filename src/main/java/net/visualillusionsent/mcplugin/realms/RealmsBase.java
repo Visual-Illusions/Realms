@@ -57,81 +57,76 @@ import net.visualillusionsent.utils.VersionChecker;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsBase {
-    private static RealmsBase $;
+public class RealmsBase{
 
+    private static RealmsBase $;
     private final Mod_Server server;
     private final String name = "Realms";
     private final String version_check_URL = "http://visualillusionsent.net/minecraft/plugins/";
-    private final String download_URL = "http://dl.dropbox.com/u/25586491/minecraft/plugins/Realms.jar";
+    private final String download_URL = "http://dl.visualillusionsent.net/?download=Realms.jar";
     private final String jar_Path = "plugins/Realms.jar";
-
     private final DataSourceHandler source_handler;
     private final RealmsProps props;
-
     private final VersionChecker vc;
     private final Updater updater;
-
     private final MobRemover mobdes = new MobRemover(this);
     private final AnimalRemover animaldes = new AnimalRemover(this);
     private final Healer healer = new Healer(this);
     private final RestrictionDamager restrictdam = new RestrictionDamager(this);
-
     private final HashMap<Mod_User, Wand> wands = new HashMap<Mod_User, Wand>();
     private final HashMap<String, Mod_Item[]> inventories = new HashMap<String, Mod_Item[]>();
-
     private String version;
     private String build;
     private boolean beta;
     private boolean rc;
     private static boolean loaded;
 
-    public RealmsBase(Mod_Server server) {
-        if ($ == null) {
+    public RealmsBase(Mod_Server server){
+        if($ == null){
             $ = this;
             this.server = server;
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(isBeta() ? " BETA" : isReleaseCandidate() ? " RC" : "").concat(" initializing..."));
-            if (beta) {
+            if(beta){
                 RealmsLogMan.warning("Realms has declared itself as a 'BETA' build. Production use is not advised!");
             }
-            else if (rc) {
+            else if(rc){
                 RealmsLogMan.info("Realms has declared itself as a 'Release Candidate' build. Expect some bugs.");
             }
             vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, beta, rc);
-            if (!vc.isLatest()) {
+            if(!vc.isLatest()){
                 RealmsLogMan.info(vc.getUpdateAvailibleMessage());
             }
             updater = new Updater(download_URL, jar_Path, name);
             props = new RealmsProps();
-            if (!props.initialize()) {
+            if(!props.initialize()){
                 throw new RealmsInitializeException();
             }
-            try {
+            try{
                 source_handler = new DataSourceHandler(DataSourceType.valueOf(props.getStringVal("datasource").toUpperCase()));
             }
-            catch (DataSourceException e) {
+            catch(DataSourceException e){
                 throw new RealmsInitializeException(e);
             }
             initializeThreads();
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initialized."));
             loaded = true;
         }
-        else {
+        else{
             throw new IllegalStateException();
         }
     }
 
-    private final void initializeThreads() {
-        if (!props.getBooleanVal("sanctuary.mobs") && props.getLongVal("sanctuary.timeout") > 0) { //If allowing all mobs into Sanctuary area don't bother scheduling
+    private final void initializeThreads(){
+        if(!props.getBooleanVal("sanctuary.mobs") && props.getLongVal("sanctuary.timeout") > 0){ //If allowing all mobs into Sanctuary area don't bother scheduling
             TaskManager.scheduleContinuedTaskInSeconds(mobdes, props.getLongVal("sanctuary.timeout"), props.getLongVal("sanctuary.timeout")); //Sanctuary Runnable
         }
-        if (props.getLongVal("animals.timeout") > 0) {
+        if(props.getLongVal("animals.timeout") > 0){
             TaskManager.scheduleContinuedTaskInSeconds(animaldes, props.getLongVal("animals.timeout"), props.getLongVal("animals.timeout")); //Animals Runnable
         }
-        if (props.getLongVal("healing.timeout") > 0) {
+        if(props.getLongVal("healing.timeout") > 0){
             TaskManager.scheduleContinuedTaskInSeconds(healer, props.getLongVal("healing.timeout"), props.getLongVal("healing.timeout")); //Healing Runnable
         }
-        if (props.getLongVal("restrict.timeout") > 0) {
+        if(props.getLongVal("restrict.timeout") > 0){
             TaskManager.scheduleContinuedTaskInSeconds(restrictdam, props.getLongVal("restrict.timeout"), props.getLongVal("restrict.timeout")); //Restricted Zone Damager Task
         }
     }
@@ -139,7 +134,7 @@ public class RealmsBase {
     /**
      * Terminates the threadhandler and closes the log file
      */
-    public final void terminate() {
+    public final void terminate(){
         TaskManager.removeTask($.mobdes);
         TaskManager.removeTask($.animaldes);
         TaskManager.removeTask($.healer);
@@ -147,31 +142,31 @@ public class RealmsBase {
         TaskManager.terminateThreadPool();
         source_handler.killOutput();
         ZoneLists.clearOut();
-        for (Wand wand : wands.values()) {
+        for(Wand wand : wands.values()){
             wand.softReset();
         }
         wands.clear();
         RealmsLogMan.killLogger();
     }
 
-    public final static boolean isLoaded() {
+    public final static boolean isLoaded(){
         return loaded;
     }
 
-    public final static DataSourceHandler getDataSourceHandler() {
+    public final static DataSourceHandler getDataSourceHandler(){
         return $.source_handler;
     }
 
-    public final static Mod_Server getServer() {
+    public final static Mod_Server getServer(){
         return $.server;
     }
 
-    public final static RealmsProps getProperties() {
+    public final static RealmsProps getProperties(){
         return $.props;
     }
 
-    public final static Wand getPlayerWand(Mod_User user) {
-        if ($.wands.containsKey(user)) {
+    public final static Wand getPlayerWand(Mod_User user){
+        if($.wands.containsKey(user)){
             return $.wands.get(user);
         }
         Wand wand = new Wand(user);
@@ -179,31 +174,31 @@ public class RealmsBase {
         return wand;
     }
 
-    public final static void removePlayerWand(Mod_User user) {
-        synchronized ($.wands) {
-            if ($.wands.containsKey(user)) {
+    public final static void removePlayerWand(Mod_User user){
+        synchronized($.wands){
+            if($.wands.containsKey(user)){
                 $.wands.get(user).softReset();
                 $.wands.remove(user);
             }
         }
     }
 
-    public final static void playerMessage(Mod_User user) {
+    public final static void playerMessage(Mod_User user){
         List<Zone> oldZoneList = ZoneLists.getplayerZones(user);
         Zone everywhere = ZoneLists.getEverywhere(user);
         List<Zone> newZoneList = ZoneLists.getZonesPlayerIsIn(everywhere, user);
-        if (oldZoneList.isEmpty()) {
+        if(oldZoneList.isEmpty()){
             ZoneLists.addplayerzones(user, newZoneList);
             return;
         }
-        else if (oldZoneList.hashCode() != newZoneList.hashCode()) {
-            for (Zone zone : oldZoneList) {
-                if (!newZoneList.contains(zone)) {
+        else if(oldZoneList.hashCode() != newZoneList.hashCode()){
+            for(Zone zone : oldZoneList){
+                if(!newZoneList.contains(zone)){
                     zone.farewell(user);
                 }
             }
-            for (Zone zone : newZoneList) {
-                if (!oldZoneList.contains(zone)) {
+            for(Zone zone : newZoneList){
+                if(!oldZoneList.contains(zone)){
                     zone.greet(user);
                 }
             }
@@ -211,71 +206,70 @@ public class RealmsBase {
         }
     }
 
-    public final static void handleInventory(Mod_User user, boolean store) {
-        if (store) {
-            if (!$.inventories.containsKey(user.getName())) {
+    public final static void handleInventory(Mod_User user, boolean store){
+        if(store){
+            if(!$.inventories.containsKey(user.getName())){
                 Mod_Item[] items = user.getInventoryContents();
                 $.inventories.put(user.getName(), items);
                 $.source_handler.addToQueue(OutputAction.SAVE_INVENTORY, user, items);
                 user.clearInventoryContents();
             }
         }
-        else if ($.inventories.containsKey(user.getName())) {
+        else if($.inventories.containsKey(user.getName())){
             user.setInventoryContents($.inventories.get(user.getName()));
             $.inventories.remove(user.getName());
             $.source_handler.addToQueue(OutputAction.DELETE_INVENTORY, user);
         }
     }
 
-    public final static void storeInventory(String name, Mod_Item[] items) {
-        if (!$.inventories.containsKey(name)) {
+    public final static void storeInventory(String name, Mod_Item[] items){
+        if(!$.inventories.containsKey(name)){
             $.inventories.put(name, items);
         }
     }
 
-    public final static String update() {
-        try {
+    public final static String update(){
+        try{
             $.updater.performUpdate();
         }
-        catch (UpdateException ue) {
+        catch(UpdateException ue){
             return ue.getMessage();
         }
         return "Update Successful!";
     }
 
-    public final static boolean isLatest() {
+    public final static boolean isLatest(){
         return $.vc.isLatest();
     }
 
-    public final static String getCurrent() {
+    public final static String getCurrent(){
         return $.vc.getCurrentVersion();
     }
 
-    public final static String getVersion() {
-        if ($.version == null) {
+    public final static String getVersion(){
+        if($.version == null){
             $.generateVersion();
         }
-
         return $.version.concat(".").concat($.build);
     }
 
-    private final String getRawVersion() {
-        if ($.version == null) {
+    private final String getRawVersion(){
+        if($.version == null){
             $.generateVersion();
         }
         return $.version;
     }
 
-    public final static boolean isBeta() {
+    public final static boolean isBeta(){
         return $.beta;
     }
 
-    public final static boolean isReleaseCandidate() {
+    public final static boolean isReleaseCandidate(){
         return $.rc;
     }
 
-    private void generateVersion() {
-        try {
+    private void generateVersion(){
+        try{
             Manifest manifest = getManifest();
             Attributes mainAttribs = manifest.getMainAttributes();
             version = mainAttribs.getValue("Version");
@@ -283,49 +277,48 @@ public class RealmsBase {
             beta = Boolean.parseBoolean(mainAttribs.getValue("Beta"));
             rc = Boolean.parseBoolean(mainAttribs.getValue("ReleaseCanidate"));
         }
-        catch (Exception e) {
+        catch(Exception e){
             RealmsLogMan.warning(e.getMessage());
         }
-
-        if (version == null) {
+        if(version == null){
             version = "UNKNOWN";
         }
-        else if (build == null) {
+        else if(build == null){
             build = "UNKNOWN";
         }
     }
 
-    private final Manifest getManifest() throws Exception {
+    private final Manifest getManifest() throws Exception{
         Manifest toRet = null;
         Exception ex = null;
         JarFile jar = null;
-        try {
+        try{
             jar = new JarFile(jar_Path);
             toRet = jar.getManifest();
         }
-        catch (Exception e) {
+        catch(Exception e){
             ex = e;
         }
-        finally {
-            if (jar != null) {
-                try {
+        finally{
+            if(jar != null){
+                try{
                     jar.close();
                 }
-                catch (IOException e) {}
+                catch(IOException e){}
             }
-            if (ex != null) {
+            if(ex != null){
                 throw ex;
             }
         }
         return toRet;
     }
 
-    public final static String[] commandAdjustment(String[] args, int adjust) {
+    public final static String[] commandAdjustment(String[] args, int adjust){
         String[] newArgs = new String[0];
-        if (args.length > adjust) {
+        if(args.length > adjust){
             newArgs = new String[args.length - adjust];
-            for (int index = 0; index < args.length; index++) {
-                if (index <= (adjust - 1)) {
+            for(int index = 0; index < args.length; index++){
+                if(index <= (adjust - 1)){
                     continue;
                 }
                 newArgs[index - adjust] = args[index];
@@ -334,23 +327,22 @@ public class RealmsBase {
         return newArgs;
     }
 
-    public final static Point throwBack(Zone zone, Point oPoint) {
+    public final static Point throwBack(Zone zone, Point oPoint){
         PolygonArea area = zone.getPolygon();
         Point temp = oPoint.clone();
-        if (area != null) {
+        if(area != null){
             temp = area.getClosestPoint(temp);
             temp.x += 1;
-            if (area.contains(temp)) {
+            if(area.contains(temp)){
                 temp.x -= 2;
-                if (area.contains(temp)) {
+                if(area.contains(temp)){
                     temp.x += 1;
                     temp.z += 1;
-                    if (area.contains(temp)) {
+                    if(area.contains(temp)){
                         temp.z -= 2;
                     }
                 }
             }
-
             temp.y = $.server.getHighestY(temp.x, temp.z, zone.getWorld(), zone.getDimension());
         }
         return temp;
