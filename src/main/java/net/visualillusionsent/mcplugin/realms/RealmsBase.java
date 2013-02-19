@@ -57,7 +57,7 @@ import net.visualillusionsent.utils.VersionChecker;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsBase{
+public final class RealmsBase{
 
     private static RealmsBase $;
     private final Mod_Server server;
@@ -235,7 +235,7 @@ public class RealmsBase{
         catch(UpdateException ue){
             return ue.getMessage();
         }
-        return "Update Successful!";
+        return "Update Successful! Please verify that the libraries used by Realms are also up to date!";
     }
 
     public final static boolean isLatest(){
