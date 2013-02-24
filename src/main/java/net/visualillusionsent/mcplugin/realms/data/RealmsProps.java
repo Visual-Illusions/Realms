@@ -113,6 +113,7 @@ public class RealmsProps{
             props_File.getString("sql.zones.table");
             props_File.getString("sql.inventories.table");
             props_File.getString("lang.locale");
+            props_File.getBoolean("check.unstable");
             RealmsLogMan.info("Properties tests passed!");
         }
         catch(UtilityException ue){

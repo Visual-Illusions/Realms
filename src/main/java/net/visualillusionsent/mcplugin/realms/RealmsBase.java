@@ -48,6 +48,7 @@ import net.visualillusionsent.utils.TaskManager;
 import net.visualillusionsent.utils.UpdateException;
 import net.visualillusionsent.utils.Updater;
 import net.visualillusionsent.utils.VersionChecker;
+import net.visualillusionsent.utils.VersionChecker.ProgramStatus;
 
 /**
  * This file is part of Realms.
@@ -92,11 +93,6 @@ public final class RealmsBase{
             else if(rc){
                 RealmsLogMan.info("Realms has declared itself as a 'Release Candidate' build. Expect some bugs.");
             }
-            vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, beta, rc);
-            if(!vc.isLatest()){
-                RealmsLogMan.info(vc.getUpdateAvailibleMessage());
-            }
-            updater = new Updater(download_URL, jar_Path, name);
             props = new RealmsProps();
             if(!props.initialize()){
                 throw new RealmsInitializeException();
@@ -107,6 +103,16 @@ public final class RealmsBase{
             catch(DataSourceException e){
                 throw new RealmsInitializeException(e);
             }
+            vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, (beta ? ProgramStatus.BETA : rc ? ProgramStatus.RELEASE_CANADATE : ProgramStatus.STABLE), props.getBooleanVal("check.unstable"));
+            Boolean islatest = vc.isLatest();
+            if(islatest == null){
+                RealmsLogMan.warning("VersionCheckerError: " + vc.getErrorMessage());
+            }
+            else if(!vc.isLatest()){
+                RealmsLogMan.warning(vc.getUpdateAvailibleMessage());
+                RealmsLogMan.warning("You can view update info @ http://wiki.visualillusionsent.net/Realms#ChangeLog");
+            }
+            updater = new Updater(download_URL, jar_Path, name);
             initializeThreads();
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initialized."));
             loaded = true;
