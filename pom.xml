@@ -5,7 +5,7 @@
   <version>7.0</version>
   <name>Realms</name>
   <description>Polygonal Heirarchy Area Ownership</description>
-  <url>http://visualillusionsent.net</url>
+  <url>http://wiki.visualillusionsent.net/Realms</url>
   <inceptionYear>2012</inceptionYear>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,11 +34,22 @@
     <system>Jenkins</system>
     <url>http://ci.visualillusionsent.net</url>
   </ciManagement>
+  <distributionManagement>
+    <repository>
+      <id>vi-repo</id>
+      <url>ftp://repo.visualillusionsent.net/</url>
+    </repository>
+  </distributionManagement>
   <repositories>
     <repository>
       <id>CodeBukkit</id>
       <name>Bukkit Public Repository</name>
       <url>http://repo.bukkit.org/content/groups/public</url>
+    </repository>
+    <repository>
+      <id>vi-repo</id>
+      <name>Visual Illusions Repository</name>
+      <url>http://repo.visualillusionsent.net/</url>
     </repository>
   </repositories>
   <dependencies>
@@ -130,6 +141,7 @@
         <configuration>
           <finalName>${project.build.finalName}</finalName>
           <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
               <addClasspath>false</addClasspath>
             </manifest>
@@ -137,8 +149,7 @@
                 <Title>Realms</Title>
                 <Version>${project.version}</Version>
                 <Build>${timestamp}</Build>
-                <Beta>true</Beta>
-                <Release-Canidate>false</Release-Canidate>
+                <ProgramStatus>BETA</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
                 <Class-Path>../lib/viutils-1.0.0.jar ../lib/jdom2.jar ../lib/sqlite.jar</Class-Path>
@@ -147,5 +158,41 @@
         </configuration>
       </plugin>
     </plugins>
+    <pluginManagement>
+     <plugins>
+      <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+      <plugin>
+       <groupId>org.eclipse.m2e</groupId>
+       <artifactId>lifecycle-mapping</artifactId>
+       <version>1.0.0</version>
+       <configuration>
+        <lifecycleMappingMetadata>
+         <pluginExecutions>
+          <pluginExecution>
+           <pluginExecutionFilter>
+            <groupId>com.github.goldin</groupId>
+            <artifactId>timestamp-maven-plugin</artifactId>
+            <versionRange>[0.2.5,)</versionRange>
+            <goals>
+             <goal>timestamp</goal>
+            </goals>
+           </pluginExecutionFilter>
+           <action>
+            <ignore></ignore>
+           </action>
+          </pluginExecution>
+         </pluginExecutions>
+        </lifecycleMappingMetadata>
+       </configuration>
+      </plugin>
+     </plugins>
+    </pluginManagement>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>1.0-alpha-6</version>
+      </extension>
+    </extensions>
   </build>
 </project>

@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * @author Jason (darkdiplomat)
  */
-public interface Mod_Server {
+public interface Mod_Server{
 
     List<Mod_Entity> getAnimals();
 
@@ -55,5 +55,4 @@ public interface Mod_Server {
     boolean isBukkit();
 
     int getHighestY(int x, int z, String world, int dimension);
-
 }

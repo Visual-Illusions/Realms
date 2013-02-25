@@ -44,11 +44,9 @@ import net.visualillusionsent.mcplugin.realms.zones.Zone;
 import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
 import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
 import net.visualillusionsent.mcplugin.realms.zones.polygon.PolygonArea;
+import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.TaskManager;
-import net.visualillusionsent.utils.UpdateException;
-import net.visualillusionsent.utils.Updater;
 import net.visualillusionsent.utils.VersionChecker;
-import net.visualillusionsent.utils.VersionChecker.ProgramStatus;
 
 /**
  * This file is part of Realms.
@@ -64,12 +62,10 @@ public final class RealmsBase{
     private final Mod_Server server;
     private final String name = "Realms";
     private final String version_check_URL = "http://visualillusionsent.net/minecraft/plugins/";
-    private final String download_URL = "http://dl.visualillusionsent.net/?download=Realms.jar";
     private final String jar_Path = "plugins/Realms.jar";
     private final DataSourceHandler source_handler;
     private final RealmsProps props;
     private final VersionChecker vc;
-    private final Updater updater;
     private final MobRemover mobdes = new MobRemover(this);
     private final AnimalRemover animaldes = new AnimalRemover(this);
     private final Healer healer = new Healer(this);
@@ -78,19 +74,24 @@ public final class RealmsBase{
     private final HashMap<String, Mod_Item[]> inventories = new HashMap<String, Mod_Item[]>();
     private String version;
     private String build;
-    private boolean beta;
-    private boolean rc;
+    private ProgramStatus status;
     private static boolean loaded;
 
     public RealmsBase(Mod_Server server){
         if($ == null){
             $ = this;
             this.server = server;
-            RealmsLogMan.info("Realms v".concat(getVersion()).concat(isBeta() ? " BETA" : isReleaseCandidate() ? " RC" : "").concat(" initializing..."));
-            if(beta){
+            RealmsLogMan.info("Realms v".concat(getVersion()).concat(status != ProgramStatus.STABLE ? " " + status.toString() : "").concat(" initializing..."));
+            if(status == ProgramStatus.UNKNOWN){
+                RealmsLogMan.severe("Realms has declared itself as an 'UNKNOWN STATUS' build. Use is not advised and could cause damage to your system!");
+            }
+            else if(status == ProgramStatus.ALPHA){
+                RealmsLogMan.warning("Realms has declared itself as a 'ALPHA' build. Production use is not advised!");
+            }
+            else if(status == ProgramStatus.BETA){
                 RealmsLogMan.warning("Realms has declared itself as a 'BETA' build. Production use is not advised!");
             }
-            else if(rc){
+            else if(status == ProgramStatus.RELEASE_CANADATE){
                 RealmsLogMan.info("Realms has declared itself as a 'Release Candidate' build. Expect some bugs.");
             }
             props = new RealmsProps();
@@ -103,7 +104,7 @@ public final class RealmsBase{
             catch(DataSourceException e){
                 throw new RealmsInitializeException(e);
             }
-            vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, (beta ? ProgramStatus.BETA : rc ? ProgramStatus.RELEASE_CANADATE : ProgramStatus.STABLE), props.getBooleanVal("check.unstable"));
+            vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, status, props.getBooleanVal("check.unstable"));
             Boolean islatest = vc.isLatest();
             if(islatest == null){
                 RealmsLogMan.warning("VersionCheckerError: " + vc.getErrorMessage());
@@ -112,7 +113,6 @@ public final class RealmsBase{
                 RealmsLogMan.warning(vc.getUpdateAvailibleMessage());
                 RealmsLogMan.warning("You can view update info @ http://wiki.visualillusionsent.net/Realms#ChangeLog");
             }
-            updater = new Updater(download_URL, jar_Path, name);
             initializeThreads();
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initialized."));
             loaded = true;
@@ -141,6 +141,7 @@ public final class RealmsBase{
      * Terminates the threadhandler and closes the log file
      */
     public final void terminate(){
+        loaded = false;
         TaskManager.removeTask($.mobdes);
         TaskManager.removeTask($.animaldes);
         TaskManager.removeTask($.healer);
@@ -153,6 +154,7 @@ public final class RealmsBase{
         }
         wands.clear();
         RealmsLogMan.killLogger();
+        $ = null;
     }
 
     public final static boolean isLoaded(){
@@ -234,16 +236,6 @@ public final class RealmsBase{
         }
     }
 
-    public final static String update(){
-        try{
-            $.updater.performUpdate();
-        }
-        catch(UpdateException ue){
-            return ue.getMessage();
-        }
-        return "Update Successful! Please verify that the libraries used by Realms are also up to date!";
-    }
-
     public final static boolean isLatest(){
         return $.vc.isLatest();
     }
@@ -267,11 +259,11 @@ public final class RealmsBase{
     }
 
     public final static boolean isBeta(){
-        return $.beta;
+        return $.status == ProgramStatus.BETA;
     }
 
     public final static boolean isReleaseCandidate(){
-        return $.rc;
+        return $.status == ProgramStatus.RELEASE_CANADATE;
     }
 
     private void generateVersion(){
@@ -280,8 +272,12 @@ public final class RealmsBase{
             Attributes mainAttribs = manifest.getMainAttributes();
             version = mainAttribs.getValue("Version");
             build = mainAttribs.getValue("Build");
-            beta = Boolean.parseBoolean(mainAttribs.getValue("Beta"));
-            rc = Boolean.parseBoolean(mainAttribs.getValue("ReleaseCanidate"));
+            try{
+                status = ProgramStatus.valueOf(mainAttribs.getValue("ProgramStatus"));
+            }
+            catch(IllegalArgumentException iaex){
+                status = ProgramStatus.UNKNOWN;
+            }
         }
         catch(Exception e){
             RealmsLogMan.warning(e.getMessage());

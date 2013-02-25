@@ -374,8 +374,13 @@ public final class Realms_CanaryListener extends PluginListener{
             }
         }
         catch(Exception ex){
-            RealmsLogMan.severe("An unexpected exception occured @ CONSOLE_COMMAND. Caused by: " + ex.getClass().getName());
-            RealmsLogMan.stacktrace(ex);
+            try{
+                RealmsLogMan.severe("An unexpected exception occured @ CONSOLE_COMMAND. Caused by: " + ex.getClass().getName());
+                RealmsLogMan.stacktrace(ex);
+            }
+            catch(Exception exc){
+                //FAIL...
+            }
         }
         return false;
     }

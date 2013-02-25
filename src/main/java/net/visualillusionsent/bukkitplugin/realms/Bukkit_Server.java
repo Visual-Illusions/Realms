@@ -48,20 +48,21 @@ import org.bukkit.inventory.meta.ItemMeta;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Bukkit_Server implements net.visualillusionsent.mcmod.interfaces.Mod_Server {
+public final class Bukkit_Server implements net.visualillusionsent.mcmod.interfaces.Mod_Server{
+
     private Server server;
 
-    public Bukkit_Server(Server server) {
+    public Bukkit_Server(Server server){
         this.server = server;
     }
 
     @Override
-    public final List<Mod_Entity> getAnimals() {
+    public final List<Mod_Entity> getAnimals(){
         List<World> worlds = new ArrayList<World>(server.getWorlds());
         List<Mod_Entity> animals = new ArrayList<Mod_Entity>();
-        for (World world : worlds) {
+        for(World world : worlds){
             List<Animals> bAni = new ArrayList<Animals>(world.getEntitiesByClass(Animals.class));
-            for (Animals anim : bAni) {
+            for(Animals anim : bAni){
                 animals.add(new Bukkit_Entity(anim));
             }
         }
@@ -69,12 +70,12 @@ public final class Bukkit_Server implements net.visualillusionsent.mcmod.interfa
     }
 
     @Override
-    public final List<Mod_Entity> getMobs() {
+    public final List<Mod_Entity> getMobs(){
         List<World> worlds = new ArrayList<World>(server.getWorlds());
         List<Mod_Entity> mobs = new ArrayList<Mod_Entity>();
-        for (World world : worlds) {
+        for(World world : worlds){
             List<Monster> bMobs = new ArrayList<Monster>(world.getEntitiesByClass(Monster.class));
-            for (Monster mon : bMobs) {
+            for(Monster mon : bMobs){
                 mobs.add(new Bukkit_Entity(mon));
             }
         }
@@ -82,88 +83,88 @@ public final class Bukkit_Server implements net.visualillusionsent.mcmod.interfa
     }
 
     @Override
-    public final List<Mod_User> getUsers() {
+    public final List<Mod_User> getUsers(){
         List<Mod_User> users = new ArrayList<Mod_User>();
-        for (Player player : server.getOnlinePlayers()) {
+        for(Player player : server.getOnlinePlayers()){
             users.add(new Bukkit_User(player));
         }
         return users;
     }
 
     @Override
-    public final Mod_User getUser(String name) {
+    public final Mod_User getUser(String name){
         Player player = server.getPlayer(name);
-        if (player != null) {
+        if(player != null){
             return new Bukkit_User(player);
         }
         return null;
     }
 
     @Override
-    public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world) {
+    public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world){
         Block block = server.getWorld(world).getBlockAt(x, y, z);
         block.setTypeId(type);
-        block.setData((byte) data);
+        block.setData((byte)data);
     }
 
     @Override
-    public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world) {
+    public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world){
         Block block = server.getWorld(world).getBlockAt(x, y, z);
         return new Bukkit_Block(block);
     }
 
     @Override
-    public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchants, String[] lore) {
-        ItemStack item = new ItemStack(type, amount, (short) damage);
-        if (enchants != null) {
-            for (Mod_ItemEnchantment ench : enchants) {
+    public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchants, String[] lore){
+        ItemStack item = new ItemStack(type, amount, (short)damage);
+        if(enchants != null){
+            for(Mod_ItemEnchantment ench : enchants){
                 item.addEnchantment(Enchantment.getById(ench.getId()), ench.getLevel());
             }
         }
         ItemMeta meta = server.getItemFactory().getItemMeta(Material.getMaterial(type));
         item.setItemMeta(meta);
-        if (lore != null) {
+        if(lore != null){
             item.getItemMeta().setLore(Arrays.asList(new String[0]));
         }
-        if (name != null) {
+        if(name != null){
             item.getItemMeta().setDisplayName(name);
         }
         return new Bukkit_Item(item);
     }
 
     @Override
-    public final Mod_ItemEnchantment constructEnchantment(int id, int level) {
+    public final Mod_ItemEnchantment constructEnchantment(int id, int level){
         return new Bukkit_ItemEnchantment(Enchantment.getById(id), level);
     }
 
     @Override
-    public final String getDefaultWorldName() {
+    public final String getDefaultWorldName(){
         return server.getServerName();
     }
 
     @Override
-    public final List<String> getAdminGroups() {
+    public final List<String> getAdminGroups(){
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public final String getDefaultGroupName() {
+    public final String getDefaultGroupName(){
         return "NO_GROUP";
     }
 
     @Override
-    public final int getHighestY(int x, int z, String world, int dimension) {
+    public final int getHighestY(int x, int z, String world, int dimension){
         return server.getWorld(world).getHighestBlockYAt(x, z);
     }
 
     @Override
-    public final boolean isCanary() {
+    public final boolean isCanary(){
         return false;
     }
 
     @Override
-    public final boolean isBukkit() {
+    public final boolean isBukkit(){
         return true;
     }
 }
