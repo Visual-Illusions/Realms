@@ -5,9 +5,7 @@
 #### Realms originally developed by Impact and durron597 (versions before v3) ####
 
 ## About ##
-See the [Realms Usage File](https://github.com/Visual-Illusions/Realms/blob/v7/src/resources/usage.txt "realms_usage") for more information
-
-[CanaryMod Forums Realms Topic](http://forums.canarymod.net/?topic=1142 "realms_topic")
+See the [Realms Wiki Page](http://wiki.visualillusionsent.net/Realms "wiki_realms") for more information
 
 ## Bug Reporting ##
 Please use the [GitHub issue tracker](https://github.com/Visual-Illusions/Realms/issues "issues") associated with this repository.<br>
@@ -32,7 +30,7 @@ Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.0.jar, and 
 You may also need a reference to minecraft_servero.jar from CanaryMod for compliation.<br>
 Export with the provide MANIFEST.MF file!<br>
 
-You can find VIUtils by visiting [ci.visualillusionsent.net](http://ci.visualillusionsent.net/job/VIUtils/lastBuild/net.visualillusionsent$viutils/ "jenkins")<br>
+You can find VIUtils from the [Visual Illusions Repository](http://repo.visualillusionsent.net/net/visualillusionsent/viutils/1.0.0/viutils-1.0.0.jar "viutils-download")<br>
 JDOM2 can be found by visiting [jdom.org](http://www.jdom.org/downloads/index.html "jdom")<br>
 SQLite3-JDBC can be found by visiting [xerial.org](http://www.xerial.org/maven/repository/artifact/org/xerial/sqlite-jdbc/3.7.2/ "sqlite-jdbc")<br>
 Bukkit API Jars can be found at [dl.bukkit.org](http://dl.bukkit.org/downloads/bukkit/ "bukkit-api") (Requires bukkit-1.4.5-R1.0.jar or greater [untested with anything below 1.4.5])<br>
