@@ -93,17 +93,12 @@ public abstract class SQL_Source implements DataSource{
             " `polygon` TEXT NOT NULL," + //
             " `permissions` TEXT NOT NULL," + //
             " PRIMARY KEY (`name`))");
-            RealmsLogMan.log(RLevel.GENERAL, "Executing Zone table statement...");
             ps.execute();
-            RealmsLogMan.log(RLevel.GENERAL, "Closing statement...");
             ps.close();
             List<Object[]> delayLoad = new ArrayList<Object[]>();
             List<String> knownZones = new ArrayList<String>();
-            RealmsLogMan.log(RLevel.GENERAL, "Preparing to read table...");
             ps = conn.prepareStatement("SELECT * FROM `" + zone_table + "`");
-            RealmsLogMan.log(RLevel.GENERAL, "Executing statement to read table...");
             rs = ps.executeQuery();
-            RealmsLogMan.log(RLevel.GENERAL, "Reading Zones...");
             while(rs.next()){
                 String name = rs.getString("name");
                 knownZones.add(name);
@@ -153,7 +148,6 @@ public abstract class SQL_Source implements DataSource{
                         continue;
                     }
                 }
-                RealmsLogMan.log(RLevel.GENERAL, "Creating Zone: " + name);
                 try{
                     Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
                     adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
@@ -167,23 +161,23 @@ public abstract class SQL_Source implements DataSource{
                                 Permission permTemp = new Permission(perm.split(","));
                                 temp.setPermission(permTemp);
                             }
-                            catch(PermissionConstructException e){
+                            catch(PermissionConstructException pcex){
                                 RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
+                                RealmsLogMan.stacktrace(pcex);
                             }
                         }
                     }
                 }
-                catch(ZoneConstructException e){
-                    RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage());
-                    RealmsLogMan.stacktrace(e);
+                catch(ZoneConstructException zcex){
+                    RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + zcex.getMessage());
+                    RealmsLogMan.stacktrace(zcex);
                 }
-                catch(PolygonConstructException e){
+                catch(PolygonConstructException pcex){
                     RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
-                    //RealmsLogMan.stacktrace(e);
+                    RealmsLogMan.stacktrace(pcex);
                 }
                 RealmsLogMan.log(RLevel.GENERAL, "Zone created.");
             }
-            RealmsLogMan.log(RLevel.GENERAL, "Checking delayed load Zones...");
             Iterator<Object[]> objIter = delayLoad.iterator();
             while(!delayLoad.isEmpty()){
                 while(objIter.hasNext()){
@@ -223,11 +217,13 @@ public abstract class SQL_Source implements DataSource{
                             objIter.remove();
                         }
                     }
-                    catch(ZoneConstructException e){
+                    catch(ZoneConstructException zcex){
                         RealmsLogMan.warning("Failed to construct Zone:".concat((String)obj[0]));
+                        RealmsLogMan.stacktrace(zcex);
                     }
-                    catch(PolygonConstructException e){
+                    catch(PolygonConstructException pcex){
                         RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat((String)obj[0]));
+                        RealmsLogMan.stacktrace(pcex);
                     }
                 }
             }
@@ -248,13 +244,12 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to load Zones...", sqlex);
-            }
-            else{
-                return true;
+                RealmsLogMan.severe("Failed to load Zones...");
+                RealmsLogMan.stacktrace(sqlex);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public boolean reloadZone(Zone zone){
@@ -313,18 +308,21 @@ public abstract class SQL_Source implements DataSource{
                             Permission permTemp = new Permission(perm.split(","));
                             temp.setPermission(permTemp);
                         }
-                        catch(PermissionConstructException e){
+                        catch(PermissionConstructException pcex){
                             RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
+                            RealmsLogMan.stacktrace(pcex);
                         }
                     }
                 }
                 RealmsLogMan.info("Zone ".concat(zone.getName()).concat(" reloaded."));
             }
-            catch(ZoneConstructException e){
-                RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage(), e);
+            catch(ZoneConstructException zcex){
+                RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + zcex.getMessage());
+                RealmsLogMan.stacktrace(zcex);
             }
-            catch(PolygonConstructException e){
+            catch(PolygonConstructException pcex){
                 RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
+                RealmsLogMan.stacktrace(pcex);
             }
         }
         catch(SQLException sqle){
@@ -342,7 +340,8 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to reload Zone:".concat(zone.getName()), sqlex);
+                RealmsLogMan.severe("Failed to reload Zone:".concat(zone.getName()));
+                RealmsLogMan.stacktrace(sqlex);
             }
             else{
                 return true;
@@ -507,7 +506,8 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to save Zone...", sqlex);
+                RealmsLogMan.severe("Failed to save Zone...");
+                RealmsLogMan.stacktrace(sqlex);
             }
             else{
                 return true;
@@ -536,7 +536,8 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to delete Zone...", sqlex);
+                RealmsLogMan.severe("Failed to delete Zone...");
+                RealmsLogMan.stacktrace(sqlex);
             }
             else{
                 return true;
@@ -626,13 +627,12 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to load inventories...", sqlex);
-            }
-            else{
-                return true;
+                RealmsLogMan.severe("Failed to load inventories...");
+                RealmsLogMan.stacktrace(sqlex);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @SuppressWarnings("resource")
@@ -648,7 +648,6 @@ public abstract class SQL_Source implements DataSource{
             rs = ps.executeQuery();
             boolean found = rs.next();
             if(found){
-                RealmsLogMan.log(RLevel.GENERAL, "Inventory exists in database. Updating...");
                 ps = conn.prepareStatement(//
                 "UPDATE " + inv_table + " SET" + //
                 " item0=?," + // 1
@@ -699,7 +698,6 @@ public abstract class SQL_Source implements DataSource{
                 ps.execute();
             }
             else{
-                RealmsLogMan.log(RLevel.GENERAL, "Inventory does not exists in database. Inserting...");
                 ps = conn.prepareStatement("INSERT INTO `" + inv_table + "`" + //
                 " (name," + // 1
                 "item0," + // 2
@@ -766,13 +764,12 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to save Inventory...", sqlex);
-            }
-            else{
-                return true;
+                RealmsLogMan.severe("Failed to save Inventory...");
+                RealmsLogMan.stacktrace(sqlex);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -795,13 +792,12 @@ public abstract class SQL_Source implements DataSource{
             }
             catch(SQLException sqle){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to delete inventory...", sqlex);
-            }
-            else{
-                return true;
+                RealmsLogMan.severe("Failed to delete inventory...");
+                RealmsLogMan.stacktrace(sqlex);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     private final String parseZoneFlagElement(String text){

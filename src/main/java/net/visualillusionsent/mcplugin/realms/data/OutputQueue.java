@@ -33,50 +33,48 @@ import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
  * 
  * @author Jason (darkdiplomat)
  */
-final class OutputQueue {
+final class OutputQueue{
+
     private LinkedList<DataSourceActionContainer> queue;
 
-    public OutputQueue() {
+    public OutputQueue(){
         queue = new LinkedList<DataSourceActionContainer>();
     }
 
-    public final void add(DataSourceActionContainer dsac) {
-        synchronized (queue) {
+    public final void add(DataSourceActionContainer dsac){
+        synchronized(queue){
             queue.add(dsac);
             queue.notify();
         }
     }
 
-    public final DataSourceActionContainer next() {
+    public final DataSourceActionContainer next(){
         DataSourceActionContainer dsac = null;
-
-        if (queue.isEmpty()) {
-            synchronized (queue) {
-                try {
+        if(queue.isEmpty()){
+            synchronized(queue){
+                try{
                     queue.wait();
                 }
-                catch (InterruptedException e) {
+                catch(InterruptedException iex){
                     // Interrupted
                     RealmsLogMan.log(RLevel.GENERAL, "InterruptedException occured in OutputQueue");
                     return null;
                 }
             }
         }
-
-        try {
+        try{
             dsac = queue.getFirst();
             queue.removeFirst();
         }
-        catch (NoSuchElementException nsee) {
+        catch(NoSuchElementException nseex){
             throw new InternalError("Race hazard in LinkedList object.");
         }
         return dsac;
     }
 
-    public final void clear() {
-        synchronized (queue) {
+    public final void clear(){
+        synchronized(queue){
             queue.clear();
         }
     }
-
 }

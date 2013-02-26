@@ -102,9 +102,7 @@ final class XML_Source implements DataSource{
                 writer = null;
                 if(ex != null){
                     RealmsLogMan.severe("Failed to create new Zones file...", ex);
-                }
-                else{
-                    return true;
+                    return false;
                 }
             }
         }
@@ -177,17 +175,20 @@ final class XML_Source implements DataSource{
                                     Permission permTemp = new Permission(perm.split(","));
                                     temp.setPermission(permTemp);
                                 }
-                                catch(PermissionConstructException e){
+                                catch(PermissionConstructException pcex){
                                     RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
+                                    RealmsLogMan.stacktrace(pcex);
                                 }
                             }
                         }
                     }
-                    catch(ZoneConstructException e){
-                        RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage(), e);
+                    catch(ZoneConstructException zcex){
+                        RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + zcex.getMessage());
+                        RealmsLogMan.stacktrace(zcex);
                     }
-                    catch(PolygonConstructException e){
+                    catch(PolygonConstructException pcex){
                         RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
+                        RealmsLogMan.stacktrace(pcex);
                     }
                 }
                 Iterator<Object[]> objIter = delayLoad.iterator();
@@ -227,11 +228,13 @@ final class XML_Source implements DataSource{
                                 objIter.remove();
                             }
                         }
-                        catch(ZoneConstructException e){
+                        catch(ZoneConstructException zcex){
                             RealmsLogMan.warning("Failed to construct Zone:".concat((String)obj[0]));
+                            RealmsLogMan.stacktrace(zcex);
                         }
-                        catch(PolygonConstructException e){
+                        catch(PolygonConstructException pcex){
                             RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat((String)obj[0]));
+                            RealmsLogMan.stacktrace(pcex);
                         }
                     }
                 }
@@ -310,22 +313,26 @@ final class XML_Source implements DataSource{
                             }
                         }
                     }
-                    catch(ZoneConstructException e){
-                        RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + e.getMessage(), e);
+                    catch(ZoneConstructException zcex){
+                        RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + zcex.getMessage());
+                        RealmsLogMan.stacktrace(zcex);
                     }
-                    catch(PolygonConstructException e){
+                    catch(PolygonConstructException pcex){
                         RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
+                        RealmsLogMan.stacktrace(pcex);
                     }
                 }
             }
             RealmsLogMan.info("Zone ".concat(reloading.getName()).concat(" reloaded."));
             return true;
         }
-        catch(JDOMException jdome){
-            RealmsLogMan.severe("Failed to read Zones file", jdome);
+        catch(JDOMException jdomex){
+            RealmsLogMan.severe("JDOM Exception while loading Zones file...");
+            RealmsLogMan.stacktrace(jdomex);
         }
-        catch(IOException ioe){
-            RealmsLogMan.severe("Failed to read Zones file", ioe);
+        catch(IOException ioex){
+            RealmsLogMan.severe("Input/Output Exception while trying to read Zones file...");
+            RealmsLogMan.stacktrace(ioex);
         }
         return false;
     }
@@ -433,19 +440,21 @@ final class XML_Source implements DataSource{
                     catch(IOException e){}
                     writer = null;
                     if(ex != null){
-                        RealmsLogMan.severe("Failed to write to Zones file...", ex);
-                    }
-                    else{
-                        return true;
+                        RealmsLogMan.severe("Input/Output Exception while trying to write to Zones file...");
+                        RealmsLogMan.stacktrace(ex);
+                        return false;
                     }
                 }
                 RealmsLogMan.info("Zone: ".concat(zone.getName()) + " saved!");
+                return true;
             }
-            catch(JDOMException e){
-                RealmsLogMan.severe("Failed to write to Zones file...", ex);
+            catch(JDOMException jdomex){
+                RealmsLogMan.severe("JDOM Exception while trying to save Zone: " + zone.getName());
+                RealmsLogMan.stacktrace(jdomex);
             }
-            catch(IOException e){
-                RealmsLogMan.severe("Failed to write to Zones file...", ex);
+            catch(IOException ioex){
+                RealmsLogMan.severe("Input/Output Exception while trying to save Zone: " + zone.getName());
+                RealmsLogMan.stacktrace(ioex);
             }
         }
         return false;
@@ -473,11 +482,11 @@ final class XML_Source implements DataSource{
                     outputter.output(root, writer);
                 }
             }
-            catch(JDOMException e){
-                ex = e;
+            catch(JDOMException jdomex){
+                ex = jdomex;
             }
-            catch(IOException e){
-                ex = e;
+            catch(IOException ioex){
+                ex = ioex;
             }
             finally{
                 try{
@@ -488,14 +497,13 @@ final class XML_Source implements DataSource{
                 catch(IOException e){}
                 writer = null;
                 if(ex != null){
-                    RealmsLogMan.severe("Failed to write to Zones file...", ex);
-                }
-                else{
-                    return true;
+                    RealmsLogMan.severe("Failed to write to Zones file...");
+                    RealmsLogMan.stacktrace(ex);
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -525,10 +533,9 @@ final class XML_Source implements DataSource{
                 catch(IOException e){}
                 writer = null;
                 if(ex != null){
-                    RealmsLogMan.severe("Failed to create new Inventories file...", ex);
-                }
-                else{
-                    return true;
+                    RealmsLogMan.severe("Failed to create new Inventories file...");
+                    RealmsLogMan.stacktrace(ex);
+                    return false;
                 }
             }
         }
@@ -548,11 +555,13 @@ final class XML_Source implements DataSource{
                 }
                 return true;
             }
-            catch(JDOMException jdome){
-                RealmsLogMan.severe("Failed to read Inventories file", jdome);
+            catch(JDOMException jdomex){
+                RealmsLogMan.severe("JDOM Exception while trying to read Inventories file");
+                RealmsLogMan.stacktrace(jdomex);
             }
-            catch(IOException ioe){
-                RealmsLogMan.severe("Failed to read Inventories file", ioe);
+            catch(IOException ioex){
+                RealmsLogMan.severe("Input/Output Exception while trying to read Inventories file");
+                RealmsLogMan.stacktrace(ioex);
             }
         }
         return false;
@@ -603,19 +612,21 @@ final class XML_Source implements DataSource{
                     catch(IOException e){}
                     writer = null;
                     if(ex != null){
-                        RealmsLogMan.severe("Failed to write to Zones file...", ex);
-                    }
-                    else{
-                        return true;
+                        RealmsLogMan.severe("Failed to write to Zones file...");
+                        RealmsLogMan.stacktrace(ex);
+                        return false;
                     }
                 }
                 RealmsLogMan.info("Inventory for User: ".concat(user.getName()) + " saved!");
+                return true;
             }
-            catch(JDOMException e){
-                RealmsLogMan.severe("Failed to write to inventories file...", ex);
+            catch(JDOMException jdomex){
+                RealmsLogMan.severe("JDOM Exception while trying to write to inventories file...");
+                RealmsLogMan.stacktrace(jdomex);
             }
-            catch(IOException e){
-                RealmsLogMan.severe("Failed to write to inventories file...", ex);
+            catch(IOException ioex){
+                RealmsLogMan.severe("Failed to write to inventories file...");
+                RealmsLogMan.stacktrace(ioex);
             }
         }
         return false;
@@ -658,14 +669,13 @@ final class XML_Source implements DataSource{
                 catch(IOException e){}
                 writer = null;
                 if(ex != null){
-                    RealmsLogMan.severe("Failed to write to inventories file...", ex);
-                }
-                else{
-                    return true;
+                    RealmsLogMan.severe("Failed to write to inventories file...");
+                    RealmsLogMan.stacktrace(ex);
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     private final String genParent(String name, String world, String dimension){

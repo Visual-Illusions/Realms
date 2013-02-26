@@ -116,11 +116,11 @@ public class RealmsProps{
             props_File.getBoolean("check.unstable");
             RealmsLogMan.info("Properties tests passed!");
         }
-        catch(UtilityException ue){
-            RealmsLogMan.severe("Failed to load Properties..." + ue.getMessage());
+        catch(UtilityException uex){
+            RealmsLogMan.severe("Failed to load Properties..." + uex.getMessage());
             return false;
         }
-        catch(IllegalArgumentException iae){
+        catch(IllegalArgumentException iaex){
             RealmsLogMan.severe("Failed to understand datasource type...");
             return false;
         }
@@ -186,15 +186,19 @@ public class RealmsProps{
         try{
             return props_File.getString(key);
         }
-        catch(UtilityException e){}
-        return null;
+        catch(UtilityException e){
+            RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
+        }
+        return "*MISSING VALUE*";
     }
 
     public final int getIntVal(String key){
         try{
             return props_File.getInt(key);
         }
-        catch(UtilityException e){}
+        catch(UtilityException e){
+            RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
+        }
         return (int)Double.NaN; //will probably blow up
     }
 
@@ -202,16 +206,20 @@ public class RealmsProps{
         try{
             return props_File.getInt(key);
         }
-        catch(UtilityException e){}
+        catch(UtilityException e){
+            RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
+        }
         return (long)Double.NaN; //will probably blow up
     }
 
-    public final boolean getBooleanVal(String key){
+    public final Boolean getBooleanVal(String key){
         try{
             return props_File.getBoolean(key);
         }
-        catch(UtilityException e){}
-        return (Boolean)null;
+        catch(UtilityException e){
+            RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
+        }
+        return null;
     }
 
     public final boolean isCommandAllowed(String[] args){

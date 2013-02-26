@@ -33,88 +33,93 @@ import net.visualillusionsent.mcplugin.realms.RealmsBase;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class RealmsLogMan {
-    private static Logger logger;
+public final class RealmsLogMan{
 
-    static {
+    private static Logger logger;
+    static{
         logger = new RLogger();
         logger.setParent(Logger.getLogger("Minecraft"));
         logger.setLevel(Level.ALL);
     }
 
-    private static class RLogger extends Logger {
-        RLogger() {
+    private static class RLogger extends Logger{
+
+        RLogger(){
             super("Realms", null);
         }
 
         @Override
-        public void log(LogRecord logRecord) {
+        public void log(LogRecord logRecord){
             Level lvl = logRecord.getLevel();
             String message = logRecord.getMessage();
-
-            if (lvl instanceof RLevel) {
-                if (!RealmsBase.getProperties().getBooleanVal("debug.all")) {
-                    if (!RealmsBase.getProperties().getBooleanVal(lvl.getName().replace('-', '.').replace("REALMS.", "").toLowerCase())) {
+            if(lvl instanceof RLevel){
+                Boolean all = RealmsBase.getProperties().getBooleanVal("debug.all");
+                if(all == null || !all){
+                    Boolean prop = RealmsBase.getProperties().getBooleanVal(lvl.getName().replace('-', '.').replace("REALMS.", "").toLowerCase());
+                    if(prop == null || !prop){
                         return;
                     }
                 }
             }
-
-            if (RealmsBase.getServer().isCanary()) {
-                if (lvl instanceof RLevel) {
+            if(RealmsBase.getServer().isCanary()){
+                if(lvl instanceof RLevel){
                     logRecord.setMessage(" [" + lvl.getName() + "] [Realms] " + message);
                 }
-                else {
+                else{
                     logRecord.setMessage(" [Realms] ".concat(message));
                 }
             }
-            else {
+            else{
                 logRecord.setMessage("[Realms] ".concat(message));
             }
-
             super.log(logRecord);
         }
     }
 
-    private RealmsLogMan() {}
+    private RealmsLogMan(){}
 
-    public static void info(String msg) {
+    public static void info(String msg){
         logger.info(msg);
     }
 
-    public static void info(String msg, Throwable thrown) {
+    public static void info(String msg, Throwable thrown){
         logger.log(Level.INFO, msg, thrown);
     }
 
-    public static void warning(String msg) {
+    public static void warning(String msg){
         logger.warning(msg);
     }
 
-    public static void warning(String msg, Throwable thrown) {
+    public static void warning(String msg, Throwable thrown){
         logger.log(Level.WARNING, msg, thrown);
     }
 
-    public static void severe(String msg) {
+    public static void severe(String msg){
         logger.severe(msg);
     }
 
-    public static void severe(String msg, Throwable thrown) {
+    public static void severe(String msg, Throwable thrown){
         logger.log(Level.SEVERE, msg, thrown);
     }
 
-    public static void stacktrace(Throwable thrown) {
-        logger.log(RLevel.STACKTRACE, "Stacktrace: ", thrown);
+    public static void stacktrace(Throwable thrown){
+        if(RealmsBase.getProperties().getBooleanVal("debug.stacktrace") || RealmsBase.getProperties().getBooleanVal("debug.all")){
+            logger.log(RLevel.STACKTRACE, "Stacktrace: ", thrown);
+        }
+        else{
+            logger.warning("*** Enabled \"debug.stacktrace\" in the Realms.ini to view stacktraces ***");
+        }
     }
 
-    public static void log(RLevel lvl, String msg) {
+    public static void log(RLevel lvl, String msg){
         logger.log(lvl, msg);
     }
 
-    public static void log(RLevel lvl, String msg, Throwable thrown) {
+    public static void log(RLevel lvl, String msg, Throwable thrown){
         logger.log(lvl, msg, thrown);
     }
 
-    public static void killLogger() {
+    public static void killLogger(){
         logger.setLevel(Level.OFF);
         logger = null;
     }

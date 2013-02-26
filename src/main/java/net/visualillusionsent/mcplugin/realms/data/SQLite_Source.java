@@ -35,31 +35,33 @@ import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class SQLite_Source extends SQL_Source {
+public final class SQLite_Source extends SQL_Source{
+
     private final String db_Path;
 
-    public SQLite_Source() throws DataSourceException {
+    public SQLite_Source() throws DataSourceException{
         db_Path = RealmsBase.getProperties().getStringVal("sql.database.url");
-        try {
+        try{
             conn = DriverManager.getConnection("jdbc:sqlite:".concat(db_Path));
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             throw new DataSourceException(sqle);
         }
     }
 
     @Override
-    public final DataSourceType getType() {
+    public final DataSourceType getType(){
         return DataSourceType.SQLITE;
     }
 
     @Override
-    public final boolean load() {
+    public final boolean load(){
         File test = new File(db_Path);
         SQLException sqlex = null;
         PreparedStatement ps = null;
-        try {
-            if (!test.exists()) {
+        boolean toret = false;
+        try{
+            if(!test.exists()){
                 RealmsLogMan.info("Realms DataBase not found. Creating...");
                 ps = conn.prepareStatement("CREATE TABLE `" + zone_table + "` " + //
                 "(`name` VARCHAR(30) NOT NULL," + //
@@ -92,33 +94,30 @@ public final class SQLite_Source extends SQL_Source {
                 " PRIMARY KEY (`name`))");
                 ps.execute();
             }
-            return super.load();
+            toret = super.load();
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             sqlex = sqle;
         }
-        finally {
-            try {
-                if (ps != null && !ps.isClosed()) {
+        finally{
+            try{
+                if(ps != null && !ps.isClosed()){
                     ps.close();
                 }
             }
-            catch (SQLException sqle) {}
-
-            if (sqlex != null) {
+            catch(SQLException sqle){}
+            if(sqlex != null){
                 RealmsLogMan.severe("Failed to load Zones...", sqlex);
-            }
-            else {
-                return true;
+                toret = false;
             }
         }
-        return false;
+        return toret;
     }
 
-    final void closeDatabase() {
-        try {
+    final void closeDatabase(){
+        try{
             conn.close();
         }
-        catch (SQLException e) {}
+        catch(SQLException e){}
     }
 }

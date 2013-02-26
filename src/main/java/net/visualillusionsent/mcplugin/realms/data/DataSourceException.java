@@ -29,20 +29,20 @@ import java.sql.SQLException;
  * 
  * @author Jason (darkdiplomat)
  */
-public class DataSourceException extends Exception {
+public class DataSourceException extends Exception{
 
     private static final long serialVersionUID = 101800012013L;
 
-    public DataSourceException(String msg) {
+    public DataSourceException(String msg){
         super(msg);
     }
 
-    public DataSourceException(SQLException e) {
-        super(e.getMessage());
-        this.setStackTrace(e.getStackTrace());
+    public DataSourceException(SQLException sqlex){
+        super(sqlex.getMessage());
+        this.setStackTrace(sqlex.getStackTrace());
     }
 
-    public DataSourceException(ClassNotFoundException cnfe, DataSourceType type) {
+    public DataSourceException(ClassNotFoundException cnfe, DataSourceType type){
         super("Driver not found for DataSourceType: ".concat(type.name()));
     }
 }

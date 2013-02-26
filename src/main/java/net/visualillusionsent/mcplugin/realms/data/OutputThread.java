@@ -64,7 +64,7 @@ final class OutputThread extends Thread{
                     }
                 }
             }
-            catch(Exception e){}
+            catch(Exception ex){}
         }
     }
 

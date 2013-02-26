@@ -27,20 +27,15 @@ package net.visualillusionsent.mcplugin.realms.zones;
  * 
  * @author Jason (darkdiplomat)
  */
-public class ZoneConstructException extends Exception {
+public class ZoneConstructException extends Exception{
 
     private static final long serialVersionUID = 642684322566161215L;
 
-    public ZoneConstructException(String msg) {
+    public ZoneConstructException(String msg){
         super(msg);
     }
 
-    public ZoneConstructException(Exception e) {
-        super(e);
-    }
-
-    public ZoneConstructException(String msg, Exception e) {
+    public ZoneConstructException(String msg, Exception e){
         super(msg, e);
     }
-
 }

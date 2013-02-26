@@ -36,108 +36,115 @@ import net.visualillusionsent.mcplugin.realms.zones.Zone;
  * 
  * @author Jason (darkdiplomat)
  */
-public class MySQL_Source extends SQL_Source {
+public class MySQL_Source extends SQL_Source{
 
-    public MySQL_Source() throws DataSourceException {
+    public MySQL_Source() throws DataSourceException{
         testConnection();
     }
 
     @Override
-    public final DataSourceType getType() {
+    public final DataSourceType getType(){
         return DataSourceType.MYSQL;
     }
 
     @Override
-    public final boolean load() {
-        try {
+    public final boolean load(){
+        try{
             testConnection();
             return super.load();
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to load Zones...", dse);
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("DataSource Exception while trying to load zones");
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
     @Override
-    public final boolean reloadZone(Zone zone) {
-        try {
+    public final boolean reloadZone(Zone zone){
+        try{
             testConnection();
             return super.reloadZone(zone);
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to reload Zone:".concat(zone.getName()));
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("DataSource Exception while trying to reload Zone:".concat(zone.getName()));
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
     @Override
-    public boolean saveZone(Zone zone) {
-        try {
+    public boolean saveZone(Zone zone){
+        try{
             testConnection();
             return super.saveZone(zone);
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to save Zone...", dse);
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("DataSource Exception while trying to save Zone: " + zone.getName());
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
     @Override
-    public boolean deleteZone(Zone zone) {
-        try {
+    public boolean deleteZone(Zone zone){
+        try{
             testConnection();
             return super.deleteZone(zone);
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to delete Zone...", dse);
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("Datasource exception while deleting Zone: " + zone.getName());
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
     @Override
-    public boolean loadInventories() {
-        try {
+    public boolean loadInventories(){
+        try{
             testConnection();
             return super.loadInventories();
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to load inventories...", dse);
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("DataSource Exception while trying to load inventories...");
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
     @Override
-    public boolean saveInventory(Mod_User user, Mod_Item[] items) {
-        try {
+    public boolean saveInventory(Mod_User user, Mod_Item[] items){
+        try{
             testConnection();
             return super.saveInventory(user, items);
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to save inventory for User: " + user.getName() + "...", dse);
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("DataSource Exception while trying to save inventory for User: " + user.getName() + "...");
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
     @Override
-    public boolean deleteInventory(Mod_User user) {
-        try {
+    public boolean deleteInventory(Mod_User user){
+        try{
             testConnection();
             return super.deleteInventory(user);
         }
-        catch (DataSourceException dse) {
-            RealmsLogMan.severe("Failed to delete inventory for User: " + user.getName() + "...", dse);
+        catch(DataSourceException dsex){
+            RealmsLogMan.severe("DataSource Exception while trying to delete inventory for User: " + user.getName() + "...");
+            RealmsLogMan.stacktrace(dsex);
         }
         return false;
     }
 
-    private final void testConnection() throws DataSourceException {
-        try {
-            if (conn == null || conn.isClosed() || !conn.isValid(2)) {
+    private final void testConnection() throws DataSourceException{
+        try{
+            if(conn == null || conn.isClosed() || !conn.isValid(2)){
                 conn = DriverManager.getConnection("jdbc:mysql://" + RealmsBase.getProperties().getStringVal("sql.database.url"), RealmsBase.getProperties().getStringVal("sql.user"), RealmsBase.getProperties().getStringVal("sql.password"));
             }
         }
-        catch (SQLException sqle) {
+        catch(SQLException sqle){
             throw new DataSourceException(sqle);
         }
     }

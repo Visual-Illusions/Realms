@@ -158,8 +158,8 @@ public final class Zone{
             }
             ZoneLists.addZone(this);
         }
-        catch(Exception e){
-            throw new ZoneConstructException(e);
+        catch(Exception ex){
+            throw new ZoneConstructException("Args invalid", ex);
         }
     }
 
