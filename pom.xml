@@ -89,6 +89,11 @@
     <artifactId>sqlite-jdbc</artifactId>
     <version>3.7.2</version>
    </dependency>
+   <dependency>
+    <groupId>postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>9.1-901-1.jdbc4</version>
+   </dependency>
   </dependencies>
   <build>
     <resources>
@@ -152,7 +157,7 @@
                 <ProgramStatus>BETA</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
-                <Class-Path>../lib/viutils-1.0.0.jar ../lib/jdom2.jar ../lib/sqlite.jar</Class-Path>
+                <Class-Path>../lib/viutils-1.0.0.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/derby.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>

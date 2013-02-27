@@ -3,19 +3,19 @@
  *  
  * This file is part of Realms.
  *
- * Realms is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * 
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
 package net.visualillusionsent.mcplugin.realms;
 
@@ -26,12 +26,12 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import net.visualillusionsent.lang.DataSourceType;
+import net.visualillusionsent.lang.InitializationError;
 import net.visualillusionsent.mcmod.interfaces.Mod_Item;
 import net.visualillusionsent.mcmod.interfaces.Mod_Server;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
-import net.visualillusionsent.mcplugin.realms.data.DataSourceException;
 import net.visualillusionsent.mcplugin.realms.data.DataSourceHandler;
-import net.visualillusionsent.mcplugin.realms.data.DataSourceType;
 import net.visualillusionsent.mcplugin.realms.data.OutputAction;
 import net.visualillusionsent.mcplugin.realms.data.RealmsProps;
 import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
@@ -51,8 +51,8 @@ import net.visualillusionsent.utils.VersionChecker;
 /**
  * This file is part of Realms.
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  * 
  * @author Jason (darkdiplomat)
  */
@@ -96,14 +96,9 @@ public final class RealmsBase{
             }
             props = new RealmsProps();
             if(!props.initialize()){
-                throw new RealmsInitializeException();
+                throw new InitializationError("Properties failed to initialize...");
             }
-            try{
-                source_handler = new DataSourceHandler(DataSourceType.valueOf(props.getStringVal("datasource").toUpperCase()));
-            }
-            catch(DataSourceException e){
-                throw new RealmsInitializeException(e);
-            }
+            source_handler = new DataSourceHandler(DataSourceType.valueOf(props.getStringVal("datasource").toUpperCase()));
             vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, status, props.getBooleanVal("check.unstable"));
             Boolean islatest = vc.isLatest();
             if(islatest == null){

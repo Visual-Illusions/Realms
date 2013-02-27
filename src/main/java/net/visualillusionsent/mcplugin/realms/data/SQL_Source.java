@@ -3,19 +3,19 @@
  *  
  * This file is part of Realms.
  *
- * Realms is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * 
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
 package net.visualillusionsent.mcplugin.realms.data;
 
@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import net.visualillusionsent.lang.DataSourceError;
 import net.visualillusionsent.mcmod.interfaces.Mod_Item;
 import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
@@ -46,8 +47,8 @@ import net.visualillusionsent.mcplugin.realms.zones.polygon.PolygonConstructExce
 /**
  * This file is part of Realms.
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  * 
  * @author Jason (darkdiplomat)
  */
@@ -57,44 +58,12 @@ public abstract class SQL_Source implements DataSource{
     protected String zone_table = RealmsBase.getProperties().getStringVal("sql.zones.table");
     protected String inv_table = RealmsBase.getProperties().getStringVal("sql.inventories.table");
 
-    public boolean load(){
+    public void load(){
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         int load = 0;
         try{
-            RealmsLogMan.info("Testing Zone table and creating if needed...");
-            ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `" + zone_table + "` " + //
-            "(`name` VARCHAR(30) NOT NULL," + //
-            " `world` TEXT NOT NULL," + //
-            " `dimension` int(1) NOT NULL," + //
-            " `parent` TEXT NOT NULL," + //
-            " `greeting` TEXT NOT NULL," + //
-            " `farewell` TEXT NOT NULL," + //
-            " `adventure` VARCHAR(10) NOT NULL," + //
-            " `animals` VARCHAR(10) NOT NULL," + //
-            " `burn` VARCHAR(10) NOT NULL," + //
-            " `creative` VARCHAR(10) NOT NULL," + //
-            " `dispensers` VARCHAR(10) NOT NULL," + //
-            " `enderman` VARCHAR(10) NOT NULL," + //
-            " `explode` VARCHAR(10) NOT NULL," + //
-            " `fall` VARCHAR(10) NOT NULL," + //
-            " `fire` VARCHAR(10) NOT NULL," + //
-            " `flow` VARCHAR(10) NOT NULL," + //
-            " `healing` VARCHAR(10) NOT NULL," + //
-            " `physics` VARCHAR(10) NOT NULL," + //
-            " `pistons` VARCHAR(10) NOT NULL," + //
-            " `potion` VARCHAR(10) NOT NULL," + //
-            " `pvp` VARCHAR(10) NOT NULL," + //
-            " `restricted` VARCHAR(10) NOT NULL," + //
-            " `sanctuary` VARCHAR(10) NOT NULL," + //
-            " `starve` VARCHAR(10) NOT NULL," + //
-            " `suffocate` VARCHAR(10) NOT NULL," + //
-            " `polygon` TEXT NOT NULL," + //
-            " `permissions` TEXT NOT NULL," + //
-            " PRIMARY KEY (`name`))");
-            ps.execute();
-            ps.close();
             List<Object[]> delayLoad = new ArrayList<Object[]>();
             List<String> knownZones = new ArrayList<String>();
             ps = conn.prepareStatement("SELECT * FROM `" + zone_table + "`");
@@ -176,7 +145,6 @@ public abstract class SQL_Source implements DataSource{
                     RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
                     RealmsLogMan.stacktrace(pcex);
                 }
-                RealmsLogMan.log(RLevel.GENERAL, "Zone created.");
             }
             Iterator<Object[]> objIter = delayLoad.iterator();
             while(!delayLoad.isEmpty()){
@@ -244,279 +212,280 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to load Zones...");
-                RealmsLogMan.stacktrace(sqlex);
-                return false;
+                throw new DataSourceError(sqlex);
             }
         }
-        return true;
     }
 
-    public boolean reloadZone(Zone zone){
-        SQLException sqlex = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try{
-            ps = conn.prepareStatement("SELECT * FROM `" + zone_table + "` WHERE name=?");
-            ps.setString(1, zone.getName());
-            rs = ps.executeQuery();
-            rs.next();
-            String name = rs.getString("name");
-            String world = rs.getString("world");
-            String dimension = rs.getString("dimension");
-            String parent = rs.getString("parent");
-            String greeting = rs.getString("greeting").trim().isEmpty() ? null : rs.getString("greeting");
-            String farewell = rs.getString("farewell").trim().isEmpty() ? null : rs.getString("farewell");
-            String adventure = parseZoneFlagElement(rs.getString("adventure"));
-            String animals = parseZoneFlagElement(rs.getString("animals"));
-            String burn = parseZoneFlagElement(rs.getString("burn"));
-            String creative = parseZoneFlagElement(rs.getString("creative"));
-            String dispensers = parseZoneFlagElement(rs.getString("dispensers"));
-            String enderman = parseZoneFlagElement(rs.getString("enderman"));
-            String explode = parseZoneFlagElement(rs.getString("explode"));
-            String fall = parseZoneFlagElement(rs.getString("fall"));
-            String fire = parseZoneFlagElement(rs.getString("fire"));
-            String flow = parseZoneFlagElement(rs.getString("flow"));
-            String healing = parseZoneFlagElement(rs.getString("healing"));
-            String physics = parseZoneFlagElement(rs.getString("physics"));
-            String pistons = parseZoneFlagElement(rs.getString("pistons"));
-            String potion = parseZoneFlagElement(rs.getString("potion"));
-            String pvp = parseZoneFlagElement(rs.getString("pvp"));
-            String restricted = parseZoneFlagElement(rs.getString("restricted"));
-            String sanctuary = parseZoneFlagElement(rs.getString("sanctuary"));
-            String starve = parseZoneFlagElement(rs.getString("starve"));
-            String suffocate = parseZoneFlagElement(rs.getString("suffocate"));
-            String testPoly = rs.getString("polygon");
-            String[] poly = null;
-            if(!testPoly.equals("null")){
-                poly = testPoly.split(",");
-            }
-            String testPerm = rs.getString("permissions");
-            String[] perms = null;
-            if(!testPerm.trim().isEmpty()){
-                perms = testPerm.split(":");
-            }
+    public synchronized boolean reloadZone(Zone zone){
+        synchronized(lock){
+            SQLException sqlex = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
             try{
-                Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
-                adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
-                if(poly != null){
-                    temp.setPolygon(new PolygonArea(temp, poly));
+                ps = conn.prepareStatement("SELECT * FROM `" + zone_table + "` WHERE name=?");
+                ps.setString(1, zone.getName());
+                rs = ps.executeQuery();
+                rs.next();
+                String name = rs.getString("name");
+                String world = rs.getString("world");
+                String dimension = rs.getString("dimension");
+                String parent = rs.getString("parent");
+                String greeting = rs.getString("greeting").trim().isEmpty() ? null : rs.getString("greeting");
+                String farewell = rs.getString("farewell").trim().isEmpty() ? null : rs.getString("farewell");
+                String adventure = parseZoneFlagElement(rs.getString("adventure"));
+                String animals = parseZoneFlagElement(rs.getString("animals"));
+                String burn = parseZoneFlagElement(rs.getString("burn"));
+                String creative = parseZoneFlagElement(rs.getString("creative"));
+                String dispensers = parseZoneFlagElement(rs.getString("dispensers"));
+                String enderman = parseZoneFlagElement(rs.getString("enderman"));
+                String explode = parseZoneFlagElement(rs.getString("explode"));
+                String fall = parseZoneFlagElement(rs.getString("fall"));
+                String fire = parseZoneFlagElement(rs.getString("fire"));
+                String flow = parseZoneFlagElement(rs.getString("flow"));
+                String healing = parseZoneFlagElement(rs.getString("healing"));
+                String physics = parseZoneFlagElement(rs.getString("physics"));
+                String pistons = parseZoneFlagElement(rs.getString("pistons"));
+                String potion = parseZoneFlagElement(rs.getString("potion"));
+                String pvp = parseZoneFlagElement(rs.getString("pvp"));
+                String restricted = parseZoneFlagElement(rs.getString("restricted"));
+                String sanctuary = parseZoneFlagElement(rs.getString("sanctuary"));
+                String starve = parseZoneFlagElement(rs.getString("starve"));
+                String suffocate = parseZoneFlagElement(rs.getString("suffocate"));
+                String testPoly = rs.getString("polygon");
+                String[] poly = null;
+                if(!testPoly.equals("null")){
+                    poly = testPoly.split(",");
                 }
-                if(perms != null){
-                    for(String perm : perms){
-                        try{
-                            Permission permTemp = new Permission(perm.split(","));
-                            temp.setPermission(permTemp);
-                        }
-                        catch(PermissionConstructException pcex){
-                            RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
-                            RealmsLogMan.stacktrace(pcex);
+                String testPerm = rs.getString("permissions");
+                String[] perms = null;
+                if(!testPerm.trim().isEmpty()){
+                    perms = testPerm.split(":");
+                }
+                try{
+                    Zone temp = new Zone(name, world, dimension, parent, greeting, farewell, //
+                    adventure, animals, burn, creative, dispensers, enderman, explode, fall, fire, flow, healing, physics, pistons, potion, pvp, restricted, sanctuary, starve, suffocate);
+                    if(poly != null){
+                        temp.setPolygon(new PolygonArea(temp, poly));
+                    }
+                    if(perms != null){
+                        for(String perm : perms){
+                            try{
+                                Permission permTemp = new Permission(perm.split(","));
+                                temp.setPermission(permTemp);
+                            }
+                            catch(PermissionConstructException pcex){
+                                RealmsLogMan.warning("Invaild permission for Zone: ".concat(name).concat(" Perm: ").concat(perm));
+                                RealmsLogMan.stacktrace(pcex);
+                            }
                         }
                     }
+                    RealmsLogMan.info("Zone ".concat(zone.getName()).concat(" reloaded."));
                 }
-                RealmsLogMan.info("Zone ".concat(zone.getName()).concat(" reloaded."));
-            }
-            catch(ZoneConstructException zcex){
-                RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + zcex.getMessage());
-                RealmsLogMan.stacktrace(zcex);
-            }
-            catch(PolygonConstructException pcex){
-                RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
-                RealmsLogMan.stacktrace(pcex);
-            }
-        }
-        catch(SQLException sqle){
-            sqlex = sqle;
-        }
-        finally{
-            try{
-                if(rs != null && !rs.isClosed()){
-                    rs.close();
+                catch(ZoneConstructException zcex){
+                    RealmsLogMan.warning("Failed to construct Zone:".concat(name) + " Cause: " + zcex.getMessage());
+                    RealmsLogMan.stacktrace(zcex);
                 }
-                if(ps != null && !ps.isClosed()){
-                    ps.close();
+                catch(PolygonConstructException pcex){
+                    RealmsLogMan.warning("Failed to construct Polygon for Zone:".concat(name));
+                    RealmsLogMan.stacktrace(pcex);
                 }
             }
-            catch(AbstractMethodError e){} //SQLite weird stuff
-            catch(Exception e){}
-            if(sqlex != null){
-                RealmsLogMan.severe("Failed to reload Zone:".concat(zone.getName()));
-                RealmsLogMan.stacktrace(sqlex);
+            catch(SQLException sqle){
+                sqlex = sqle;
             }
-            else{
-                return true;
+            finally{
+                try{
+                    if(rs != null && !rs.isClosed()){
+                        rs.close();
+                    }
+                    if(ps != null && !ps.isClosed()){
+                        ps.close();
+                    }
+                }
+                catch(AbstractMethodError e){} //SQLite weird stuff
+                catch(Exception e){}
+                if(sqlex != null){
+                    RealmsLogMan.severe("Failed to reload Zone:".concat(zone.getName()));
+                    RealmsLogMan.stacktrace(sqlex);
+                }
+                else{
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public boolean saveZone(Zone zone){
-        RealmsLogMan.info("Saving Zone: ".concat(zone.getName()));
-        SQLException sqlex = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try{
-            ps = conn.prepareStatement("SELECT * FROM " + zone_table + " WHERE name=?");
-            ps.setString(1, zone.getName());
-            rs = ps.executeQuery();
-            boolean found = rs.next();
-            if(found){
-                ps = conn.prepareStatement(//
-                "UPDATE " + zone_table + " SET" + //
-                " world=?," + // 1
-                " dimension=?," + // 2
-                " parent=?," + // 3
-                " greeting=?," + // 4
-                " farewell=?," + // 5
-                " adventure=?," + // 6
-                " animals=?," + // 7
-                " burn=?," + // 8
-                " creative=?," + // 9
-                " dispensers=?," + // 10
-                " enderman=?," + // 11
-                " explode=?," + // 12
-                " fall=?," + // 13
-                " fire=?," + // 14
-                " flow=?," + // 15
-                " healing=?," + // 16
-                " physics=?," + // 17
-                " pistons=?," + // 18
-                " potion=?," + // 19
-                " pvp=?," + // 20
-                " restricted=?," + // 21
-                " sanctuary=?," + // 22
-                " starve=?," + // 23
-                " suffocate=?," + // 24
-                " polygon=?," + // 25
-                " permissions=?" + // 26
-                " WHERE name=?"); //27
-                ps.setString(1, zone.getWorld());
-                ps.setInt(2, zone.getDimension());
-                ps.setString(3, zone.getParent() != null ? zone.getParent().getName() : "null");
-                ps.setString(4, zone.getGreeting() != null ? zone.getGreeting() : "");
-                ps.setString(5, zone.getFarewell() != null ? zone.getFarewell() : "");
-                ps.setString(6, zone.getAbsoluteAdventure().toString());
-                ps.setString(7, zone.getAbsoluteAnimals().toString());
-                ps.setString(8, zone.getAbsoluteBurn().toString());
-                ps.setString(9, zone.getAbsoluteCreative().toString());
-                ps.setString(10, zone.getAbsoluteDispensers().toString());
-                ps.setString(11, zone.getAbsoluteEnderman().toString());
-                ps.setString(12, zone.getAbsoluteExplode().toString());
-                ps.setString(13, zone.getAbsoluteFall().toString());
-                ps.setString(14, zone.getAbsoluteFire().toString());
-                ps.setString(15, zone.getAbsoluteFlow().toString());
-                ps.setString(16, zone.getAbsoluteHealing().toString());
-                ps.setString(17, zone.getAbsolutePhysics().toString());
-                ps.setString(18, zone.getAbsolutePistons().toString());
-                ps.setString(19, zone.getAbsolutePotion().toString());
-                ps.setString(20, zone.getAbsolutePVP().toString());
-                ps.setString(21, zone.getAbsoluteRestricted().toString());
-                ps.setString(22, zone.getAbsoluteSanctuary().toString());
-                ps.setString(23, zone.getAbsoluteStarve().toString());
-                ps.setString(24, zone.getAbsoluteSuffocate().toString());
-                ps.setString(25, zone.isEmpty() ? "null" : zone.getPolygon().toString());
-                StringBuilder permBuild = new StringBuilder();
-                for(Permission perm : zone.getPerms()){
-                    permBuild.append(perm);
-                    permBuild.append(":");
-                }
-                ps.setString(26, permBuild.toString());
-                ps.setString(27, zone.getName());
-                ps.execute();
-            }
-            else{
-                ps.close();
-                ps = conn.prepareStatement("INSERT INTO `" + zone_table + "`" + //
-                " (name," + // 1
-                "world," + // 2
-                "dimension," + // 3
-                "parent," + // 4
-                "greeting," + // 5
-                "farewell," + // 6
-                "adventure," + // 7
-                "animals," + // 8
-                "burn," + // 9
-                "creative," + // 10
-                "dispensers," + // 11
-                "enderman," + // 12
-                "explode," + // 13
-                "fall," + // 14
-                "fire," + // 15
-                "flow," + // 16
-                "healing," + // 17
-                "physics," + // 18
-                "pistons," + // 19
-                "potion," + // 20
-                "pvp," + // 21
-                "restricted," + // 22
-                "sanctuary," + // 23
-                "starve," + // 24
-                "suffocate," + // 25
-                "polygon," + // 26
-                "permissions) " + // 27
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    public synchronized boolean saveZone(Zone zone){
+        synchronized(lock){
+            RealmsLogMan.info("Saving Zone: ".concat(zone.getName()));
+            SQLException sqlex = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            try{
+                ps = conn.prepareStatement("SELECT * FROM " + zone_table + " WHERE name=?");
                 ps.setString(1, zone.getName());
-                ps.setString(2, zone.getWorld());
-                ps.setInt(3, zone.getDimension());
-                ps.setString(4, zone.getParent() != null ? zone.getParent().getName() : "null");
-                ps.setString(5, zone.getGreeting() != null ? zone.getGreeting() : "");
-                ps.setString(6, zone.getFarewell() != null ? zone.getFarewell() : "");
-                ps.setString(7, zone.getAbsoluteAdventure().toString());
-                ps.setString(8, zone.getAbsoluteAnimals().toString());
-                ps.setString(9, zone.getAbsoluteBurn().toString());
-                ps.setString(10, zone.getAbsoluteCreative().toString());
-                ps.setString(11, zone.getAbsoluteDispensers().toString());
-                ps.setString(12, zone.getAbsoluteEnderman().toString());
-                ps.setString(13, zone.getAbsoluteExplode().toString());
-                ps.setString(14, zone.getAbsoluteFall().toString());
-                ps.setString(15, zone.getAbsoluteFire().toString());
-                ps.setString(16, zone.getAbsoluteFlow().toString());
-                ps.setString(17, zone.getAbsoluteHealing().toString());
-                ps.setString(18, zone.getAbsolutePhysics().toString());
-                ps.setString(19, zone.getAbsolutePistons().toString());
-                ps.setString(20, zone.getAbsolutePotion().toString());
-                ps.setString(21, zone.getAbsolutePVP().toString());
-                ps.setString(22, zone.getAbsoluteRestricted().toString());
-                ps.setString(23, zone.getAbsoluteSanctuary().toString());
-                ps.setString(24, zone.getAbsoluteStarve().toString());
-                ps.setString(25, zone.getAbsoluteSuffocate().toString());
-                ps.setString(26, zone.isEmpty() ? "null" : zone.getPolygon().toString());
-                StringBuilder permBuild = new StringBuilder();
-                for(Permission perm : zone.getPerms()){
-                    permBuild.append(perm);
-                    permBuild.append(":");
+                rs = ps.executeQuery();
+                boolean found = rs.next();
+                if(found){
+                    ps = conn.prepareStatement(//
+                    "UPDATE " + zone_table + " SET" + //
+                    " world=?," + // 1
+                    " dimension=?," + // 2
+                    " parent=?," + // 3
+                    " greeting=?," + // 4
+                    " farewell=?," + // 5
+                    " adventure=?," + // 6
+                    " animals=?," + // 7
+                    " burn=?," + // 8
+                    " creative=?," + // 9
+                    " dispensers=?," + // 10
+                    " enderman=?," + // 11
+                    " explode=?," + // 12
+                    " fall=?," + // 13
+                    " fire=?," + // 14
+                    " flow=?," + // 15
+                    " healing=?," + // 16
+                    " physics=?," + // 17
+                    " pistons=?," + // 18
+                    " potion=?," + // 19
+                    " pvp=?," + // 20
+                    " restricted=?," + // 21
+                    " sanctuary=?," + // 22
+                    " starve=?," + // 23
+                    " suffocate=?," + // 24
+                    " polygon=?," + // 25
+                    " permissions=?" + // 26
+                    " WHERE name=?"); //27
+                    ps.setString(1, zone.getWorld());
+                    ps.setInt(2, zone.getDimension());
+                    ps.setString(3, zone.getParent() != null ? zone.getParent().getName() : "null");
+                    ps.setString(4, zone.getGreeting() != null ? zone.getGreeting() : "");
+                    ps.setString(5, zone.getFarewell() != null ? zone.getFarewell() : "");
+                    ps.setString(6, zone.getAbsoluteAdventure().toString());
+                    ps.setString(7, zone.getAbsoluteAnimals().toString());
+                    ps.setString(8, zone.getAbsoluteBurn().toString());
+                    ps.setString(9, zone.getAbsoluteCreative().toString());
+                    ps.setString(10, zone.getAbsoluteDispensers().toString());
+                    ps.setString(11, zone.getAbsoluteEnderman().toString());
+                    ps.setString(12, zone.getAbsoluteExplode().toString());
+                    ps.setString(13, zone.getAbsoluteFall().toString());
+                    ps.setString(14, zone.getAbsoluteFire().toString());
+                    ps.setString(15, zone.getAbsoluteFlow().toString());
+                    ps.setString(16, zone.getAbsoluteHealing().toString());
+                    ps.setString(17, zone.getAbsolutePhysics().toString());
+                    ps.setString(18, zone.getAbsolutePistons().toString());
+                    ps.setString(19, zone.getAbsolutePotion().toString());
+                    ps.setString(20, zone.getAbsolutePVP().toString());
+                    ps.setString(21, zone.getAbsoluteRestricted().toString());
+                    ps.setString(22, zone.getAbsoluteSanctuary().toString());
+                    ps.setString(23, zone.getAbsoluteStarve().toString());
+                    ps.setString(24, zone.getAbsoluteSuffocate().toString());
+                    ps.setString(25, zone.isEmpty() ? "null" : zone.getPolygon().toString());
+                    StringBuilder permBuild = new StringBuilder();
+                    for(Permission perm : zone.getPerms()){
+                        permBuild.append(perm);
+                        permBuild.append(":");
+                    }
+                    ps.setString(26, permBuild.toString());
+                    ps.setString(27, zone.getName());
+                    ps.execute();
                 }
-                ps.setString(27, permBuild.toString());
-                ps.execute();
-            }
-            RealmsLogMan.info("Zone saved!");
-        }
-        catch(SQLException sqle){
-            sqlex = sqle;
-        }
-        finally{
-            try{
-                if(rs != null && !rs.isClosed()){
-                    rs.close();
-                }
-                if(ps != null && !ps.isClosed()){
+                else{
                     ps.close();
+                    ps = conn.prepareStatement("INSERT INTO `" + zone_table + "`" + //
+                    " (name," + // 1
+                    "world," + // 2
+                    "dimension," + // 3
+                    "parent," + // 4
+                    "greeting," + // 5
+                    "farewell," + // 6
+                    "adventure," + // 7
+                    "animals," + // 8
+                    "burn," + // 9
+                    "creative," + // 10
+                    "dispensers," + // 11
+                    "enderman," + // 12
+                    "explode," + // 13
+                    "fall," + // 14
+                    "fire," + // 15
+                    "flow," + // 16
+                    "healing," + // 17
+                    "physics," + // 18
+                    "pistons," + // 19
+                    "potion," + // 20
+                    "pvp," + // 21
+                    "restricted," + // 22
+                    "sanctuary," + // 23
+                    "starve," + // 24
+                    "suffocate," + // 25
+                    "polygon," + // 26
+                    "permissions) " + // 27
+                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    ps.setString(1, zone.getName());
+                    ps.setString(2, zone.getWorld());
+                    ps.setInt(3, zone.getDimension());
+                    ps.setString(4, zone.getParent() != null ? zone.getParent().getName() : "null");
+                    ps.setString(5, zone.getGreeting() != null ? zone.getGreeting() : "");
+                    ps.setString(6, zone.getFarewell() != null ? zone.getFarewell() : "");
+                    ps.setString(7, zone.getAbsoluteAdventure().toString());
+                    ps.setString(8, zone.getAbsoluteAnimals().toString());
+                    ps.setString(9, zone.getAbsoluteBurn().toString());
+                    ps.setString(10, zone.getAbsoluteCreative().toString());
+                    ps.setString(11, zone.getAbsoluteDispensers().toString());
+                    ps.setString(12, zone.getAbsoluteEnderman().toString());
+                    ps.setString(13, zone.getAbsoluteExplode().toString());
+                    ps.setString(14, zone.getAbsoluteFall().toString());
+                    ps.setString(15, zone.getAbsoluteFire().toString());
+                    ps.setString(16, zone.getAbsoluteFlow().toString());
+                    ps.setString(17, zone.getAbsoluteHealing().toString());
+                    ps.setString(18, zone.getAbsolutePhysics().toString());
+                    ps.setString(19, zone.getAbsolutePistons().toString());
+                    ps.setString(20, zone.getAbsolutePotion().toString());
+                    ps.setString(21, zone.getAbsolutePVP().toString());
+                    ps.setString(22, zone.getAbsoluteRestricted().toString());
+                    ps.setString(23, zone.getAbsoluteSanctuary().toString());
+                    ps.setString(24, zone.getAbsoluteStarve().toString());
+                    ps.setString(25, zone.getAbsoluteSuffocate().toString());
+                    ps.setString(26, zone.isEmpty() ? "null" : zone.getPolygon().toString());
+                    StringBuilder permBuild = new StringBuilder();
+                    for(Permission perm : zone.getPerms()){
+                        permBuild.append(perm);
+                        permBuild.append(":");
+                    }
+                    ps.setString(27, permBuild.toString());
+                    ps.execute();
                 }
+                RealmsLogMan.info("Zone saved!");
             }
-            catch(AbstractMethodError e){} //SQLite weird stuff
-            catch(Exception e){}
-            if(sqlex != null){
-                RealmsLogMan.severe("Failed to save Zone...");
-                RealmsLogMan.stacktrace(sqlex);
+            catch(SQLException sqle){
+                sqlex = sqle;
             }
-            else{
-                return true;
+            finally{
+                try{
+                    if(rs != null && !rs.isClosed()){
+                        rs.close();
+                    }
+                    if(ps != null && !ps.isClosed()){
+                        ps.close();
+                    }
+                }
+                catch(AbstractMethodError e){} //SQLite weird stuff
+                catch(Exception e){}
+                if(sqlex != null){
+                    RealmsLogMan.severe("Failed to save Zone...");
+                    RealmsLogMan.stacktrace(sqlex);
+                }
+                else{
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public boolean deleteZone(Zone zone){
+    public synchronized boolean deleteZone(Zone zone){
         SQLException sqlex = null;
         PreparedStatement ps = null;
         try{
@@ -547,7 +516,7 @@ public abstract class SQL_Source implements DataSource{
     }
 
     @Override
-    public boolean loadInventories(){
+    public synchronized void loadInventories(){
         SQLException sqlex = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -627,17 +596,13 @@ public abstract class SQL_Source implements DataSource{
             catch(AbstractMethodError e){} //SQLite weird stuff
             catch(Exception e){}
             if(sqlex != null){
-                RealmsLogMan.severe("Failed to load inventories...");
-                RealmsLogMan.stacktrace(sqlex);
-                return false;
+                throw new DataSourceError(sqlex);
             }
         }
-        return true;
     }
 
-    @SuppressWarnings("resource")
     @Override
-    public boolean saveInventory(Mod_User user, Mod_Item[] items){
+    public synchronized boolean saveInventory(Mod_User user, Mod_Item[] items){
         RealmsLogMan.info("Saving inventory for User: ".concat(user.getName()));
         SQLException sqlex = null;
         PreparedStatement ps = null;
@@ -698,6 +663,7 @@ public abstract class SQL_Source implements DataSource{
                 ps.execute();
             }
             else{
+                ps.close();
                 ps = conn.prepareStatement("INSERT INTO `" + inv_table + "`" + //
                 " (name," + // 1
                 "item0," + // 2

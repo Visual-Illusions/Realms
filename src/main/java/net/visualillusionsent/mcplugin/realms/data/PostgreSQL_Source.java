@@ -39,15 +39,15 @@ import net.visualillusionsent.mcplugin.realms.zones.Zone;
  * 
  * @author Jason (darkdiplomat)
  */
-public class MySQL_Source extends SQL_Source{
+public class PostgreSQL_Source extends SQL_Source{
 
-    public MySQL_Source(){
+    public PostgreSQL_Source(){
         testConnection();
     }
 
     @Override
     public final DataSourceType getType(){
-        return DataSourceType.MYSQL;
+        return DataSourceType.POSTGRESQL;
     }
 
     @Override
@@ -168,7 +168,7 @@ public class MySQL_Source extends SQL_Source{
     private final void testConnection(){
         try{
             if(conn == null || conn.isClosed() || !conn.isValid(2)){
-                conn = DriverManager.getConnection("jdbc:mysql://" + RealmsBase.getProperties().getStringVal("sql.database.url"), RealmsBase.getProperties().getStringVal("sql.user"), RealmsBase.getProperties().getStringVal("sql.password"));
+                conn = DriverManager.getConnection("jdbc:postgresql://" + RealmsBase.getProperties().getStringVal("sql.database.url"), RealmsBase.getProperties().getStringVal("sql.user"), RealmsBase.getProperties().getStringVal("sql.password"));
             }
         }
         catch(SQLException sqle){

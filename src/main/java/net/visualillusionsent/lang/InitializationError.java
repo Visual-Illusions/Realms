@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  */
-package net.visualillusionsent.mcmod.interfaces;
+package net.visualillusionsent.lang;
 
 /**
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
@@ -22,11 +22,19 @@ package net.visualillusionsent.mcmod.interfaces;
  * @version 1.0
  * @author Jason (darkdiplomat)
  */
-public interface Mod_ItemEnchantment{
+public final class InitializationError extends Error{
 
-    int getId();
+    public InitializationError(String msg){
+        super(msg);
+    }
 
-    int getLevel();
+    public InitializationError(String msg, Throwable cause){
+        super(msg, cause);
+    }
 
-    <T> Object getBaseEnchantment();
+    public InitializationError(Throwable cause){
+        super(cause);
+    }
+
+    private static final long serialVersionUID = 2772175982743369746L;
 }

@@ -3,19 +3,19 @@
  *  
  * This file is part of Realms.
  *
- * Realms is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * 
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
 package net.visualillusionsent.mcplugin.realms.data;
 
@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import net.visualillusionsent.lang.DataSourceError;
+import net.visualillusionsent.lang.DataSourceType;
 import net.visualillusionsent.mcmod.interfaces.Mod_Item;
 import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.mcmod.interfaces.Mod_User;
@@ -54,8 +56,8 @@ import org.jdom2.output.XMLOutputter;
 /**
  * This file is part of Realms.
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  * 
  * @author Jason (darkdiplomat)
  */
@@ -74,7 +76,7 @@ final class XML_Source implements DataSource{
     }
 
     @Override
-    public final boolean load(){
+    public final void load(){
         RealmsLogMan.info("Loading Zones...");
         File zoneFile = new File(zone_Path);
         Exception ex = null;
@@ -101,8 +103,7 @@ final class XML_Source implements DataSource{
                 catch(IOException e){}
                 writer = null;
                 if(ex != null){
-                    RealmsLogMan.severe("Failed to create new Zones file...", ex);
-                    return false;
+                    throw new DataSourceError(ex);
                 }
             }
         }
@@ -239,16 +240,14 @@ final class XML_Source implements DataSource{
                     }
                 }
                 RealmsLogMan.info("Loaded ".concat(String.valueOf(load)).concat(" zones."));
-                return true;
             }
-            catch(JDOMException jdome){
-                RealmsLogMan.severe("Failed to read Zones file", jdome);
+            catch(JDOMException jdomex){
+                throw new DataSourceError(jdomex);
             }
-            catch(IOException ioe){
-                RealmsLogMan.severe("Failed to read Zones file", ioe);
+            catch(IOException ioex){
+                throw new DataSourceError(ioex);
             }
         }
-        return false;
     }
 
     @Override
@@ -507,7 +506,7 @@ final class XML_Source implements DataSource{
     }
 
     @Override
-    public boolean loadInventories(){
+    public final void loadInventories(){
         RealmsLogMan.info("Loading Inventories...");
         File invFile = new File(inv_Path);
         Exception ex = null;
@@ -533,9 +532,7 @@ final class XML_Source implements DataSource{
                 catch(IOException e){}
                 writer = null;
                 if(ex != null){
-                    RealmsLogMan.severe("Failed to create new Inventories file...");
-                    RealmsLogMan.stacktrace(ex);
-                    return false;
+                    throw new DataSourceError(ex);
                 }
             }
         }
@@ -553,22 +550,18 @@ final class XML_Source implements DataSource{
                     }
                     RealmsBase.storeInventory(name, items);
                 }
-                return true;
             }
             catch(JDOMException jdomex){
-                RealmsLogMan.severe("JDOM Exception while trying to read Inventories file");
-                RealmsLogMan.stacktrace(jdomex);
+                throw new DataSourceError(jdomex);
             }
             catch(IOException ioex){
-                RealmsLogMan.severe("Input/Output Exception while trying to read Inventories file");
-                RealmsLogMan.stacktrace(ioex);
+                throw new DataSourceError(ioex);
             }
         }
-        return false;
     }
 
     @Override
-    public boolean saveInventory(Mod_User user, Mod_Item[] items){
+    public synchronized final boolean saveInventory(Mod_User user, Mod_Item[] items){
         RealmsLogMan.info("Saving inventory for User: ".concat(user.getName()));
         synchronized(lock){
             File invFile = new File(inv_Path);
@@ -633,7 +626,7 @@ final class XML_Source implements DataSource{
     }
 
     @Override
-    public boolean deleteInventory(Mod_User user){
+    public synchronized final boolean deleteInventory(Mod_User user){
         RealmsLogMan.info("Deleting Inventory for User: ".concat(user.getName()));
         synchronized(lock){
             File zoneFile = new File(inv_Path);

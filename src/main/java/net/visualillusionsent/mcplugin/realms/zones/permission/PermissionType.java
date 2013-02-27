@@ -3,31 +3,31 @@
  *  
  * This file is part of Realms.
  *
- * Realms is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * 
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
 package net.visualillusionsent.mcplugin.realms.zones.permission;
 
 /**
  * This file is part of Realms.
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  * 
  * @author Jason (darkdiplomat)
  */
-public enum PermissionType {
+public enum PermissionType{
     ALL, //
     AUTHED, //
     COMBAT, //
@@ -46,19 +46,18 @@ public enum PermissionType {
     NULL;
 
     @Override
-    public final String toString() {
+    public final String toString(){
         return this.name().toLowerCase();
     }
 
-    public static final PermissionType getTypeFromString(String myType) throws InvaildPermissionTypeException {
+    public static final PermissionType getTypeFromString(String myType) throws InvaildPermissionTypeException{
         PermissionType rValue = null;
-        try {
+        try{
             rValue = PermissionType.valueOf(myType.toUpperCase());
         }
-        catch (IllegalArgumentException IAE) {
+        catch(IllegalArgumentException IAE){
             throw new InvaildPermissionTypeException(myType);
         }
-
         return rValue;
     }
 }

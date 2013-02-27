@@ -3,19 +3,19 @@
  *  
  * This file is part of Realms.
  *
- * Realms is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * 
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
 import java.util.List;
 
@@ -26,18 +26,19 @@ import net.visualillusionsent.mcplugin.realms.zones.ZoneFlag;
 /**
  * This file is part of Realms.
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation
- * Source Code availible @ https://github.com/darkdiplomat/Realms
+ * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_RealmsAPIListener {
+public final class Canary_RealmsAPIListener{
+
     private final static RealmsPluginAPI zch = new RealmsPluginAPI();
 
     /**
      * This class should never be constructed
      */
-    private Canary_RealmsAPIListener() {}
+    private Canary_RealmsAPIListener(){}
 
     /**
      * Checks if a {@link Zone} with the specified name exists
@@ -46,8 +47,8 @@ public final class Canary_RealmsAPIListener {
      *            the name of the {@link Zone} to check
      * @return {@code true} if the {@link Zone} exists, {@code false} otherwise
      */
-    public final static boolean nameCheck(String zoneName) {
-        if (zoneName == null) {
+    public final static boolean nameCheck(String zoneName){
+        if(zoneName == null){
             return false;
         }
         return zch.nameCheck(zoneName);
@@ -60,9 +61,9 @@ public final class Canary_RealmsAPIListener {
      *            the player to check zones for
      * @return {@link String} array of the names
      */
-    public final static String[] getPlayerZoneNames(Player player) {
-        if (player == null) {
-            return new String[] { "none" };
+    public final static String[] getPlayerZoneNames(Player player){
+        if(player == null){
+            return new String[]{ "none" };
         }
         Canary_User user = new Canary_User(player);
         return zch.getPlayerZoneNames(user);
@@ -79,7 +80,7 @@ public final class Canary_RealmsAPIListener {
      *            the setting to set it to (ON/OFF/INHERIT)
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public final static boolean changeZoneFlag(String zoneName, String flag, String setting) {
+    public final static boolean changeZoneFlag(String zoneName, String flag, String setting){
         return zch.changeZoneFlag(zoneName, flag, setting);
     }
 
@@ -94,7 +95,7 @@ public final class Canary_RealmsAPIListener {
      *            wether to check the absolute setting for a flag (inheritance checks true/false)
      * @return {@code true} is ON, {@code false} if OFF or INHERIT, {@code null} if error
      */
-    public final static Boolean checkZoneFlag(String zoneName, String flag, boolean absolute) {
+    public final static Boolean checkZoneFlag(String zoneName, String flag, boolean absolute){
         return zch.checkZoneFlag(zoneName, flag, absolute);
     }
 
@@ -111,7 +112,7 @@ public final class Canary_RealmsAPIListener {
      *            the index of the {@link World.Dimension} the {@link Zone} should be in
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public final static boolean createZone(String zoneName, String parentName, String world, int dimension) {
+    public final static boolean createZone(String zoneName, String parentName, String world, int dimension){
         return zch.createZone(zoneName, parentName, world, dimension);
     }
 
@@ -122,7 +123,7 @@ public final class Canary_RealmsAPIListener {
      *            the name of the {@link Zone} to delete
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public final static boolean deleteZone(String zoneName) {
+    public final static boolean deleteZone(String zoneName){
         return zch.deleteZone(zoneName);
     }
 
@@ -139,7 +140,7 @@ public final class Canary_RealmsAPIListener {
      *            the Verticies for the points of the Polygon listed as X1 Y1 Z1 X2 Y2 Z2 and so on
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public final static boolean setZonePolygon(String zoneName, int ceiling, int floor, List<Integer[]> verticies) {
+    public final static boolean setZonePolygon(String zoneName, int ceiling, int floor, List<Integer[]> verticies){
         return zch.setZonePolygon(zoneName, ceiling, floor, verticies);
     }
 
@@ -156,7 +157,7 @@ public final class Canary_RealmsAPIListener {
      *            {@code boolean} value, {@code true} to Grant, {@code false} to deny
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public final static boolean setZonePermission(String zoneName, String userName, String type, boolean grant) {
+    public final static boolean setZonePermission(String zoneName, String userName, String type, boolean grant){
         return zch.setZonePermission(zoneName, userName, type, grant);
     }
 
@@ -171,7 +172,7 @@ public final class Canary_RealmsAPIListener {
      *            the type of permission to check
      * @return {@code true} if allowed, {@code false} if denied, {@code null} if error
      */
-    public final static Boolean checkZonePermission(Player player, Block block, String permType) {
+    public final static Boolean checkZonePermission(Player player, Block block, String permType){
         Canary_User user = new Canary_User(player);
         Canary_Block cBlock = new Canary_Block(block);
         return zch.checkZonePermission(user, cBlock, permType);
@@ -188,7 +189,7 @@ public final class Canary_RealmsAPIListener {
      *            the type of permission to check
      * @return {@code true} if allowed, {@code false} if denied, {@code null} if error
      */
-    public final static Boolean checkZonePermission(Player player, String zoneName, String permType) {
+    public final static Boolean checkZonePermission(Player player, String zoneName, String permType){
         Canary_User user = new Canary_User(player);
         return zch.checkZonePermission(user, zoneName, permType);
     }
