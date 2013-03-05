@@ -22,9 +22,9 @@ package net.visualillusionsent.bukkitplugin.realms;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.MCChatForm;
-import net.visualillusionsent.mcmod.interfaces.Mod_Item;
-import net.visualillusionsent.mcmod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -41,7 +41,7 @@ import org.bukkit.inventory.ItemStack;
 public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
 
     private final Player player;
-    private final net.visualillusionsent.mcmod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.mcmod.interfaces.Mod_Item[]{};
+    private final net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[]{};
 
     public Bukkit_User(Player player){
         super(player);

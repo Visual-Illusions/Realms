@@ -19,9 +19,9 @@
  */
 import java.util.List;
 
-import net.visualillusionsent.mcplugin.realms.RealmsPluginAPI;
-import net.visualillusionsent.mcplugin.realms.zones.Zone;
-import net.visualillusionsent.mcplugin.realms.zones.ZoneFlag;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsPluginAPI;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneFlag;
 
 /**
  * This file is part of Realms.

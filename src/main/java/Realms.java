@@ -17,9 +17,9 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-import net.visualillusionsent.mcplugin.realms.RealmsBase;
-import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
-import net.visualillusionsent.mcplugin.realms.commands.RealmsCommandHandler;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.commands.RealmsCommandHandler;
 
 /**
  * This file is part of Realms.

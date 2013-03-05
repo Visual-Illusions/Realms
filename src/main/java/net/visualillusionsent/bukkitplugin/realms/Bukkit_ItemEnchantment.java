@@ -19,7 +19,7 @@
  */
 package net.visualillusionsent.bukkitplugin.realms;
 
-import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 
 import org.bukkit.enchantments.Enchantment;
 

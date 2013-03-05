@@ -17,8 +17,8 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-import net.visualillusionsent.mcmod.interfaces.Mod_Item;
-import net.visualillusionsent.mcmod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 
 /**
  * This file is part of Realms.

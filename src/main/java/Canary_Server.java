@@ -24,13 +24,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.visualillusionsent.mcmod.interfaces.Mod_Block;
-import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
-import net.visualillusionsent.mcmod.interfaces.Mod_Item;
-import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
-import net.visualillusionsent.mcmod.interfaces.Mod_User;
-import net.visualillusionsent.mcplugin.realms.logging.RLevel;
-import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 
 /**
  * This file is part of Realms.
@@ -40,7 +40,7 @@ import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_Server implements net.visualillusionsent.mcmod.interfaces.Mod_Server{
+public final class Canary_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
 
     private final Server server;
 

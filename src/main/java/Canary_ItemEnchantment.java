@@ -17,7 +17,7 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 
 /**
  * This file is part of Realms.

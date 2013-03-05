@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.Mod_Block;
-import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
-import net.visualillusionsent.mcmod.interfaces.Mod_Item;
-import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
-import net.visualillusionsent.mcmod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -48,7 +48,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Bukkit_Server implements net.visualillusionsent.mcmod.interfaces.Mod_Server{
+public final class Bukkit_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
 
     private Server server;
 

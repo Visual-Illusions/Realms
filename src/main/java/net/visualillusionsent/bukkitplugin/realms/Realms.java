@@ -19,12 +19,12 @@
  */
 package net.visualillusionsent.bukkitplugin.realms;
 
-import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
-import net.visualillusionsent.mcplugin.realms.RealmsBase;
-import net.visualillusionsent.mcplugin.realms.RealmsTranslate;
-import net.visualillusionsent.mcplugin.realms.commands.RealmsCommandHandler;
-import net.visualillusionsent.mcplugin.realms.logging.RLevel;
-import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.commands.RealmsCommandHandler;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

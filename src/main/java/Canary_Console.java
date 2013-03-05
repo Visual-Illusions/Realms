@@ -17,8 +17,8 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-import net.visualillusionsent.mcmod.interfaces.MCChatForm;
-import net.visualillusionsent.mcmod.interfaces.Mod_Caller;
+import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 
 /**
  * This file is part of Realms.

@@ -19,8 +19,8 @@
  */
 package net.visualillusionsent.bukkitplugin.realms;
 
-import net.visualillusionsent.mcmod.interfaces.Mod_Entity;
-import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

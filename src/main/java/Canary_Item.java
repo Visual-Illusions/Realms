@@ -20,7 +20,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 
 /**
  * This file is part of Realms.
@@ -30,7 +30,7 @@ import net.visualillusionsent.mcmod.interfaces.Mod_ItemEnchantment;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_Item implements net.visualillusionsent.mcmod.interfaces.Mod_Item{
+public final class Canary_Item implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item{
 
     private final Item item;
 

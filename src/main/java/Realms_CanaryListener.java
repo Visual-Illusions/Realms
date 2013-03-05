@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import net.visualillusionsent.mcplugin.realms.RealmsBase;
-import net.visualillusionsent.mcplugin.realms.commands.RealmsCommandHandler;
-import net.visualillusionsent.mcplugin.realms.logging.RLevel;
-import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
-import net.visualillusionsent.mcplugin.realms.zones.Zone;
-import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
-import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
-import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.commands.RealmsCommandHandler;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneLists;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permission.PermissionType;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.

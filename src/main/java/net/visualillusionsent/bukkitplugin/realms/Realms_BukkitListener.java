@@ -22,14 +22,14 @@ package net.visualillusionsent.bukkitplugin.realms;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.visualillusionsent.mcmod.interfaces.MCChatForm;
-import net.visualillusionsent.mcplugin.realms.RealmsBase;
-import net.visualillusionsent.mcplugin.realms.logging.RLevel;
-import net.visualillusionsent.mcplugin.realms.logging.RealmsLogMan;
-import net.visualillusionsent.mcplugin.realms.zones.Zone;
-import net.visualillusionsent.mcplugin.realms.zones.ZoneLists;
-import net.visualillusionsent.mcplugin.realms.zones.permission.PermissionType;
-import net.visualillusionsent.mcplugin.realms.zones.polygon.Point;
+import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneLists;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permission.PermissionType;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
