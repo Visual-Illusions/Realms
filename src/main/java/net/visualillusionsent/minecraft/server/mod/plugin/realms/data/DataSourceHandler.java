@@ -1,32 +1,24 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.data;
 
+import net.visualillusionsent.lang.DataSourceError;
 import net.visualillusionsent.lang.DataSourceType;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
-
-import com.avaje.ebeaninternal.server.lib.sql.DataSourceException;
 
 /**
  * This file is part of Realms.
@@ -44,20 +36,20 @@ public class DataSourceHandler{
 
     public DataSourceHandler(DataSourceType type){
         type.testDriver();
-        if(type == DataSourceType.XML){
+        if (type == DataSourceType.XML) {
             source = new XML_Source();
         }
-        else if(type == DataSourceType.MYSQL){
+        else if (type == DataSourceType.MYSQL) {
             source = new MySQL_Source();
         }
-        else if(type == DataSourceType.SQLITE){
+        else if (type == DataSourceType.SQLITE) {
             source = new SQLite_Source();
         }
-        else if(type == DataSourceType.POSTGRESQL){
+        else if (type == DataSourceType.POSTGRESQL) {
             source = new PostgreSQL_Source();
         }
-        else{
-            throw new DataSourceException("Invaild DataSourceType...");
+        else {
+            throw new DataSourceError("Invaild DataSourceType...");
         }
         source.load();
         source.loadInventories();
@@ -89,16 +81,16 @@ public class DataSourceHandler{
     public void killOutput(){
         clearQueue();
         outThread.terminate();
-        if(source.getType() == DataSourceType.SQLITE){
-            ((SQLite_Source)source).closeDatabase();
+        if (source.getType() == DataSourceType.SQLITE) {
+            ((SQLite_Source) source).closeDatabase();
         }
     }
 
     public void reloadZone(Mod_Caller caller, Zone zone){
-        if(source.reloadZone(zone)){
+        if (source.reloadZone(zone)) {
             caller.sendMessage(RealmsTranslate.transformMessage("zone.reload.sucess", zone.getName()));
         }
-        else{
+        else {
             caller.sendError(RealmsTranslate.transformMessage("zone.reload.fail", zone.getName()));
         }
     }
