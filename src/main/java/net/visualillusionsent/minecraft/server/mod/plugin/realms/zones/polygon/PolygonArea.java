@@ -1,29 +1,21 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
@@ -40,7 +32,7 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
  */
 public final class PolygonArea{
 
-    private enum Mode{
+    private enum Mode {
         DELETED, //
         EDIT, //
         SAVED; //
@@ -73,21 +65,21 @@ public final class PolygonArea{
      * PolygonArea Constructor from DataSource
      */
     public PolygonArea(Zone zone, String... args) throws PolygonConstructException{
-        try{
+        try {
             this.zone = zone;
             this.ceiling = Integer.parseInt(args[0]);
             this.floor = Integer.parseInt(args[1]);
-            for(int i = 2; i < args.length; i += 3){
+            for (int i = 2; i < args.length; i += 3) {
                 vertices.add(new Point(Integer.parseInt(args[i]), Integer.parseInt(args[i + 1]), Integer.parseInt(args[i + 2])));
             }
             centroid = calculateCentroid(vertices);
             radius = calculateRadius(vertices, centroid);
-            reorganize(vertices); //Redundancy and verification
+            reorganize(vertices); // Redundancy and verification
         }
-        catch(NumberFormatException nfe){
+        catch (NumberFormatException nfe) {
             throw new PolygonConstructException("Number format exception in one of the Verticies for Zone: " + zone.getName());
         }
-        catch(ArrayIndexOutOfBoundsException aioobex){
+        catch (ArrayIndexOutOfBoundsException aioobex) {
             throw new PolygonConstructException("Invaild count of Verticies for Zone: " + zone.getName());
         }
     }
@@ -146,7 +138,7 @@ public final class PolygonArea{
      * Saves Polygon
      */
     public final void save(){
-        if(workingVertices.isEmpty()){
+        if (workingVertices.isEmpty()) {
             vertices = new LinkedList<Point>();
             floor = 0;
             ceiling = 1000;
@@ -154,7 +146,7 @@ public final class PolygonArea{
             centroid = null;
             radius = 0;
         }
-        else{
+        else {
             vertices = new LinkedList<Point>(workingVertices);
             workingVertices = new LinkedList<Point>();
             floor = workingFloor;
@@ -169,18 +161,18 @@ public final class PolygonArea{
     private final Point calculateCentroid(List<Point> points){
         double x = 0;
         double z = 0;
-        for(Point p : points){
+        for (Point p : points) {
             x += p.x;
             z += p.z;
         }
-        return new Point((int)Math.floor(x / points.size()), (int)Math.floor(ceiling - (ceiling - floor) / 2), (int)Math.floor(z / points.size()));
+        return new Point((int) Math.floor(x / points.size()), (int) Math.floor(ceiling - (ceiling - floor) / 2), (int) Math.floor(z / points.size()));
     }
 
     private final double calculateRadius(List<Point> points, Point c){
         double max = 0;
-        for(Point p : points){
+        for (Point p : points) {
             double distance = c.distance2D(p);
-            if(distance > max){
+            if (distance > max) {
                 max = distance;
             }
         }
@@ -209,16 +201,16 @@ public final class PolygonArea{
 
     public final void removeWorkingVertex(Mod_Block block){
         Iterator<Point> itr = workingVertices.iterator();
-        while(itr.hasNext()){
+        while (itr.hasNext()) {
             Point p = itr.next();
-            if(p.x == block.getX() && p.z == block.getZ()){
+            if (p.x == block.getX() && p.z == block.getZ()) {
                 itr.remove();
             }
         }
     }
 
     public final boolean contains(Mod_Entity entity){
-        Point p = new Point((int)Math.floor(entity.getX()), (int)Math.floor(entity.getY()), (int)Math.floor(entity.getZ()));
+        Point p = new Point((int) Math.floor(entity.getX()), (int) Math.floor(entity.getY()), (int) Math.floor(entity.getZ()));
         return this.contains(p, true);
     }
 
@@ -238,66 +230,66 @@ public final class PolygonArea{
      * 6/19/95 - Bob Stein & Craig Yap stein@visibone.com craig@cse.fau.edu
      ***************************************************************************/
     public final static boolean contains(List<Point> points, Point p, int floor, int ceiling){
-        if(points == null){
+        if (points == null) {
             return false;
         }
-        if(points.isEmpty()){
+        if (points.isEmpty()) {
             return false;
         }
         Point oldPoint;
         int x1, z1;
         int x2, z2;
         boolean inside = false;
-        if(p.y > ceiling || p.y < floor){
+        if (p.y > ceiling || p.y < floor) {
             return false;
         }
-        if(points.size() < 3){
+        if (points.size() < 3) {
             return false;
         }
         oldPoint = points.get(points.size() - 1);
-        for(Point newPoint : points){
-            if(newPoint.x > oldPoint.x){
+        for (Point newPoint : points) {
+            if (newPoint.x > oldPoint.x) {
                 x1 = oldPoint.x;
                 x2 = newPoint.x;
                 z1 = oldPoint.z;
                 z2 = newPoint.z;
             }
-            else{
+            else {
                 x1 = newPoint.x;
                 x2 = oldPoint.x;
                 z1 = newPoint.z;
                 z2 = oldPoint.z;
             }
-            //if (x1 == 40 && p.x == 40) Realms.log(Level.INFO, String.format("(%d,%d),(%d,%d),(%d,%d),%d", x1,z1,p.x,p.z,x2,z2,determinant));
-            if(x1 <= p.x && p.x <= x2 && Math.min(z1, z2) <= p.z && p.z <= Math.max(z1, z2)){ /* edges */
+            // if (x1 == 40 && p.x == 40) Realms.log(Level.INFO, String.format("(%d,%d),(%d,%d),(%d,%d),%d", x1,z1,p.x,p.z,x2,z2,determinant));
+            if (x1 <= p.x && p.x <= x2 && Math.min(z1, z2) <= p.z && p.z <= Math.max(z1, z2)) { /* edges */
                 int determinant = x1 * (p.z - z2) + p.x * (z2 - z1) + x2 * (z1 - p.z);
-                if(determinant == 0){
+                if (determinant == 0) {
                     return true;
                 }
             }
-            if(newPoint.x < p.x == p.x <= oldPoint.x /* edge "open" at left end */
-                            && (p.z - z1) * (x2 - x1) < (z2 - z1) * (p.x - x1)){
+            if (newPoint.x < p.x == p.x <= oldPoint.x /* edge "open" at left end */
+                    && (p.z - z1) * (x2 - x1) < (z2 - z1) * (p.x - x1)) {
                 inside = !inside;
             }
             oldPoint = newPoint;
         }
         return inside;
+        /* End INPOLY.C */
     }
 
-    /* End INPOLY */
     public final boolean contains(Point p, boolean checkRadius){
-        if(this.centroid == null){
+        if (this.centroid == null) {
             return false;
         }
-        if(checkRadius && this.centroid.distance2D(p) > this.radius){
+        if (checkRadius && this.centroid.distance2D(p) > this.radius) {
             return false;
         }
         return contains(vertices, p, this.floor, this.ceiling);
     }
 
     public final boolean workingVerticesContain(PolygonArea polygonArea){
-        for(Point p : polygonArea.getVertices()){
-            if(!contains(workingVertices, p, this.workingFloor, this.workingCeiling)){
+        for (Point p : polygonArea.getVertices()) {
+            if (!contains(workingVertices, p, this.workingFloor, this.workingCeiling)) {
                 return false;
             }
         }
@@ -305,8 +297,8 @@ public final class PolygonArea{
     }
 
     public final boolean containsWorkingVertex(Mod_Block block){
-        for(Point p : workingVertices){
-            if(p.x == block.getX() && p.z == block.getZ()){
+        for (Point p : workingVertices) {
+            if (p.x == block.getX() && p.z == block.getZ()) {
                 return true;
             }
         }
@@ -314,8 +306,8 @@ public final class PolygonArea{
     }
 
     public final boolean verticesContain(PolygonArea polygonArea){
-        for(Point p : polygonArea.getVertices()){
-            if(contains(this.vertices, p, this.floor, this.ceiling)){
+        for (Point p : polygonArea.getVertices()) {
+            if (contains(this.vertices, p, this.floor, this.ceiling)) {
                 return true;
             }
         }
@@ -329,7 +321,7 @@ public final class PolygonArea{
         Point newVertex = new Point(block.getX(), block.getY(), block.getZ());
         // Case #1: The vertex list has less than three points
         // Just add the point to the end of the working vertices list
-        if(workingVertices.size() < 3){
+        if (workingVertices.size() < 3) {
             workingVertices.add(newVertex);
             return removed;
         }
@@ -348,19 +340,19 @@ public final class PolygonArea{
      */
     public final boolean validVertex(Mod_User user, Mod_Block block){
         // The vertex must be contained by the parent zone
-        if(!zone.getParent().contains(block)){
+        if (!zone.getParent().contains(block)) {
             user.sendError(RealmsTranslate.transformMessage("polygon.not.contain", zone.getParent().getName()));
             return false;
         }
         // The vertex must not be contained by sibling zones
-        for(Zone sibling : zone.getParent().getChildren()){
-            if(sibling != zone && sibling.contains(block)){
+        for (Zone sibling : zone.getParent().getChildren()) {
+            if (sibling != zone && sibling.contains(block)) {
                 user.sendError(RealmsTranslate.transformMessage("polygon.sibling.contain", sibling.getName()));
                 return false;
             }
         }
         // The vertex must not already be in the vertex list
-        if(containsWorkingVertex(block)){
+        if (containsWorkingVertex(block)) {
             user.sendError(RealmsTranslate.transMessage("vertex.exists"));
             return false;
         }
@@ -376,36 +368,38 @@ public final class PolygonArea{
      */
     public final boolean validPolygon(Mod_User user){
         // A polygon must have a least three sides
-        if(workingVertices.size() < 3){
+        if (workingVertices.size() < 3) {
             user.sendError("A polygon must have a least three vertices");
             return false;
         }
         // The polygon must not intersect any other sibling zones unless completely containing them
-        for(Zone sibling : zone.getParent().getChildren()){
-            if(sibling != zone && !sibling.isEmpty() && intersects(sibling.getPolygon().getVertices(), workingVertices)){
-                if(sibling.getPolygon().getFloor() < workingCeiling && sibling.getPolygon().getCeiling() > workingFloor){
+        for (Zone sibling : zone.getParent().getChildren()) {
+            if (sibling != zone && !sibling.isEmpty() && intersects(sibling.getPolygon().getVertices(), workingVertices)) {
+                if (sibling.getPolygon().getFloor() < workingCeiling && sibling.getPolygon().getCeiling() > workingFloor) {
                     user.sendError(RealmsTranslate.transformMessage("block.dual.claim", sibling.getName()));
                     return false;
                 }
             }
-            else if(!sibling.isEmpty() && workingVerticesContain(sibling.getPolygon()) && sibling.getName() != zone.getName()){
+            else if (!sibling.isEmpty() && workingVerticesContain(sibling.getPolygon()) && sibling != zone) {
                 user.sendMessage(RealmsTranslate.transformMessage("sibling.move", sibling.getName()));
                 zone.getParent().removeChild(sibling);
                 sibling.setParent(zone);
             }
         }
         // The polygon must contain all zone children
-        for(Zone child : zone.getChildren()){
-            if(!workingVerticesContain(child.getPolygon())){
-                user.sendError(RealmsTranslate.transMessage("polygon.no.contain"));
-                return false;
+        for (Zone child : zone.getChildren()) {
+            if (!child.isEmpty()) {
+                if (!workingVerticesContain(child.getPolygon())) {
+                    user.sendError(RealmsTranslate.transMessage("polygon.no.contain"));
+                    return false;
+                }
             }
         }
         // The polygon must not contain intersecting lines
-        if(intersects(workingVertices, workingVertices)){
+        if (intersects(workingVertices, workingVertices)) {
             user.sendError(RealmsTranslate.transMessage("line.intersect"));
             reorganize(workingVertices);
-            if(intersects(workingVertices, workingVertices)){
+            if (intersects(workingVertices, workingVertices)) {
                 user.sendError(RealmsTranslate.transMessage("reorg.fail"));
                 return false;
             }
@@ -417,12 +411,12 @@ public final class PolygonArea{
     public final Point getClosestPoint(Point temp){
         Iterator<Point> pointIt = vertices.iterator();
         Point closest = null;
-        while(pointIt.hasNext()){
+        while (pointIt.hasNext()) {
             Point check = pointIt.next();
-            if(closest == null){
+            if (closest == null) {
                 closest = check;
             }
-            else if(check.distance2D(temp) < closest.distance2D(temp)){
+            else if (check.distance2D(temp) < closest.distance2D(temp)) {
                 closest = check;
             }
         }
@@ -435,12 +429,12 @@ public final class PolygonArea{
     }
 
     public static final int calculateArea(List<Point> points){
-        if(points.size() < 3){
+        if (points.size() < 3) {
             return 0;
         }
         int areaCalc = 0;
         Point last = points.get(points.size() - 1);
-        for(Point p : points){
+        for (Point p : points) {
             areaCalc += p.x * last.z - last.x * p.z;
             last = p;
         }
@@ -456,9 +450,9 @@ public final class PolygonArea{
     private static final boolean intersects(List<Point> list1, List<Point> list2){
         List<Line> lines1 = getLines(list1);
         List<Line> lines2 = getLines(list2);
-        for(Line line1 : lines1){
-            for(Line line2 : lines2){
-                if(line1.intersects2DIgnorePoints(line2)){
+        for (Line line1 : lines1) {
+            for (Line line2 : lines2) {
+                if (line1.intersects2DIgnorePoints(line2)) {
                     return true;
                 }
             }
@@ -468,11 +462,11 @@ public final class PolygonArea{
 
     private static final List<Line> getLines(List<Point> points){
         List<Line> results = new LinkedList<Line>();
-        if(points.size() < 2){
+        if (points.size() < 2) {
             return results;
         }
         Point last = points.get(points.size() - 1);
-        for(Point p : points){
+        for (Point p : points) {
             results.add(new Line(p, last));
             last = p;
         }
@@ -485,7 +479,7 @@ public final class PolygonArea{
         builder.append(ceiling);
         builder.append(",");
         builder.append(floor);
-        for(Point vertex : vertices){
+        for (Point vertex : vertices) {
             builder.append(",");
             builder.append(vertex.x);
             builder.append(",");
