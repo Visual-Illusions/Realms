@@ -17,7 +17,7 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-package net.visualillusionsent.bukkitplugin.realms;
+package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
 import java.util.ArrayList;
 import java.util.Iterator;

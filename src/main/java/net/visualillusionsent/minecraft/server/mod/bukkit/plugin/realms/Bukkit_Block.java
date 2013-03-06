@@ -1,26 +1,18 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
-package net.visualillusionsent.bukkitplugin.realms;
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
+package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
-
 import org.bukkit.block.Block;
 
 /**
@@ -90,10 +82,10 @@ public final class Bukkit_Block implements Mod_Block{
 
     @Override
     public final boolean equals(Object obj){
-        if(obj instanceof Bukkit_Block){
-            return block.equals(((Bukkit_Block)obj).getBlock());
+        if (obj instanceof Bukkit_Block) {
+            return block.equals(((Bukkit_Block) obj).getBlock());
         }
-        else if(obj instanceof Block){
+        else if (obj instanceof Block) {
             return block.equals(obj);
         }
         return false;

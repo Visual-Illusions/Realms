@@ -17,11 +17,10 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-package net.visualillusionsent.bukkitplugin.realms;
+package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
-import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
-
-import org.bukkit.enchantments.Enchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 
 /**
  * This file is part of Realms.
@@ -31,47 +30,30 @@ import org.bukkit.enchantments.Enchantment;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Bukkit_ItemEnchantment implements Mod_ItemEnchantment{
+public final class Bukkit_Console implements Mod_Caller{
 
-    private final Enchantment enchantment;
-    private final int level;
-
-    public Bukkit_ItemEnchantment(Enchantment enchantment, int level){
-        this.enchantment = enchantment;
-        this.level = level;
+    @Override
+    public final void sendError(String msg){
+        System.out.println("[ERROR] ".concat(MCChatForm.removeFormating(msg)));
     }
 
     @Override
-    public final int getId(){
-        return enchantment.getId();
+    public final void sendMessage(String msg){
+        System.out.println(MCChatForm.removeFormating(msg));
     }
 
     @Override
-    public final int getLevel(){
-        return level;
+    public final boolean isConsole(){
+        return true;
     }
 
     @Override
-    public final Enchantment getBaseEnchantment(){
-        return enchantment;
+    public final boolean isBukkit(){
+        return true;
     }
 
     @Override
-    public final boolean equals(Object obj){
-        if(obj instanceof Bukkit_ItemEnchantment){
-            Bukkit_ItemEnchantment other = (Bukkit_ItemEnchantment)obj;
-            if(other.getBaseEnchantment() == this.enchantment && this.level == other.getLevel()){
-                return true;
-            }
-        }
+    public final boolean isCanary(){
         return false;
-    }
-
-    @Override
-    public final int hashCode(){
-        int hash = 7;
-        hash = hash * level + enchantment.hashCode();
-        hash = hash * level + level;
-        return hash;
     }
 }

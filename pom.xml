@@ -56,7 +56,7 @@
    <dependency>
     <groupId>net.visualillusionsent</groupId>
     <artifactId>viutils</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
    </dependency>
    <dependency>
     <groupId>org.bukkit</groupId>
@@ -154,10 +154,10 @@
                 <Title>Realms</Title>
                 <Version>${project.version}</Version>
                 <Build>${timestamp}</Build>
-                <ProgramStatus>BETA</ProgramStatus>
+                <ProgramStatus>RELEASE_CANDIDATE</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
-                <Class-Path>../lib/viutils-1.0.0.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
+                <Class-Path>../lib/viutils-1.0.1.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>
@@ -193,6 +193,7 @@
      </plugins>
     </pluginManagement>
     <extensions>
+      <!-- FTP Extension to upload to repo.visualillusionsent.net -->
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-ftp</artifactId>

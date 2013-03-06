@@ -1,4 +1,4 @@
-package net.visualillusionsent.bukkitplugin.realms;
+package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
 import java.util.List;
 

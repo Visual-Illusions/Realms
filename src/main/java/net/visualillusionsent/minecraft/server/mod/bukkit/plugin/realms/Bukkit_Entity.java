@@ -17,7 +17,7 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-package net.visualillusionsent.bukkitplugin.realms;
+package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
