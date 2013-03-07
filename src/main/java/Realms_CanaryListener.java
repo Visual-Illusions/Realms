@@ -557,7 +557,7 @@ public final class Realms_CanaryListener extends PluginListener{
             if(entityClicked != null){
                 Canary_User user = new Canary_User(player);
                 Zone zone = ZoneLists.getInZone(user);
-                deny = zone.permissionCheck(user, PermissionType.INTERACT);
+                deny = !zone.permissionCheck(user, PermissionType.INTERACT);
                 RealmsLogMan.log(RLevel.ENTITY_RIGHTCLICK, "Player: '" + player.getName() + "' Entity: '" + entityClicked.getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "Denied" : "Allow"));
             }
         }
