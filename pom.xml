@@ -9,6 +9,7 @@
   <inceptionYear>2012</inceptionYear>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <ProgramStatus>STABLE</ProgramStatus>
   </properties>
   <organization>
    <name>Visual Illusions Entertainment</name>
@@ -154,7 +155,7 @@
                 <Title>Realms</Title>
                 <Version>${project.version}</Version>
                 <Build>${timestamp}</Build>
-                <ProgramStatus>RELEASE_CANDIDATE</ProgramStatus>
+                <ProgramStatus>${ProgramStatus}</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
                 <Class-Path>../lib/viutils-1.0.1.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
