@@ -1,28 +1,20 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.zones;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
@@ -55,25 +47,25 @@ public final class Zone{
     private PolygonArea polygon;
     private List<Permission> zoneperms = new ArrayList<Permission>();
     private List<Zone> children = new ArrayList<Zone>();
-    private ZoneFlag adventure; //OFF = Survival Mode, ON = Adventure Mode
-    private ZoneFlag animals; //OFF = NO Animals, ON = Animals
-    private ZoneFlag burn; //OFF = Blocks may burn. ON = Blocks may not burn.
-    private ZoneFlag creative; //OFF = Survival Mode, ON = Creative Mode
-    private ZoneFlag dispensers; //OFF = no dispensing, ON = dispensing
-    private ZoneFlag enderman; //OFF = No Enderman may not PickUp/Place Blocks. ON = Enderman may PickUp/Place Blocks
+    private ZoneFlag adventure; // OFF = Survival Mode, ON = Adventure Mode
+    private ZoneFlag animals; // OFF = NO Animals, ON = Animals
+    private ZoneFlag burn; // OFF = Blocks may burn. ON = Blocks may not burn.
+    private ZoneFlag creative; // OFF = Survival Mode, ON = Creative Mode
+    private ZoneFlag dispensers; // OFF = no dispensing, ON = dispensing
+    private ZoneFlag enderman; // OFF = No Enderman may not PickUp/Place Blocks. ON = Enderman may PickUp/Place Blocks
     private ZoneFlag explode; // OFF = entity may not explode, ON = entity may explode
-    private ZoneFlag fall; //OFF = No Fall Damage, ON = Fall Damage
-    private ZoneFlag fire; //OFF = NO Fire Damage, ON = Fire Damage
-    private ZoneFlag flow; //OFF = Water/Lava may not flow. ON = Water/Lava may flow.
-    private ZoneFlag healing; //Changed to boolean --  OFF = No Healing. ON = Healing.
+    private ZoneFlag fall; // OFF = No Fall Damage, ON = Fall Damage
+    private ZoneFlag fire; // OFF = NO Fire Damage, ON = Fire Damage
+    private ZoneFlag flow; // OFF = Water/Lava may not flow. ON = Water/Lava may flow.
+    private ZoneFlag healing; // Changed to boolean -- OFF = No Healing. ON = Healing.
     private ZoneFlag physics; // OFF = Sand/Gravel may not fall, ON = Sand/Gravel may fall
-    private ZoneFlag pistons; //OFF = Pistons may not function, ON = Pistons may function
-    private ZoneFlag potion; //OFF = no potion damage, ON = potions can damage
+    private ZoneFlag pistons; // OFF = Pistons may not function, ON = Pistons may function
+    private ZoneFlag potion; // OFF = no potion damage, ON = potions can damage
     private ZoneFlag pvp; // OFF = pvp disabled, ON = pvp enabled
-    private ZoneFlag restricted; //OFF = Allow All, ON = Those without Authed permission take damage
+    private ZoneFlag restricted; // OFF = Allow All, ON = Those without Authed permission take damage
     private ZoneFlag sanctuary; // OFF = zone is not a sanctuary, ON = zone is a sanctuary
-    private ZoneFlag starve; //OFF = no Starvation, ON = Starvation
-    private ZoneFlag suffocate; //OFF = No Suffocation, ON = Suffocation
+    private ZoneFlag starve; // OFF = no Starvation, ON = Starvation
+    private ZoneFlag suffocate; // OFF = No Suffocation, ON = Suffocation
     private boolean deleted = false;
     private boolean saving = false;
 
@@ -87,10 +79,10 @@ public final class Zone{
         this.world = world;
         this.dimension = dimension;
         setDefaults(parent == null);
-        if(parent != null && !parent.getChildren().contains(this)){
+        if (parent != null && !parent.getChildren().contains(this)) {
             parent.children.add(this);
         }
-        if(name.startsWith("EVERYWHERE")){
+        if (name.startsWith("EVERYWHERE")) {
             TaskManager.executeTask(new RealmsDefaultPermsSet(this));
         }
         ZoneLists.addZone(this);
@@ -100,38 +92,38 @@ public final class Zone{
 
     // File Constructor
     public Zone(String... args) throws ZoneConstructException{
-        try{
+        try {
             this.name = args[0];
             this.world = args[1];
             this.dimension = Integer.valueOf(args[2]);
-            if(name.startsWith("EVERYWHERE")){
+            if (name.startsWith("EVERYWHERE")) {
                 this.parent = null;
             }
-            else{
-                try{
+            else {
+                try {
                     this.parent = args[3] != null ? ZoneLists.getZoneByName(args[3]) : null;
                 }
-                catch(ZoneNotFoundException ZNFE){}
+                catch (ZoneNotFoundException ZNFE) {}
             }
-            if(parent != null && !parent.getChildren().contains(this)){
+            if (parent != null && !parent.getChildren().contains(this)) {
                 parent.children.add(this);
             }
-            if(args.length < 5 || args[4] == null || args[4].equalsIgnoreCase("null")){
+            if (args.length < 5 || args[4] == null || args[4].equalsIgnoreCase("null")) {
                 this.greeting = null;
             }
-            else{
+            else {
                 this.greeting = args[4];
             }
-            if(args.length < 6 || args[5] == null || args[5].equalsIgnoreCase("null")){
+            if (args.length < 6 || args[5] == null || args[5].equalsIgnoreCase("null")) {
                 this.farewell = null;
             }
-            else{
+            else {
                 this.farewell = args[5];
             }
-            if(args.length < 7){
+            if (args.length < 7) {
                 setDefaults(name.toUpperCase().startsWith("EVERYWHERE"));
             }
-            else{
+            else {
                 this.adventure = ZoneFlag.getZoneFlag(args[6]);
                 this.animals = ZoneFlag.getZoneFlag(args[7]);
                 this.burn = ZoneFlag.getZoneFlag(args[8]);
@@ -153,18 +145,18 @@ public final class Zone{
                 this.suffocate = ZoneFlag.getZoneFlag(args[24]);
             }
             this.children = new ArrayList<Zone>();
-            if(parent != null && !parent.getChildren().contains(this)){
+            if (parent != null && !parent.getChildren().contains(this)) {
                 parent.children.add(this);
             }
             ZoneLists.addZone(this);
         }
-        catch(Exception ex){
+        catch (Exception ex) {
             throw new ZoneConstructException("Args invalid", ex);
         }
     }
 
     private final void setDefaults(boolean isEverywhere){
-        if(isEverywhere){
+        if (isEverywhere) {
             this.adventure = ZoneFlag.OFF;
             this.animals = ZoneFlag.ON;
             this.burn = ZoneFlag.ON;
@@ -185,7 +177,7 @@ public final class Zone{
             this.starve = ZoneFlag.ON;
             this.suffocate = ZoneFlag.ON;
         }
-        else{
+        else {
             this.adventure = ZoneFlag.INHERIT;
             this.animals = ZoneFlag.INHERIT;
             this.burn = ZoneFlag.INHERIT;
@@ -322,172 +314,172 @@ public final class Zone{
     }
 
     public final boolean getAdventure(){
-        if(this.adventure.isInherit() && this.parent != null){
+        if (this.adventure.isInherit() && this.parent != null) {
             return parent.getAdventure();
         }
-        else{
+        else {
             return this.adventure.getValue();
         }
     }
 
     public final boolean getAnimals(){
-        if(this.animals.isInherit() && this.parent != null){
+        if (this.animals.isInherit() && this.parent != null) {
             return parent.getAnimals();
         }
-        else{
+        else {
             return this.animals.getValue();
         }
     }
 
     public final boolean getBurn(){
-        if(this.burn.isInherit() && this.parent != null){
+        if (this.burn.isInherit() && this.parent != null) {
             return parent.getBurn();
         }
-        else{
+        else {
             return this.burn.getValue();
         }
     }
 
     public final boolean getCreative(){
-        if(this.creative.isInherit() && this.parent != null){
+        if (this.creative.isInherit() && this.parent != null) {
             return parent.getCreative();
         }
-        else{
+        else {
             return this.creative.getValue();
         }
     }
 
     public final boolean getDispensers(){
-        if(this.dispensers.isInherit() && this.parent != null){
+        if (this.dispensers.isInherit() && this.parent != null) {
             return parent.getDispensers();
         }
-        else{
+        else {
             return this.dispensers.getValue();
         }
     }
 
     public final boolean getEnderman(){
-        if(this.enderman.isInherit() && this.parent != null){
+        if (this.enderman.isInherit() && this.parent != null) {
             return parent.getEnderman();
         }
-        else{
+        else {
             return this.enderman.getValue();
         }
     }
 
     public final boolean getExplode(){
-        if(this.explode.isInherit() && this.parent != null){
+        if (this.explode.isInherit() && this.parent != null) {
             return parent.getExplode();
         }
-        else{
+        else {
             return this.explode.getValue();
         }
     }
 
     public final boolean getFall(){
-        if(this.fall.isInherit() && this.parent != null){
+        if (this.fall.isInherit() && this.parent != null) {
             return parent.getFall();
         }
-        else{
+        else {
             return this.fall.getValue();
         }
     }
 
     public final boolean getFire(){
-        if(this.fire.isInherit() && this.parent != null){
+        if (this.fire.isInherit() && this.parent != null) {
             return parent.getFire();
         }
-        else{
+        else {
             return this.fire.getValue();
         }
     }
 
     public final boolean getFlow(){
-        if(this.flow.isInherit() && this.parent != null){
+        if (this.flow.isInherit() && this.parent != null) {
             return parent.getFlow();
         }
-        else{
+        else {
             return this.flow.getValue();
         }
     }
 
     public final boolean getHealing(){
-        if(this.healing.isInherit() && this.parent != null){
+        if (this.healing.isInherit() && this.parent != null) {
             return parent.getHealing();
         }
-        else{
+        else {
             return this.healing.getValue();
         }
     }
 
     public final boolean getPhysics(){
-        if(this.physics.isInherit() && this.parent != null){
+        if (this.physics.isInherit() && this.parent != null) {
             return parent.getPhysics();
         }
-        else{
+        else {
             return this.physics.getValue();
         }
     }
 
     public final boolean getPistons(){
-        if(this.pistons.isInherit() && this.parent != null){
+        if (this.pistons.isInherit() && this.parent != null) {
             return parent.getPistons();
         }
-        else{
+        else {
             return this.pistons.getValue();
         }
     }
 
     public final boolean getPotion(){
-        if(this.potion.isInherit() && this.parent != null){
+        if (this.potion.isInherit() && this.parent != null) {
             return parent.getPotion();
         }
-        else{
+        else {
             return this.potion.getValue();
         }
     }
 
     public final boolean getPVP(){
-        if(this.pvp.isInherit() && this.parent != null){
+        if (this.pvp.isInherit() && this.parent != null) {
             return parent.getPVP();
         }
-        else{
+        else {
             return this.pvp.getValue();
         }
     }
 
     public final boolean getRestricted(){
-        if(this.restricted.isInherit() && this.parent != null){
+        if (this.restricted.isInherit() && this.parent != null) {
             return parent.getRestricted();
         }
-        else{
+        else {
             return this.restricted.getValue();
         }
     }
 
     public final boolean getSanctuary(){
-        if(this.sanctuary.isInherit() && this.parent != null){
+        if (this.sanctuary.isInherit() && this.parent != null) {
             return parent.getSanctuary();
         }
-        else{
+        else {
             return this.sanctuary.getValue();
         }
     }
 
     public final boolean getStarve(){
-        if(this.starve.isInherit() && this.parent != null){
+        if (this.starve.isInherit() && this.parent != null) {
             return parent.getStarve();
         }
-        else{
+        else {
             return this.starve.getValue();
         }
     }
 
     public final boolean getSuffocate(){
-        if(this.suffocate.isInherit() && this.parent != null){
+        if (this.suffocate.isInherit() && this.parent != null) {
             return parent.getSuffocate();
         }
-        else{
+        else {
             return this.suffocate.getValue();
         }
     }
@@ -550,6 +542,7 @@ public final class Zone{
     }
 
     public final void setEnderman(ZoneFlag enderman){
+        // Dynamically generated
         this.enderman = enderman;
         save();
     }
@@ -621,13 +614,13 @@ public final class Zone{
 
     /* Other Methods */
     public final void farewell(Mod_User player){
-        if(farewell != null){
+        if (farewell != null) {
             player.sendMessage(farewell.replace("@", "\u00A7"));
         }
     }
 
     public final void greet(Mod_User player){
-        if(greeting != null){
+        if (greeting != null) {
             player.sendMessage(greeting.replace("@", "\u00A7"));
         }
     }
@@ -640,7 +633,7 @@ public final class Zone{
         RealmsBase.getDataSourceHandler().addToQueue(OutputAction.DELETE_ZONE, this);
     }
 
-    //Save Zone
+    // Save Zone
     public final void save(){
         RealmsBase.getDataSourceHandler().addToQueue(OutputAction.SAVE_ZONE, this);
     }
@@ -651,47 +644,47 @@ public final class Zone{
     }
 
     public final boolean contains(Mod_Block block){
-        if(name.equals("EVERYWHERE-" + block.getWorld().toUpperCase() + "-DIM" + block.getDimension())){
+        if (name.equals("EVERYWHERE-" + block.getWorld().toUpperCase() + "-DIM" + block.getDimension())) {
             return true;
         }
-        if(isEmpty()){
+        if (isEmpty()) {
             return false;
         }
-        if(isInWorld(block.getWorld(), block.getDimension())){
+        if (isInWorld(block.getWorld(), block.getDimension())) {
             return polygon.contains(block);
         }
         return false;
     }
 
     public final boolean contains(Mod_Entity entity){
-        if(name.equals("EVERYWHERE-" + entity.getWorld().toUpperCase() + "-DIM" + entity.getDimension())){
+        if (name.equals("EVERYWHERE-" + entity.getWorld().toUpperCase() + "-DIM" + entity.getDimension())) {
             return true;
         }
-        if(isEmpty()){
+        if (isEmpty()) {
             return false;
         }
-        if(isInWorld(entity.getWorld(), entity.getDimension())){
+        if (isInWorld(entity.getWorld(), entity.getDimension())) {
             return polygon.contains(entity);
         }
         return false;
     }
 
     public final boolean contains(Zone zone){
-        if(name.equals("EVERYWHERE-" + zone.getWorld() + "-DIM" + zone.getDimension())){
+        if (name.equals("EVERYWHERE-" + zone.getWorld() + "-DIM" + zone.getDimension())) {
             return true;
         }
-        if(isEmpty()){
+        if (isEmpty()) {
             return false;
         }
-        if(isInWorld(zone.getWorld(), zone.getDimension())){
+        if (isInWorld(zone.getWorld(), zone.getDimension())) {
             return polygon.verticesContain(zone.getPolygon());
         }
         return false;
     }
 
     public final Zone whichChildContains(Mod_Block block){
-        for(Zone child : children){
-            if(child.contains(block)){
+        for (Zone child : children) {
+            if (child.contains(block)) {
                 return child.whichChildContains(block);
             }
         }
@@ -699,8 +692,8 @@ public final class Zone{
     }
 
     public final Zone whichChildContains(Mod_Entity entity){
-        for(Zone child : children){
-            if(child.contains(entity)){
+        for (Zone child : children) {
+            if (child.contains(entity)) {
                 return child.whichChildContains(entity);
             }
         }
@@ -723,8 +716,8 @@ public final class Zone{
         String[] environ = new String[5];
         String[] comb = new String[2];
         StringBuilder flags = new StringBuilder();
-        //Start Environment Flags
-        if(showEnviro){
+        // Start Environment Flags
+        if (showEnviro) {
             flags.append(formatFlag("ADVENTURE", getAbsoluteAdventure().isInherit(), getAdventure(), true));
             flags.append(formatFlag("ANIMALS", getAbsoluteAnimals().isInherit(), getAnimals(), true));
             flags.append(formatFlag("BURN", getAbsoluteBurn().isInherit(), getBurn(), false));
@@ -750,11 +743,11 @@ public final class Zone{
             environ[4] = flags.toString();
             flags.delete(0, flags.length());
         }
-        //End Environment Flags
-        //Start Combat Flags
-        if(showComb){
-            flags.append(formatFlag("HEALING", getAbsoluteHealing().isInherit(), getHealing(), true));
+        // End Environment Flags
+        // Start Combat Flags
+        if (showComb) {
             flags.append(formatFlag("EXPLODE", getAbsoluteExplode().isInherit(), getExplode(), true));
+            flags.append(formatFlag("HEALING", getAbsoluteHealing().isInherit(), getHealing(), true));
             flags.append(formatFlag("POTION", getAbsolutePotion().isInherit(), getPotion(), false));
             comb[0] = flags.toString();
             flags.delete(0, flags.length());
@@ -762,14 +755,14 @@ public final class Zone{
             flags.append(formatFlag("SANCTUARY", getAbsoluteSanctuary().isInherit(), getSanctuary(), false));
             comb[1] = flags.toString();
         }
-        //End Combat Flags
-        if(showComb && !showEnviro){
+        // End Combat Flags
+        if (showComb && !showEnviro) {
             return comb;
         }
-        else if(!showComb && showEnviro){
+        else if (!showComb && showEnviro) {
             return environ;
         }
-        else{
+        else {
             String[] allFlags = new String[environ.length + comb.length];
             System.arraycopy(environ, 0, allFlags, 0, environ.length);
             System.arraycopy(comb, 0, allFlags, environ.length, comb.length);
@@ -780,33 +773,32 @@ public final class Zone{
     private String formatFlag(String flag, boolean absolute, boolean on, boolean pad){
         StringBuffer tempRet = new StringBuffer(MCChatForm.ORANGE.toString());
         tempRet.append(flag);
-        tempRet.append(MCChatForm.CYAN);
-        tempRet.append("= ");
-        if(absolute){
+        tempRet.append(": ");
+        if (absolute) {
             tempRet.append(MCChatForm.PINK);
-            if(on){
+            if (on) {
                 tempRet.append("ON");
             }
-            else{
+            else {
                 tempRet.append("OFF");
             }
         }
-        else if(on){
+        else if (on) {
             tempRet.append(MCChatForm.GREEN);
             tempRet.append("ON");
         }
-        else{
+        else {
             tempRet.append(MCChatForm.RED);
             tempRet.append("OFF");
         }
         String toRet = tempRet.toString();
-        if(pad){
+        if (pad) {
             toRet = StringUtils.padCharRight(toRet, (26 - toRet.length()), ' ');
         }
         return toRet;
     }
 
-    //Start Permission Checks
+    // Start Permission Checks
     /**
      * Set Permissions Method
      * Overrides previous permission if it existed Otherwise creates new
@@ -825,7 +817,7 @@ public final class Zone{
      */
     public final void setPermission(String ownerName, PermissionType type, boolean allowed, boolean override){
         Permission previous = getSpecificPermission(ownerName, type);
-        if(previous != null){
+        if (previous != null) {
             zoneperms.remove(previous);
         }
         Permission perm = new Permission(ownerName, type, allowed, override);
@@ -849,8 +841,8 @@ public final class Zone{
      * @return Permission
      */
     public final Permission getSpecificPermission(String ownerName, PermissionType type){
-        for(Permission p : zoneperms){
-            if(p.getOwnerName().equals(ownerName) && p.getType().equals(type)){
+        for (Permission p : zoneperms) {
+            if (p.getOwnerName().equals(ownerName) && p.getType().equals(type)) {
                 return p;
             }
         }
@@ -866,7 +858,7 @@ public final class Zone{
      */
     public final void deletePermission(String ownerName, PermissionType type){
         Permission permission = getSpecificPermission(ownerName, type);
-        if(permission != null){
+        if (permission != null) {
             zoneperms.remove(permission);
             save();
         }
@@ -881,15 +873,15 @@ public final class Zone{
      * @return boolean check result
      */
     public final boolean delegateCheck(Mod_User player, PermissionType type){
-        if(getParent() != null){
-            if(getParent().permissionCheck(player, PermissionType.ALL)){
+        if (getParent() != null) {
+            if (getParent().permissionCheck(player, PermissionType.ALL)) {
                 return true;
             }
         }
-        if(type.equals(PermissionType.DELEGATE)){
+        if (type.equals(PermissionType.DELEGATE)) {
             return permissionCheck(player, PermissionType.ALL);
         }
-        else{
+        else {
             return permissionCheck(player, PermissionType.DELEGATE) && permissionCheck(player, type);
         }
     }
@@ -899,25 +891,25 @@ public final class Zone{
      */
     public final boolean permissionCheck(Mod_User user, PermissionType type){
         Permission result = null;
-        for(Permission p : zoneperms){
-            if(p.applicable(user, type)){
-                if(result == null){
+        for (Permission p : zoneperms) {
+            if (p.applicable(user, type)) {
+                if (result == null) {
                     result = p;
                 }
-                else{
+                else {
                     result = p.battle(result, p);
                 }
             }
         }
-        if(result == null){
-            if(getParent() != null){
+        if (result == null) {
+            if (getParent() != null) {
                 return getParent().permissionCheck(user, type);
             }
-            else{
+            else {
                 return RealmsBase.getProperties().getBooleanVal("grant.default");
             }
         }
-        else{
+        else {
             return result.getAllowed();
         }
     }
@@ -940,7 +932,7 @@ public final class Zone{
         this.saving = save;
     }
 
-    //End Permission checks
+    // End Permission checks
     @Override
     public final String toString(){
         StringBuffer toRet = new StringBuffer();
@@ -1007,14 +999,14 @@ public final class Zone{
 
     @Override
     public final boolean equals(Object obj){
-        if(this == obj){
+        if (this == obj) {
             return true;
         }
-        if(obj == null || !(obj instanceof Zone)){
+        if (obj == null || !(obj instanceof Zone)) {
             return false;
         }
-        Zone zone = (Zone)obj;
-        if(RealmsBase.getProperties().getBooleanVal("zone.case.sensitive")){
+        Zone zone = (Zone) obj;
+        if (RealmsBase.getProperties().getBooleanVal("zone.case.sensitive")) {
             return this.name.equals(zone.getName());
         }
         return this.name.toLowerCase().equals(zone.getName().toLowerCase());

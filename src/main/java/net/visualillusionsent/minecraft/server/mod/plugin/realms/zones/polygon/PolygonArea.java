@@ -48,6 +48,8 @@ public final class PolygonArea{
     private Mode mode = Mode.SAVED;
     private Point centroid = null;
     private double radius = 0;
+    private int area = 0;
+    private int volume = 0;
 
     /**
      * PolygonArea Constructor
@@ -74,7 +76,8 @@ public final class PolygonArea{
             }
             centroid = calculateCentroid(vertices);
             radius = calculateRadius(vertices, centroid);
-            reorganize(vertices); // Redundancy and verification
+            area = calculateArea();
+            volume = calculateVolume();
         }
         catch (NumberFormatException nfe) {
             throw new PolygonConstructException("Number format exception in one of the Verticies for Zone: " + zone.getName());
@@ -110,7 +113,11 @@ public final class PolygonArea{
     }
 
     public final int getArea(){
-        return calculateArea(vertices);
+        return area;
+    }
+
+    public final int getVolume(){
+        return volume;
     }
 
     public final String getMode(){
@@ -145,6 +152,8 @@ public final class PolygonArea{
             this.mode = Mode.SAVED;
             centroid = null;
             radius = 0;
+            area = 0;
+            volume = 0;
         }
         else {
             vertices = new LinkedList<Point>(workingVertices);
@@ -154,6 +163,8 @@ public final class PolygonArea{
             this.mode = Mode.SAVED;
             centroid = calculateCentroid(vertices);
             radius = calculateRadius(vertices, centroid);
+            area = calculateArea();
+            volume = calculateVolume();
         }
         zone.save();
     }
@@ -428,23 +439,23 @@ public final class PolygonArea{
         Collections.sort(points, new PointComparator(centroid));
     }
 
-    public static final int calculateArea(List<Point> points){
-        if (points.size() < 3) {
+    private final int calculateArea(){
+        if (vertices.size() < 3) {
             return 0;
         }
         int areaCalc = 0;
-        Point last = points.get(points.size() - 1);
-        for (Point p : points) {
-            areaCalc += p.x * last.z - last.x * p.z;
+        Point last = vertices.get(vertices.size() - 1);
+        for (Point p : vertices) {
+            areaCalc += Math.abs(p.x * last.z) - Math.abs(last.x * p.z);
             last = p;
         }
         areaCalc = Math.abs(areaCalc / 2);
         return areaCalc;
     }
 
-    public static final int calculateVolume(List<Point> points, int floor, int ceiling){
+    private final int calculateVolume(){
         int height = ceiling - floor;
-        return calculateArea(points) * height;
+        return calculateArea() * height;
     }
 
     private static final boolean intersects(List<Point> list1, List<Point> list2){
@@ -488,5 +499,9 @@ public final class PolygonArea{
             builder.append(vertex.z);
         }
         return builder.toString();
+    }
+
+    public final int getHeight(){
+        return ceiling - floor;
     }
 }

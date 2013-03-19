@@ -2,14 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.visualillusionsent.mcplugin</groupId>
   <artifactId>realms</artifactId>
-  <version>7.0</version>
+  <version>7.1</version>
   <name>Realms</name>
   <description>Polygonal Heirarchy Area Ownership</description>
   <url>http://wiki.visualillusionsent.net/Realms</url>
   <inceptionYear>2012</inceptionYear>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <ProgramStatus>STABLE</ProgramStatus>
+    <ProgramStatus>ALPHA</ProgramStatus>
   </properties>
   <organization>
    <name>Visual Illusions Entertainment</name>

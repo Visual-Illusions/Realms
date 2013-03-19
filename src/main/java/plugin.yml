@@ -1,10 +1,10 @@
 ﻿# Realms - Bukkit Plugin configuration file
 name: Realms
 main: net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms.Realms
-version: 7
+version: 7.1
 author: Jason (darkdiplomat)
 authors: [Impact, durron597]
-website: http://visualillusionsent.net
+website: http://wiki.visualillusionsent.net/Realms
 
 commands:
   realms:
