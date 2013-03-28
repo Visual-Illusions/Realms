@@ -73,14 +73,14 @@
    <dependency>
     <groupId>net.canarymod</groupId>
     <artifactId>crow</artifactId>
-    <version>5.7.11</version>
+    <version>5.8.11</version>
     <scope>system</scope>
     <systemPath>${basedir}/lib/CanaryMod.jar</systemPath>
    </dependency>
    <dependency>
     <groupId>net.canarymod</groupId>
     <artifactId>minecraft_servero</artifactId>
-    <version>1.4.7</version>
+    <version>1.5.1</version>
     <scope>system</scope>
     <systemPath>${basedir}/lib/minecraft_servero.jar</systemPath>
    </dependency>

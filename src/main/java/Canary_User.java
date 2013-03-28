@@ -1,22 +1,15 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 
@@ -60,12 +53,14 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     @Override
     public final void heal(int amount){
         int newHealth = getHealth() + amount;
-        if(newHealth > player.getMaxHealth()){
+        if (newHealth > player.getMaxHealth()) {
             newHealth = player.getMaxHealth();
         }
         player.setHealth(newHealth);
     }
 
+    @SuppressWarnings("deprecation")
+    // Damn it damagefilter...
     @Override
     public final void causeDamage(int amount){
         player.applyDamage(PluginLoader.DamageType.SUFFOCATION, amount);
@@ -105,8 +100,8 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     public final Mod_Item[] getInventoryContents(){
         Item[] items = player.getInventory().getContents();
         Mod_Item[] its = new Mod_Item[40];
-        for(int index = 0; index < 40; index++){
-            if(items[index] != null){
+        for (int index = 0; index < 40; index++) {
+            if (items[index] != null) {
                 its[index] = new Canary_Item(items[index].clone());
             }
         }
@@ -116,8 +111,8 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     @Override
     public final void setInventoryContents(Mod_Item[] items){
         Item[] cIt = new Item[40];
-        for(int index = 0; index < 40; index++){
-            cIt[index] = items[index] != null ? ((Canary_Item)items[index]).getBaseItem() : null;
+        for (int index = 0; index < 40; index++) {
+            cIt[index] = items[index] != null ? ((Canary_Item) items[index]).getBaseItem() : null;
         }
         player.getInventory().setContents(cIt);
     }
@@ -149,10 +144,10 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
 
     @Override
     public final boolean equals(Object obj){
-        if(obj instanceof Canary_User){
-            return ((Canary_User)obj).getPlayer().equals(player);
+        if (obj instanceof Canary_User) {
+            return ((Canary_User) obj).getPlayer().equals(player);
         }
-        else if(obj instanceof Player){
+        else if (obj instanceof Player) {
             return player.equals(obj);
         }
         return false;

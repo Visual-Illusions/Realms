@@ -379,11 +379,38 @@ public final class Realms_CanaryListener extends PluginListener{
     }
 
     @Override
-    public final boolean onDamage(PluginLoader.DamageType type, BaseEntity attacker, BaseEntity defender, int amount){
+    public final boolean onHangingEntityDestroyed(HangingEntity baseEntity){
         if (!RealmsBase.isLoaded()) {
             return false;
         }
+        try {
+            for (Player player : etc.getServer().getPlayerList()) {
+                if (player.isAdmin() || player.isOp() || player.canUseCommand("realms.admin")) {
+                    player.notify("[REALMS] Due to failed implementation of the HangingEntityDestroy hook not having enough info");
+                    player.notify("to determin who/what destroyed the HangingEntity.");
+                    player.notify("You get this annoying message about where the entity was destroyed...");
+                    player.notify(baseEntity.toString());
+                }
+            }
+        }
+        catch (Exception ex) {
+            RealmsLogMan.severe("An unexpected exception occured @ HANGINGENTITY_DESTROY. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.stacktrace(ex);
+        }
+        return false;
+    }
+
+    @Override
+    public final HookParametersDamage onDamage(HookParametersDamage hpDamage){
+        if (!RealmsBase.isLoaded()) {
+            return hpDamage;
+        }
+
         boolean deny = false;
+        BaseEntity defender = hpDamage.getDefender();
+        BaseEntity attacker = hpDamage.getAttacker();
+        DamageType type = hpDamage.getDamageSource().getDamageType();
+
         try {
             if (defender.isPlayer()) {
                 Canary_User user = new Canary_User(defender.getPlayer());
@@ -429,7 +456,10 @@ public final class Realms_CanaryListener extends PluginListener{
             RealmsLogMan.severe("An unexpected exception occured @ DAMAGE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
-        return deny;
+        if (deny) {
+            hpDamage.setCanceled();
+        }
+        return hpDamage;
     }
 
     @Override
