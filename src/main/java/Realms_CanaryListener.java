@@ -61,6 +61,7 @@ public final class Realms_CanaryListener extends PluginListener{
         loader.addListener(PluginLoader.Hook.FOODEXHAUSTION_CHANGE, this, plugin, HIGH);
         loader.addListener(PluginLoader.Hook.FOODLEVEL_CHANGE, this, plugin, HIGH);
         loader.addListener(PluginLoader.Hook.FOODSATURATION_CHANGE, this, plugin, HIGH);
+        loader.addListener(PluginLoader.Hook.HANGING_ENTITY_DESTROYED, this, plugin, HIGH);
         loader.addListener(PluginLoader.Hook.IGNITE, this, plugin, HIGH);
         loader.addListener(PluginLoader.Hook.ITEM_DROP, this, plugin, HIGH);
         loader.addListener(PluginLoader.Hook.ITEM_USE, this, plugin, HIGH);
@@ -379,28 +380,6 @@ public final class Realms_CanaryListener extends PluginListener{
     }
 
     @Override
-    public final boolean onHangingEntityDestroyed(HangingEntity baseEntity){
-        if (!RealmsBase.isLoaded()) {
-            return false;
-        }
-        try {
-            for (Player player : etc.getServer().getPlayerList()) {
-                if (player.isAdmin() || player.isOp() || player.canUseCommand("realms.admin")) {
-                    player.notify("[REALMS] Due to failed implementation of the HangingEntityDestroy hook not having enough info");
-                    player.notify("to determin who/what destroyed the HangingEntity.");
-                    player.notify("You get this annoying message about where the entity was destroyed...");
-                    player.notify(baseEntity.toString());
-                }
-            }
-        }
-        catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ HANGINGENTITY_DESTROY. Caused by: " + ex.getClass().getName());
-            RealmsLogMan.stacktrace(ex);
-        }
-        return false;
-    }
-
-    @Override
     public final HookParametersDamage onDamage(HookParametersDamage hpDamage){
         if (!RealmsBase.isLoaded()) {
             return hpDamage;
@@ -709,6 +688,26 @@ public final class Realms_CanaryListener extends PluginListener{
             }
         }
         return result;
+    }
+
+    @Override
+    public final boolean onHangingEntityDestroyed(HangingEntity baseEntity, DamageSource source){
+        if (!RealmsBase.isLoaded()) {
+            return false;
+        }
+        boolean deny = false;
+        try {
+            if (source.getDamagingEntity() != null && source.getDamagingEntity().isPlayer()) {
+                Canary_User user = new Canary_User(source.getDamagingEntity().getPlayer());
+                Zone zone = ZoneLists.getInZone(user);
+                deny = !zone.permissionCheck(user, PermissionType.DESTROY);
+            }
+        }
+        catch (Exception ex) {
+            RealmsLogMan.severe("An unexpected exception occured @ HANGINGENTITY_DESTROY. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.stacktrace(ex);
+        }
+        return deny;
     }
 
     @Override

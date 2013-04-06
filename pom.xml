@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.visualillusionsent.mcplugin</groupId>
   <artifactId>realms</artifactId>
-  <version>7.1</version>
+  <version>7.1-SNAPSHOT</version>
   <name>Realms</name>
   <description>Polygonal Heirarchy Area Ownership</description>
   <url>http://wiki.visualillusionsent.net/Realms</url>
@@ -57,7 +57,7 @@
    <dependency>
     <groupId>net.visualillusionsent</groupId>
     <artifactId>viutils</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
    </dependency>
    <dependency>
     <groupId>org.bukkit</groupId>
@@ -72,8 +72,8 @@
    <!-- CanaryMod isn't a Maven project so System Scope the dependancies -->
    <dependency>
     <groupId>net.canarymod</groupId>
-    <artifactId>crow</artifactId>
-    <version>5.8.11</version>
+    <artifactId>build</artifactId>
+    <version>11.0</version>
     <scope>system</scope>
     <systemPath>${basedir}/lib/CanaryMod.jar</systemPath>
    </dependency>
@@ -114,7 +114,6 @@
         </excludes>
       </resource>
     </resources>
-    <finalName>Realms</finalName>
     <plugins>
       <!-- Start: Generate Timestamp -->
       <plugin>
@@ -158,7 +157,7 @@
                 <ProgramStatus>${ProgramStatus}</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
-                <Class-Path>../lib/viutils-1.0.1.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
+                <Class-Path>../lib/viutils-1.0.3.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>
