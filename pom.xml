@@ -55,11 +55,6 @@
   </repositories>
   <dependencies>
    <dependency>
-    <groupId>net.visualillusionsent</groupId>
-    <artifactId>viutils</artifactId>
-    <version>1.0.3</version>
-   </dependency>
-   <dependency>
     <groupId>org.bukkit</groupId>
     <artifactId>bukkit</artifactId>
     <version>1.4.7-R1.0</version>
@@ -95,13 +90,19 @@
     <artifactId>postgresql</artifactId>
     <version>9.1-901-1.jdbc4</version>
    </dependency>
+   <dependency>
+   	<groupId>net.canarymod</groupId>
+   	<artifactId>CanaryLib</artifactId>
+   	<version>0.4-SNAPSHOT</version>
+   </dependency>
   </dependencies>
   <build>
     <resources>
       <resource>
         <directory>src/main/java</directory>
         <includes>
-          <include>*.yml</include>
+          <include>plugin.yml</include>
+          <include>Canary.inf</include>
         </includes>
       </resource>
       <resource>

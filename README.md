@@ -14,19 +14,19 @@ Be sure to include as much information about the issue as possible, including Se
 ## Compiling ##
 Create a new project in the IDE of your choice<br>
 Change the source folder to be src/main/java<br>
-Add a current CanaryMod.jar, minecraft_servero.jar (Canary generated), Bukkit API jar, sqlite.jar, viutils-1.0.1.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
+Add a current CanaryMod.jar, minecraft_servero.jar (Canary generated), Bukkit API jar, sqlite.jar, viutils-1.0.3.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
 
 Maven:<br>
 Place CanaryMod.jar and minecraft_servero.jar in a folder named 'lib' in your main project directory<br>
 Run the pom.xml<br>
 
 Ant:<br>
-Place CanaryMod.jar, minecraft_servero.jar, Bukkit API jar, sqlite.jar, viutils-1.0.1.jar, and jdom2.jar in a folder named 'lib' in your main project directory<br>
+Place CanaryMod.jar, minecraft_servero.jar, Bukkit API jar, sqlite.jar, viutils-1.0.3.jar, and jdom2.jar in a folder named 'lib' in your main project directory<br>
 Right click the realms_ant_build.xml and select Run As -> Ant Build<br>
 Files will be located in a dist folder in your project area<br>
 
 Normal:<br>
-Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.1.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
+Add a current CanaryMod.jar, Bukkit API jar, sqlite.jar, viutils-1.0.3.jar, and jdom2.jar to the build path  (verify the names are the same, renaming may be required)<br>
 You may also need a reference to minecraft_servero.jar from CanaryMod for compliation.<br>
 Export with the provide MANIFEST.MF file!<br>
 

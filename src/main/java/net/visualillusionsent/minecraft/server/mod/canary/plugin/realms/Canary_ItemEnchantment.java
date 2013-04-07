@@ -10,10 +10,10 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * Source Code availible @ https://github.com/Visual-Illusions/Realms */
-package net.visualillusionsent.minecraft.server.mod.plugin.realms;
+package net.visualillusionsent.minecraft.server.mod.canary.plugin.realms;
 
-import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
-import net.visualillusionsent.utils.LocaleHelper;
+import net.canarymod.api.inventory.Enchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 
 /**
  * This file is part of Realms.
@@ -23,31 +23,42 @@ import net.visualillusionsent.utils.LocaleHelper;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsTranslate extends LocaleHelper{
+public final class Canary_ItemEnchantment implements Mod_ItemEnchantment{
 
-    private static final RealmsTranslate instance;
+    private final Enchantment enchantment;
 
-    static {
-        instance = new RealmsTranslate();
+    public Canary_ItemEnchantment(Enchantment enchantment){
+        this.enchantment = enchantment;
     }
 
-    private RealmsTranslate(){
-        localeCodeOverride = RealmsBase.getProperties().getStringVal("lang.locale");
+    @Override
+    public final int getId(){
+        return enchantment.getType().getId();
     }
 
-    public final static String transMessage(String key){
-        return colorize(instance.localeTranslate(key));
+    @Override
+    public final int getLevel(){
+        return enchantment.getLevel();
     }
 
-    public final static String transformMessage(String key, Object... args){
-        return colorize(instance.localeTranslateMessage(key, args));
+    @Override
+    public final Enchantment getBaseEnchantment(){
+        return enchantment;
     }
 
-    private final static String colorize(String msg){
-        return msg.replaceAll("\\$c", MCChatForm.MARKER.stringValue());
+    @Override
+    public final boolean equals(Object obj){
+        if (obj instanceof Canary_ItemEnchantment) {
+            return enchantment.equals(((Canary_ItemEnchantment) obj).getBaseEnchantment());
+        }
+        else if (obj instanceof Enchantment) {
+            return enchantment.equals(obj);
+        }
+        return false;
     }
 
-    public static void initialize(){ // Just meant to help initialize the class so there isnt a delay later
-        ;
+    @Override
+    public final int hashCode(){
+        return enchantment.hashCode();
     }
 }

@@ -10,10 +10,12 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
  * Source Code availible @ https://github.com/Visual-Illusions/Realms */
-package net.visualillusionsent.minecraft.server.mod.plugin.realms;
+package net.visualillusionsent.minecraft.server.mod.canary.plugin.realms;
 
-import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
-import net.visualillusionsent.utils.LocaleHelper;
+import net.canarymod.Canary;
+import net.canarymod.plugin.Plugin;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.commands.RealmsCommandHandler;
 
 /**
  * This file is part of Realms.
@@ -23,31 +25,22 @@ import net.visualillusionsent.utils.LocaleHelper;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsTranslate extends LocaleHelper{
+public final class Realms extends Plugin{
+    private RealmsBase base;
 
-    private static final RealmsTranslate instance;
-
-    static {
-        instance = new RealmsTranslate();
+    @Override
+    public void disable(){
+        if (RealmsBase.isLoaded()) {
+            base.terminate();
+        }
     }
 
-    private RealmsTranslate(){
-        localeCodeOverride = RealmsBase.getProperties().getStringVal("lang.locale");
-    }
-
-    public final static String transMessage(String key){
-        return colorize(instance.localeTranslate(key));
-    }
-
-    public final static String transformMessage(String key, Object... args){
-        return colorize(instance.localeTranslateMessage(key, args));
-    }
-
-    private final static String colorize(String msg){
-        return msg.replaceAll("\\$c", MCChatForm.MARKER.stringValue());
-    }
-
-    public static void initialize(){ // Just meant to help initialize the class so there isnt a delay later
-        ;
+    @Override
+    public void enable(){
+        getLogman();
+        base = new RealmsBase(new Canary_Server(null));
+        RealmsCommandHandler.initialize();
+        new Realms_CanaryHookHandler(this);
+        Canary.commands().registerCommand("realms", new RealmsCanaryCommand(), this, false);
     }
 }

@@ -1,28 +1,20 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.logging;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
 
 /**
@@ -36,40 +28,45 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
 public final class RealmsLogMan{
 
     private static Logger logger;
-    static{
+    static {
         logger = new RLogger();
-        logger.setParent(Logger.getLogger("Minecraft"));
+        if (RealmsBase.getServer().isCanary() || RealmsBase.getServer().isBukkit()) {
+            logger.setParent(Logger.getLogger("Realms"));
+        }
+        else {
+            logger.setParent(Logger.getLogger("Minecraft-Sever"));
+        }
         logger.setLevel(Level.ALL);
     }
 
     private static class RLogger extends Logger{
 
         RLogger(){
-            super("Realms", null);
+            super("Realms-Internal", null);
         }
 
         @Override
         public void log(LogRecord logRecord){
             Level lvl = logRecord.getLevel();
             String message = logRecord.getMessage();
-            if(lvl instanceof RLevel){
+            if (lvl instanceof RLevel) {
                 Boolean all = RealmsBase.getProperties().getBooleanVal("debug.all");
-                if(all == null || !all){
+                if (all == null || !all) {
                     Boolean prop = RealmsBase.getProperties().getBooleanVal(lvl.getName().replace('-', '.').replace("REALMS.", "").toLowerCase());
-                    if(prop == null || !prop){
+                    if (prop == null || !prop) {
                         return;
                     }
                 }
             }
-            if(RealmsBase.getServer().isCanary()){
-                if(lvl instanceof RLevel){
+            if (RealmsBase.getServer().isCanaryClassic()) {
+                if (lvl instanceof RLevel) {
                     logRecord.setMessage(" [" + lvl.getName() + "] [Realms] " + message);
                 }
-                else{
+                else {
                     logRecord.setMessage(" [Realms] ".concat(message));
                 }
             }
-            else{
+            else {
                 logRecord.setMessage("[Realms] ".concat(message));
             }
             super.log(logRecord);
@@ -103,10 +100,10 @@ public final class RealmsLogMan{
     }
 
     public static void stacktrace(Throwable thrown){
-        if(RealmsBase.getProperties().getBooleanVal("debug.stacktrace") || RealmsBase.getProperties().getBooleanVal("debug.all")){
+        if (RealmsBase.getProperties().getBooleanVal("debug.stacktrace") || RealmsBase.getProperties().getBooleanVal("debug.all")) {
             logger.log(RLevel.STACKTRACE, "Stacktrace: ", thrown);
         }
-        else{
+        else {
             logger.warning("*** Enabled \"debug.stacktrace\" in the Realms.ini to view stacktraces ***");
         }
     }

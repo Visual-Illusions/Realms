@@ -1,34 +1,25 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
-
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -60,9 +51,9 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     public final List<Mod_Entity> getAnimals(){
         List<World> worlds = new ArrayList<World>(server.getWorlds());
         List<Mod_Entity> animals = new ArrayList<Mod_Entity>();
-        for(World world : worlds){
+        for (World world : worlds) {
             List<Animals> bAni = new ArrayList<Animals>(world.getEntitiesByClass(Animals.class));
-            for(Animals anim : bAni){
+            for (Animals anim : bAni) {
                 animals.add(new Bukkit_Entity(anim));
             }
         }
@@ -73,9 +64,9 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     public final List<Mod_Entity> getMobs(){
         List<World> worlds = new ArrayList<World>(server.getWorlds());
         List<Mod_Entity> mobs = new ArrayList<Mod_Entity>();
-        for(World world : worlds){
+        for (World world : worlds) {
             List<Monster> bMobs = new ArrayList<Monster>(world.getEntitiesByClass(Monster.class));
-            for(Monster mon : bMobs){
+            for (Monster mon : bMobs) {
                 mobs.add(new Bukkit_Entity(mon));
             }
         }
@@ -85,7 +76,7 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public final List<Mod_User> getUsers(){
         List<Mod_User> users = new ArrayList<Mod_User>();
-        for(Player player : server.getOnlinePlayers()){
+        for (Player player : server.getOnlinePlayers()) {
             users.add(new Bukkit_User(player));
         }
         return users;
@@ -94,7 +85,7 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public final Mod_User getUser(String name){
         Player player = server.getPlayer(name);
-        if(player != null){
+        if (player != null) {
             return new Bukkit_User(player);
         }
         return null;
@@ -104,7 +95,7 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world){
         Block block = server.getWorld(world).getBlockAt(x, y, z);
         block.setTypeId(type);
-        block.setData((byte)data);
+        block.setData((byte) data);
     }
 
     @Override
@@ -115,18 +106,18 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
 
     @Override
     public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchants, String[] lore){
-        ItemStack item = new ItemStack(type, amount, (short)damage);
-        if(enchants != null){
-            for(Mod_ItemEnchantment ench : enchants){
+        ItemStack item = new ItemStack(type, amount, (short) damage);
+        if (enchants != null) {
+            for (Mod_ItemEnchantment ench : enchants) {
                 item.addEnchantment(Enchantment.getById(ench.getId()), ench.getLevel());
             }
         }
         ItemMeta meta = server.getItemFactory().getItemMeta(Material.getMaterial(type));
         item.setItemMeta(meta);
-        if(lore != null){
+        if (lore != null) {
             item.getItemMeta().setLore(Arrays.asList(new String[0]));
         }
-        if(name != null){
+        if (name != null) {
             item.getItemMeta().setDisplayName(name);
         }
         return new Bukkit_Item(item);
@@ -156,6 +147,11 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public final int getHighestY(int x, int z, String world, int dimension){
         return server.getWorld(world).getHighestBlockYAt(x, z);
+    }
+
+    @Override
+    public boolean isCanaryClassic(){
+        return false;
     }
 
     @Override
