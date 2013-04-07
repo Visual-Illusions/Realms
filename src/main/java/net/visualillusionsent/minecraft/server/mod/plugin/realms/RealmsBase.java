@@ -13,6 +13,8 @@
 package net.visualillusionsent.minecraft.server.mod.plugin.realms;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.jar.Attributes;
@@ -54,7 +56,7 @@ public final class RealmsBase{
     private final Mod_Server server;
     private final String name = "Realms";
     private final String version_check_URL = "http://visualillusionsent.net/minecraft/plugins/";
-    private final String jar_Path = "plugins/Realms.jar";
+    private final String jar_Path = genJarPath();
     private final DataSourceHandler source_handler;
     private final RealmsProps props;
     private final VersionChecker vc;
@@ -105,8 +107,17 @@ public final class RealmsBase{
             loaded = true;
         }
         else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("RealmsBase already initialized");
         }
+    }
+
+    private String genJarPath(){ // For when the jar isn't Realms.jar
+        try {
+            CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
+            return codeSource.getLocation().toURI().getPath();
+        }
+        catch (URISyntaxException ex) {}
+        return "plugins/Realms.jar";
     }
 
     private final void initializeThreads(){
