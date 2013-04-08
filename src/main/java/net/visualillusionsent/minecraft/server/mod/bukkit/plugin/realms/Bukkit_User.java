@@ -1,31 +1,23 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
-
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +33,7 @@ import org.bukkit.inventory.ItemStack;
 public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
 
     private final Player player;
-    private final net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[]{};
+    private final net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] {};
 
     public Bukkit_User(Player player){
         super(player);
@@ -57,18 +49,28 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     public final void destroy(){}
 
     @Override
-    public final void sendError(String msg){
-        player.sendMessage(MCChatForm.LIGHT_RED.concat(msg));
+    public final void sendError(String transKey, Object... args){
+        if (args == null) {
+            player.sendMessage(MCChatForm.LIGHT_RED.concat(RealmsTranslate.transMessage(transKey)));
+        }
+        else {
+            player.sendMessage(MCChatForm.LIGHT_RED.concat(RealmsTranslate.transformMessage(transKey, args)));
+        }
     }
 
     @Override
-    public final void sendMessage(String msg){
-        player.sendMessage(msg);
+    public final void sendMessage(String transKey, Object... args){
+        if (args == null) {
+            player.sendMessage(RealmsTranslate.transMessage(transKey));
+        }
+        else {
+            player.sendMessage(RealmsTranslate.transformMessage(transKey, args));
+        }
     }
 
     @Override
     public final boolean isInGroup(String group){
-        if(group.equals("NO_GROUP")){
+        if (group.equals("NO_GROUP")) {
             return true;
         }
         return false;
@@ -87,7 +89,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     @Override
     public final void heal(int amount){
         int newHealth = getHealth() + amount;
-        if(newHealth > player.getMaxHealth()){
+        if (newHealth > player.getMaxHealth()) {
             newHealth = player.getMaxHealth();
         }
         player.setHealth(newHealth);
@@ -126,7 +128,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     @Override
     public final Mod_Item[] getInventoryContents(){
         List<Mod_Item> items = new ArrayList<Mod_Item>();
-        for(ItemStack item : player.getInventory().getContents()){
+        for (ItemStack item : player.getInventory().getContents()) {
             items.add(new Bukkit_Item(item));
         }
         return items.toArray(itemArray);
@@ -134,8 +136,8 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
 
     @Override
     public final void setInventoryContents(Mod_Item[] items){
-        for(Mod_Item item : items){
-            player.getInventory().addItem(((Bukkit_Item)item).getBaseItem());
+        for (Mod_Item item : items) {
+            player.getInventory().addItem(((Bukkit_Item) item).getBaseItem());
         }
     }
 
@@ -171,11 +173,11 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
 
     @Override
     public final boolean equals(Object obj){
-        if(obj instanceof Bukkit_User){
-            return player.equals(((Bukkit_User)obj).getPlayer());
+        if (obj instanceof Bukkit_User) {
+            return player.equals(((Bukkit_User) obj).getPlayer());
         }
-        else if(obj instanceof Player){
-            return player.equals((Player)obj);
+        else if (obj instanceof Player) {
+            return player.equals((Player) obj);
         }
         return false;
     }

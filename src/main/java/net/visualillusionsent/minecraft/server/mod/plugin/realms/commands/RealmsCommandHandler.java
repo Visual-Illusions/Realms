@@ -1,32 +1,23 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.commands;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-
 import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 
@@ -41,7 +32,7 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsL
 public class RealmsCommandHandler{
 
     private final static LinkedHashMap<String, RealmsCommand> commands = new LinkedHashMap<String, RealmsCommand>();
-    static{
+    static {
         new ConfigReloadCommand();
         new CreateZoneCommand();
         new DeletePermissionCommand();
@@ -89,18 +80,18 @@ public class RealmsCommandHandler{
     }
 
     static void register(RealmsCommand cmd){
-        if(cmd != null){
-            try{
+        if (cmd != null) {
+            try {
                 RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
-                if(!commands.containsValue(cmd)){
+                if (!commands.containsValue(cmd)) {
                     commands.put(rcmd.name(), cmd);
                     RealmsLogMan.log(RLevel.GENERAL, "Registered subcommand: ".concat(rcmd.name()));
                 }
-                else{
+                else {
                     RealmsLogMan.log(RLevel.GENERAL, "Failed to register SubCommand: ".concat(rcmd.name()));
                 }
             }
-            catch(NullPointerException npe){
+            catch (NullPointerException npe) {
                 RealmsLogMan.log(RLevel.GENERAL, "Realms Command was missing it's annotation: ".concat(cmd.getClass().getName()), npe);
             }
         }
@@ -108,7 +99,7 @@ public class RealmsCommandHandler{
 
     private static String getRealmsCommandsList(){
         StringBuilder builder = new StringBuilder();
-        for(String rc : commands.keySet()){
+        for (String rc : commands.keySet()) {
             builder.append(MCChatForm.BLUE);
             builder.append(rc);
             builder.append(" ");
@@ -118,29 +109,29 @@ public class RealmsCommandHandler{
 
     public static final void parseRealmsCommand(Mod_Caller caller, String command, String[] args){
         RealmsCommand cmd = commands.get(command);
-        if(cmd != null){
+        if (cmd != null) {
             RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
-            if(rcmd.noConsole() && caller.isConsole()){
-                caller.sendError(RealmsTranslate.transMessage("no.console"));
+            if (rcmd.noConsole() && caller.isConsole()) {
+                caller.sendError("no.console");
                 return;
             }
-            else if(rcmd.bukkitOnly() && !caller.isBukkit()){
-                caller.sendError(RealmsTranslate.transMessage("no.bukkit"));
+            else if (rcmd.bukkitOnly() && !caller.isBukkit()) {
+                caller.sendError("no.bukkit");
                 return;
             }
-            else if(rcmd.canaryOnly() && !caller.isCanary()){
-                caller.sendError(RealmsTranslate.transMessage("no.canary"));
+            else if (rcmd.canaryOnly() && !caller.isCanary()) {
+                caller.sendError("no.canary");
                 return;
             }
-            else if(rcmd.adminReq() && !caller.isConsole() && !((Mod_User)caller).hasPermission("realms.admin")){
-                caller.sendError(RealmsTranslate.transMessage("realms.admin.fail"));
+            else if (rcmd.adminReq() && !caller.isConsole() && !((Mod_User) caller).hasPermission("realms.admin")) {
+                caller.sendError("realms.admin.fail");
                 return;
             }
             cmd.parseCommand(caller, command, args);
             return;
         }
-        caller.sendError(RealmsTranslate.transMessage("cmd.unknown"));
-        caller.sendError(RealmsTranslate.transformMessage("cmd.specify", getRealmsCommandsList()));
+        caller.sendError("cmd.unknown");
+        caller.sendError("cmd.specify", getRealmsCommandsList());
     }
 
     public static void initialize(){

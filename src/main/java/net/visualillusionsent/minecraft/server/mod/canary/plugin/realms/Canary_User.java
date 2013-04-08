@@ -17,6 +17,7 @@ import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.api.inventory.Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 
 /**
  * This file is part of Realms.
@@ -36,13 +37,23 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     }
 
     @Override
-    public final void sendError(String msg){
-        player.notice(msg);
+    public final void sendError(String transKey, Object... args){
+        if (args == null) {
+            player.notice(RealmsTranslate.transMessage(transKey));
+        }
+        else {
+            player.notice(RealmsTranslate.transformMessage(transKey, args));
+        }
     }
 
     @Override
-    public final void sendMessage(String msg){
-        player.sendMessage(msg);
+    public final void sendMessage(String transKey, Object... args){
+        if (args == null) {
+            player.sendMessage(RealmsTranslate.transMessage(transKey));
+        }
+        else {
+            player.sendMessage(RealmsTranslate.transformMessage(transKey, args));
+        }
     }
 
     @Override

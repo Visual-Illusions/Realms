@@ -30,19 +30,14 @@ public final class RealmsLogMan{
     private static Logger logger;
     static {
         logger = new RLogger();
-        if (RealmsBase.getServer().isCanary() || RealmsBase.getServer().isBukkit()) {
-            logger.setParent(Logger.getLogger("Realms"));
-        }
-        else {
-            logger.setParent(Logger.getLogger("Minecraft-Sever"));
-        }
+        logger.setParent(Logger.getLogger("Minecraft-Sever"));
         logger.setLevel(Level.ALL);
     }
 
     private static class RLogger extends Logger{
 
         RLogger(){
-            super("Realms-Internal", null);
+            super("Realms-Logger", null);
         }
 
         @Override

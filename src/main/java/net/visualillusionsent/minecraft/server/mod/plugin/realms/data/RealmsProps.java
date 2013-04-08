@@ -1,27 +1,19 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.data;
 
 import java.io.File;
 import java.util.ArrayList;
-
 import net.visualillusionsent.lang.DataSourceType;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.utils.FileUtils;
@@ -38,7 +30,7 @@ import net.visualillusionsent.utils.UtilityException;
  */
 public class RealmsProps{
 
-    private final String dir_Path = "plugins/Realms/";
+    private final String dir_Path = "plugins" + File.separator + "Realms" + File.separator;
     private final String props_Path = dir_Path.concat("Realms.ini");
     private PropertiesFile props_File;
     private static ArrayList<Integer> interact_Block = new ArrayList<Integer>();
@@ -55,36 +47,36 @@ public class RealmsProps{
 
     public synchronized boolean initialize(){
         RealmsLogMan.info("Initializing properties...");
-        if(isInitialized){
+        if (isInitialized) {
             RealmsLogMan.severe("HERP DERP...");
             return false;
         }
         /* Check Storage Directory */
         File dir = new File(dir_Path);
-        if(!dir.exists()){
+        if (!dir.exists()) {
             RealmsLogMan.info("Creating directories...");
-            if(!dir.mkdirs()){
+            if (!dir.mkdirs()) {
                 RealmsLogMan.severe("Failed to create directories...");
                 return false;
             }
         }
         /* Check Properties File */
         File props = new File(props_Path);
-        if(!props.exists()){ //Create a new one if non-existent
+        if (!props.exists()) { // Create a new one if non-existent
             RealmsLogMan.info("Creating default properties...");
-            try{
+            try {
                 FileUtils.cloneFileFromJar(new File("plugins/Realms.jar").getAbsolutePath(), "resources/default_config.ini", props_Path);
             }
-            catch(UtilityException ue){
+            catch (UtilityException ue) {
                 RealmsLogMan.severe("Failed to create Properties..." + ue.getMessage());
                 return false;
             }
         }
-        try{
+        try {
             RealmsLogMan.info("Loading properties...");
-            props_File = new PropertiesFile(props_Path); //Initialize Properties
+            props_File = new PropertiesFile(props_Path); // Initialize Properties
             RealmsLogMan.info("Testing properties...");
-            //Test properties
+            // Test properties
             props_File.getInt("wand.type");
             props_File.getInt("pylon.type");
             props_File.getInt("pylon.height");
@@ -117,11 +109,11 @@ public class RealmsProps{
             props_File.getBoolean("check.unstable");
             RealmsLogMan.info("Properties tests passed!");
         }
-        catch(UtilityException uex){
+        catch (UtilityException uex) {
             RealmsLogMan.severe("Failed to load Properties..." + uex.getMessage());
             return false;
         }
-        catch(IllegalArgumentException iaex){
+        catch (IllegalArgumentException iaex) {
             RealmsLogMan.severe("Failed to understand datasource type...");
             return false;
         }
@@ -134,13 +126,13 @@ public class RealmsProps{
      * @param ids
      */
     private void addInteractBlock(String[] ids){
-        if(ids != null){
+        if (ids != null) {
             int bid = 0;
-            for(String id : ids){
-                try{
+            for (String id : ids) {
+                try {
                     bid = Integer.parseInt(id.trim());
                 }
-                catch(NumberFormatException NFE){
+                catch (NumberFormatException NFE) {
                     RealmsLogMan.warning("Interact Block ID: " + id + " is invalid!");
                     continue;
                 }
@@ -155,13 +147,13 @@ public class RealmsProps{
      * @param ids
      */
     private void addInteractItem(String[] ids){
-        if(ids != null){
+        if (ids != null) {
             int bid = 0;
-            for(String id : ids){
-                try{
+            for (String id : ids) {
+                try {
                     bid = Integer.parseInt(id.trim());
                 }
-                catch(NumberFormatException NFE){
+                catch (NumberFormatException NFE) {
                     RealmsLogMan.warning("Interact Item ID: " + id + " is invalid!");
                     continue;
                 }
@@ -176,48 +168,48 @@ public class RealmsProps{
      * @param cmds
      */
     private void addOverrideCommands(String[] cmds){
-        if(cmds != null){
-            for(String cmd : cmds){
+        if (cmds != null) {
+            for (String cmd : cmds) {
                 commandOverride.add(cmd.trim());
             }
         }
     }
 
     public final String getStringVal(String key){
-        try{
+        try {
             return props_File.getString(key);
         }
-        catch(UtilityException e){
+        catch (UtilityException e) {
             RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
         }
         return "*MISSING VALUE*";
     }
 
     public final int getIntVal(String key){
-        try{
+        try {
             return props_File.getInt(key);
         }
-        catch(UtilityException e){
+        catch (UtilityException e) {
             RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
         }
-        return (int)Double.NaN; //will probably blow up
+        return (int) Double.NaN; // will probably blow up
     }
 
     public final long getLongVal(String key){
-        try{
+        try {
             return props_File.getInt(key);
         }
-        catch(UtilityException e){
+        catch (UtilityException e) {
             RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
         }
-        return (long)Double.NaN; //will probably blow up
+        return (long) Double.NaN; // will probably blow up
     }
 
     public final Boolean getBooleanVal(String key){
-        try{
+        try {
             return props_File.getBoolean(key);
         }
-        catch(UtilityException e){
+        catch (UtilityException e) {
             RealmsLogMan.warning("Realms.ini is missing key/value for Key: " + key);
         }
         return null;
@@ -226,9 +218,9 @@ public class RealmsProps{
     public final boolean isCommandAllowed(String[] args){
         int argc = 0;
         StringBuilder verify = new StringBuilder();
-        while(argc < args.length){
+        while (argc < args.length) {
             verify.append(args[argc]);
-            if(commandOverride.contains(verify.toString())){
+            if (commandOverride.contains(verify.toString())) {
                 return true;
             }
             verify.append(" ");

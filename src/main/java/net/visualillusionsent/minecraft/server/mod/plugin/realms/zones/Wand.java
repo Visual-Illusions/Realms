@@ -19,7 +19,6 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permission.PermissionType;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.PolygonArea;
@@ -124,30 +123,30 @@ public final class Wand{
     // WAND COMMANDS
     public final boolean wandCommand(String[] command){
         if (command.length < 1) {
-            user.sendError(RealmsTranslate.transMessage("wand.sub.missing1"));
-            user.sendError(RealmsTranslate.transMessage("wand.sub.missing2"));
+            user.sendError("wand.sub.missing1");
+            user.sendError("wand.sub.missing2");
             user.sendError("cancel, reset, save, show, edit, setfloor, setceiling");
             return true;
         }
         // Cancel operation
         if (command[0].equalsIgnoreCase("cancel")) {
             if (mode != Mode.POLYGON) {
-                user.sendError("Not editing a zone!");
+                user.sendError("not.edit.zone");
                 return true;
             }
             reset();
-            user.sendMessage(RealmsTranslate.transMessage("wand.cancel"));
+            user.sendMessage("wand.cancel");
             return true;
         }
         // Reset operation
         if (command[0].equalsIgnoreCase("reset")) {
             if (mode != Mode.POLYGON) {
-                user.sendError("Not editing a zone!");
+                user.sendError("not.edit.zone");
                 return true;
             }
             Zone zone = workingPolygon.getZone();
             softReset();
-            user.sendMessage(RealmsTranslate.transMessage("wand.pylons.removed"));
+            user.sendMessage("wand.pylons.removed");
             if (zone.getPolygon() == null) {
                 zone.setPolygon(new PolygonArea(zone));
             }
@@ -157,30 +156,30 @@ public final class Wand{
             for (Point p : oldVertices) {
                 createPylon(p, user.getDimension(), user.getWorld());
             }
-            user.sendMessage(RealmsTranslate.transformMessage("wand.edit.ready", zone.getName()));
+            user.sendMessage("wand.edit.ready", zone.getName());
             return true;
         }
         // Save vertices
         if (command[0].equalsIgnoreCase("save")) {
             if (mode != Mode.DEFAULT) {
                 if (workingPolygon.workingVerticesCleared()) {
-                    user.sendMessage(RealmsTranslate.transMessage("wand.save.nopylons"));
+                    user.sendMessage("wand.save.nopylons");
                     workingPolygon.save();
                     reset();
                     return true;
                 }
                 else {
                     if (!workingPolygon.validPolygon(user)) {
-                        user.sendError(RealmsTranslate.transMessage("polygon.bad"));
+                        user.sendError("polygon.bad");
                         return true;
                     }
                     workingPolygon.save();
                     reset();
-                    user.sendMessage(RealmsTranslate.transMessage("wand.save"));
+                    user.sendMessage("wand.save");
                     return true;
                 }
             }
-            user.sendError(RealmsTranslate.transMessage("wand.not.editing"));
+            user.sendError("wand.not.editing");
             return true;
         }
         // Show vertices
@@ -211,7 +210,7 @@ public final class Wand{
                         }
                     }
                     if (thePolygon == null || thePolygon.getVertices().isEmpty()) {
-                        user.sendError(RealmsTranslate.transMessage("zone.no.verticies"));
+                        user.sendError("zone.no.verticies");
                         return true;
                     }
                     x1 = thePolygon.getVertices().get(0).x;
@@ -336,17 +335,17 @@ public final class Wand{
         if (command[0].equalsIgnoreCase("edit")) {
             // Wand must be in default mode
             if (mode != Mode.DEFAULT) {
-                user.sendError(RealmsTranslate.transMessage("wand.not.default"));
+                user.sendError("wand.not.default");
                 return true;
             }
             // Zone name must be provided
             if (command.length < 2) {
-                user.sendError(RealmsTranslate.transMessage("wand.no.name"));
+                user.sendError("wand.no.name");
                 return true;
             }
             // Cannot edit the "everywhere" zone!
             if (command[1].toUpperCase().startsWith("EVERYWHERE")) {
-                user.sendError(RealmsTranslate.transMessage("everywhere.noedit"));
+                user.sendError("everywhere.noedit");
                 return true;
             }
             // Get zone
@@ -357,20 +356,20 @@ public final class Wand{
                 }
                 // Zone must be in "saved" mode
                 if (!zone.getPolygon().getMode().equalsIgnoreCase("saved")) {
-                    user.sendError(RealmsTranslate.transMessage("zone.inedit"));
+                    user.sendError("zone.inedit");
                     return true;
                 }
                 // Player must have zoning permission
                 if (!zone.permissionCheck(user, PermissionType.ZONING)) {
-                    user.sendError(RealmsTranslate.transMessage("zoning.error"));
+                    user.sendError("zoning.error");
                     return true;
                 }
                 if (!zone.getWorld().equals(user.getWorld())) {
-                    user.sendError(RealmsTranslate.transMessage("zone.world.error"));
+                    user.sendError("zone.world.error");
                     return true;
                 }
                 else if (zone.getDimension() != user.getDimension()) {
-                    user.sendError(RealmsTranslate.transMessage("zone.dimension.error"));
+                    user.sendError("zone.dimension.error");
                     return true;
                 }
                 // Passed all checks!
@@ -380,7 +379,7 @@ public final class Wand{
                 for (Point p : oldVertices) {
                     createPylon(p, user.getDimension(), user.getWorld());
                 }
-                user.sendMessage(RealmsTranslate.transformMessage("wand.edit.ready", zone.getName()));
+                user.sendMessage("wand.edit.ready", zone.getName());
                 return true;
             }
             catch (ZoneNotFoundException znfe) {
@@ -394,17 +393,17 @@ public final class Wand{
                 try {
                     int floor = Integer.parseInt(command[1]);
                     workingPolygon.setWorkingFloor(floor);
-                    user.sendMessage(RealmsTranslate.transformMessage("zone.floor.set", workingPolygon.getZone().getName(), String.valueOf(floor)));
+                    user.sendMessage("zone.floor.set", workingPolygon.getZone().getName(), String.valueOf(floor));
                     return true;
                 }
                 catch (NumberFormatException NFE) {
-                    user.sendError(RealmsTranslate.transformMessage("zone.floor.invalid", command[1]));
+                    user.sendError("zone.floor.invalid", command[1]);
                     return true;
                 }
             }
             else {
                 mode = Mode.SET_FLOOR; // wand.setfcmode
-                user.sendMessage(RealmsTranslate.transformMessage("wand.setfcmode", "FLOOR", workingPolygon.getZone().getName()));
+                user.sendMessage("wand.setfcmode", "FLOOR", workingPolygon.getZone().getName());
                 return true;
             }
         }
@@ -414,22 +413,22 @@ public final class Wand{
                 try {
                     int ceiling = Integer.parseInt(command[1]);
                     workingPolygon.setWorkingCeiling(ceiling);
-                    user.sendMessage(RealmsTranslate.transformMessage("zone.ceiling.set", workingPolygon.getZone().getName(), String.valueOf(ceiling)));
+                    user.sendMessage("zone.ceiling.set", workingPolygon.getZone().getName(), String.valueOf(ceiling));
                     return true;
                 }
                 catch (Exception e) {
-                    user.sendError(RealmsTranslate.transformMessage("zone.ceiling.invalid", command[1]));
+                    user.sendError("zone.ceiling.invalid", command[1]);
                     return true;
                 }
             }
             else {
                 mode = Mode.SET_CEILING;
-                user.sendMessage(RealmsTranslate.transformMessage("wand.setfcmode", "CEILING", workingPolygon.getZone().getName()));
+                user.sendMessage("wand.setfcmode", "CEILING", workingPolygon.getZone().getName());
                 return true;
             }
         }
         // None of the above
-        user.sendError(RealmsTranslate.transMessage("wand.sub.unknown"));
+        user.sendError("wand.sub.unknown");
         return true;
     }
 
@@ -468,7 +467,7 @@ public final class Wand{
         }
         // workingPolygon must not be null for remaining wand actions
         if (workingPolygon == null) {
-            user.sendError(RealmsTranslate.transMessage("wand.nozone"));
+            user.sendError("wand.nozone");
             reset();
             return true;
         }
@@ -477,27 +476,27 @@ public final class Wand{
             workingPolygon.getZone().setDimension(user.getDimension());
         }
         else if (!workingPolygon.getZone().getWorld().equals(world)) {
-            user.sendError(RealmsTranslate.transMessage("wand.click.world.invalid"));
+            user.sendError("wand.click.world.invalid");
             reset();
             return true;
         }
         else if (workingPolygon.getZone().getDimension() != dim) {
-            user.sendError(RealmsTranslate.transMessage("wand.click.dimension.invalid"));
+            user.sendError("wand.click.dimension.invalid");
             reset();
             return true;
         }
         if (mode == Mode.SET_CEILING) {
             workingPolygon.setWorkingCeiling(y);
             mode = Mode.POLYGON;
-            user.sendMessage(RealmsTranslate.transformMessage("zone.ceiling.set", String.valueOf(y)));
-            user.sendMessage(RealmsTranslate.transformMessage("wand.define", workingPolygon.getZone().getName()));
+            user.sendMessage("zone.ceiling.set", String.valueOf(y));
+            user.sendMessage("wand.define", workingPolygon.getZone().getName());
             return true;
         }
         if (mode == Mode.SET_FLOOR) {
             workingPolygon.setWorkingFloor(y);
             mode = Mode.POLYGON;
-            user.sendMessage(RealmsTranslate.transformMessage("zone.floor.set", String.valueOf(y)));
-            user.sendMessage(RealmsTranslate.transformMessage("wand.define", workingPolygon.getZone().getName()));
+            user.sendMessage("zone.floor.set", String.valueOf(y));
+            user.sendMessage("wand.define", workingPolygon.getZone().getName());
             return true;
         }
         if (mode == Mode.POLYGON) {
@@ -505,14 +504,14 @@ public final class Wand{
             if (workingPolygon.containsWorkingVertex(block)) {
                 workingPolygon.removeWorkingVertex(block);
                 removePylon(block.getX(), block.getZ());
-                user.sendMessage(RealmsTranslate.transformMessage("vertex.remove", String.valueOf(x), String.valueOf(z)));
+                user.sendMessage("vertex.remove", String.valueOf(x), String.valueOf(z));
                 return true;
             }
             // Check chests
             for (int i = 0; i < pylonHeight; i++) {
                 Mod_Block testblock = RealmsBase.getServer().getBlockAt(block.getX(), block.getY() + i, block.getZ(), dim, world);
                 if (testblock.getType() == 54) {
-                    user.sendError(RealmsTranslate.transMessage("pylon.chest"));
+                    user.sendError("pylon.chest");
                     return true;
                 }
             }
@@ -522,14 +521,14 @@ public final class Wand{
             }
             List<Point> removedVertices = workingPolygon.addVertex(user, block);
             for (Point p : removedVertices) {
-                user.sendMessage(RealmsTranslate.transformMessage("vertex.remove", String.valueOf(p.x), String.valueOf(p.y), String.valueOf(p.z)));
+                user.sendMessage("vertex.remove", String.valueOf(p.x), String.valueOf(p.y), String.valueOf(p.z));
                 removePylon(p.x, p.z);
             }
             createPylon(block);
-            user.sendMessage(RealmsTranslate.transformMessage("vertex.add", String.valueOf(x), String.valueOf(z)));
+            user.sendMessage("vertex.add", String.valueOf(x), String.valueOf(z));
             return true;
         }
-        user.sendError(RealmsTranslate.transMessage("wand.mode.invalid"));
+        user.sendError("wand.mode.invalid");
         reset();
         return true;
     }

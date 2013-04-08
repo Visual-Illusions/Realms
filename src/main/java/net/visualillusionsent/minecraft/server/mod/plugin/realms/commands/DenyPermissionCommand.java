@@ -1,29 +1,21 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/* Copyright 2012 - 2013 Visual Illusions Entertainment.
  * This file is part of Realms.
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- */
+ * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.commands;
 
 import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneLists;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneNotFoundException;
@@ -42,45 +34,45 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permissio
 final class DenyPermissionCommand extends RealmsCommand{
 
     final void execute(Mod_Caller caller, String[] args){
-        Mod_User user = caller.isConsole() ? null : (Mod_User)caller;
-        try{
+        Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
+        try {
             PermissionType type = PermissionType.getTypeFromString(args[1]);
-            if(args[2].equals("*")){
-                if(user == null){
-                    caller.sendError(RealmsTranslate.transMessage("star.invalid"));
+            if (args[2].equals("*")) {
+                if (user == null) {
+                    caller.sendError("star.invalid");
                     return;
                 }
             }
             Zone zone = args[2].equals("*") ? ZoneLists.getInZone(user) : ZoneLists.getZoneByName(args[2]);
-            if(user != null && !zone.delegateCheck(user, type)){
-                user.sendError(RealmsTranslate.transformMessage("delegate.perm.fail", type.name(), zone.getName()));
+            if (user != null && !zone.delegateCheck(user, type)) {
+                user.sendError("delegate.perm.fail", type.name(), zone.getName());
                 return;
             }
-            if(args[0].contains(",")){
-                caller.sendError(RealmsTranslate.transMessage("player.name.commas"));
+            if (args[0].contains(",")) {
+                caller.sendError("player.name.commas");
                 return;
             }
             // Give warning message for default group permissions
             boolean override = args.length == 4 && args[3].toUpperCase().equals("OVERRIDE");
             String defaultGroupName = RealmsBase.getServer().getDefaultGroupName();
             String tempString = "";
-            if(args[0].startsWith("g:")){
+            if (args[0].startsWith("g:")) {
                 tempString = args[0].replaceAll("g:", "");
             }
-            if(!override && (args[0].equalsIgnoreCase(defaultGroupName) || defaultGroupName.equalsIgnoreCase(tempString))){
-                caller.sendMessage(RealmsTranslate.transMessage("delegate.warning1"));
-                caller.sendError(RealmsTranslate.transMessage("delegate.warning2"));
-                caller.sendError(RealmsTranslate.transMessage("delegate.warning3"));
-                caller.sendError(RealmsTranslate.transformMessage("delegate.warning4", "deny", args[1], args[2]));
+            if (!override && (args[0].equalsIgnoreCase(defaultGroupName) || defaultGroupName.equalsIgnoreCase(tempString))) {
+                caller.sendMessage("delegate.warning1");
+                caller.sendError("delegate.warning2");
+                caller.sendError("delegate.warning3");
+                caller.sendError("delegate.warning4", "deny", args[1], args[2]);
             }
             // Made it past all the checks!
             zone.setPermission(args[0], type, false, override);
-            caller.sendMessage(RealmsTranslate.transformMessage("delegate.perm", MCChatForm.RED.concat("Denied"), args[0], type.name(), zone.getName()));
+            caller.sendMessage("delegate.perm", MCChatForm.RED.concat("Denied"), args[0], type.name(), zone.getName());
         }
-        catch(ZoneNotFoundException znfe){
+        catch (ZoneNotFoundException znfe) {
             caller.sendError(znfe.getMessage());
         }
-        catch(InvaildPermissionTypeException ipte){
+        catch (InvaildPermissionTypeException ipte) {
             caller.sendError(ipte.getMessage());
         }
     }
