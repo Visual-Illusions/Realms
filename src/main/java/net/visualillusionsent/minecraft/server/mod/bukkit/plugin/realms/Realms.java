@@ -38,7 +38,7 @@ public class Realms extends JavaPlugin{
 
     @Override
     public final void onEnable(){
-        base = new RealmsBase(new Bukkit_Server(getServer(), getLogger()));
+        base = new RealmsBase(new Bukkit_Server(this, getServer(), getLogger()));
         RealmsCommandHandler.initialize();
         RealmsTranslate.initialize();
         new Realms_BukkitListener(this);

@@ -25,6 +25,9 @@ import net.canarymod.api.inventory.Item;
 import net.canarymod.api.world.DimensionType;
 import net.canarymod.api.world.World;
 import net.canarymod.api.world.blocks.Block;
+import net.canarymod.plugin.Plugin;
+import net.canarymod.tasks.ServerTask;
+import net.canarymod.tasks.ServerTaskManager;
 import net.canarymod.user.Group;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
@@ -32,6 +35,7 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.SynchronizedTask;
 
 /**
  * This file is part of Realms.
@@ -42,12 +46,14 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
  * @author Jason (darkdiplomat)
  */
 public class Canary_Server implements Mod_Server{
-    private Server server;
-    private Logger system_logger;
+    private final Server server;
+    private final Logger system_logger;
+    private final Plugin realms;
 
-    public Canary_Server(Server server, Logger system_logger){
+    public Canary_Server(Plugin realms, Server server, Logger system_logger){
         this.server = server;
         this.system_logger = system_logger;
+        this.realms = realms;
     }
 
     @Override
@@ -178,5 +184,17 @@ public class Canary_Server implements Mod_Server{
     @Override
     public Logger getLogger(){
         return system_logger;
+    }
+
+    @Override
+    public SynchronizedTask addTaskToServer(Runnable runnable, long delay){
+        CanarySyncRealmsTask csrt = new CanarySyncRealmsTask(realms, runnable, delay);
+        ServerTaskManager.addTask(csrt);
+        return csrt;
+    }
+
+    @Override
+    public void removeTask(SynchronizedTask task){
+        ServerTaskManager.removeTask((ServerTask) task);
     }
 }

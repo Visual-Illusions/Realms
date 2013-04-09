@@ -25,6 +25,7 @@ import net.visualillusionsent.lang.InitializationError;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.SynchronizedTask;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.data.DataSourceHandler;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.data.OutputAction;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.data.RealmsProps;
@@ -39,7 +40,6 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneLists
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.PolygonArea;
 import net.visualillusionsent.utils.ProgramStatus;
-import net.visualillusionsent.utils.TaskManager;
 import net.visualillusionsent.utils.VersionChecker;
 
 /**
@@ -60,10 +60,7 @@ public final class RealmsBase{
     private final DataSourceHandler source_handler;
     private final RealmsProps props;
     private final VersionChecker vc;
-    private final MobRemover mobdes = new MobRemover(this);
-    private final AnimalRemover animaldes = new AnimalRemover(this);
-    private final Healer healer = new Healer(this);
-    private final RestrictionDamager restrictdam = new RestrictionDamager(this);
+    private SynchronizedTask mobdes, animaldes, healer, restrictdam;
     private final HashMap<Mod_User, Wand> wands = new HashMap<Mod_User, Wand>();
     private final HashMap<String, Mod_Item[]> inventories = new HashMap<String, Mod_Item[]>();
     private String version;
@@ -111,7 +108,7 @@ public final class RealmsBase{
         }
     }
 
-    private String genJarPath(){ // For when the jar isn't Realms.jar
+    private final String genJarPath(){ // For when the jar isn't Realms.jar
         try {
             CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
             return codeSource.getLocation().toURI().getPath();
@@ -122,16 +119,16 @@ public final class RealmsBase{
 
     private final void initializeThreads(){
         if (!props.getBooleanVal("sanctuary.mobs") && props.getLongVal("sanctuary.timeout") > 0) { // If allowing all mobs into Sanctuary area don't bother scheduling
-            TaskManager.scheduleContinuedTaskInSeconds(mobdes, props.getLongVal("sanctuary.timeout"), props.getLongVal("sanctuary.timeout")); // Sanctuary Runnable
+            mobdes = server.addTaskToServer(new MobRemover(this), props.getLongVal("sanctuary.timeout"));
         }
         if (props.getLongVal("animals.timeout") > 0) {
-            TaskManager.scheduleContinuedTaskInSeconds(animaldes, props.getLongVal("animals.timeout"), props.getLongVal("animals.timeout")); // Animals Runnable
+            animaldes = server.addTaskToServer(new AnimalRemover(this), props.getLongVal("animals.timeout")); // Animals Runnable
         }
         if (props.getLongVal("healing.timeout") > 0) {
-            TaskManager.scheduleContinuedTaskInSeconds(healer, props.getLongVal("healing.timeout"), props.getLongVal("healing.timeout")); // Healing Runnable
+            healer = server.addTaskToServer(new Healer(this), props.getLongVal("healing.timeout")); // Healing Runnable
         }
         if (props.getLongVal("restrict.timeout") > 0) {
-            TaskManager.scheduleContinuedTaskInSeconds(restrictdam, props.getLongVal("restrict.timeout"), props.getLongVal("restrict.timeout")); // Restricted Zone Damager Task
+            restrictdam = server.addTaskToServer(new RestrictionDamager(this), props.getLongVal("restrict.timeout")); // Restricted Zone Damager Task
         }
     }
 
@@ -140,11 +137,10 @@ public final class RealmsBase{
      */
     public final void terminate(){
         loaded = false;
-        TaskManager.removeTask($.mobdes);
-        TaskManager.removeTask($.animaldes);
-        TaskManager.removeTask($.healer);
-        TaskManager.removeTask($.restrictdam);
-        TaskManager.terminateThreadPool();
+        server.removeTask($.mobdes);
+        server.removeTask($.animaldes);
+        server.removeTask($.healer);
+        server.removeTask($.restrictdam);
         source_handler.killOutput();
         ZoneLists.clearOut();
         for (Wand wand : wands.values()) {

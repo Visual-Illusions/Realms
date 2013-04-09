@@ -40,7 +40,7 @@ public final class Realms extends Plugin{
     @Override
     public boolean enable(){
         try {
-            base = new RealmsBase(new Canary_Server(Canary.getServer(), this.getLogman()));
+            base = new RealmsBase(new Canary_Server(this, Canary.getServer(), this.getLogman()));
         }
         catch (InitializationError interr) {
             RealmsLogMan.stacktrace(interr);

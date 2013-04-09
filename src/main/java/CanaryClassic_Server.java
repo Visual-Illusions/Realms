@@ -13,15 +13,18 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
 import java.util.logging.Logger;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.SynchronizedTask;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 
@@ -36,6 +39,7 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsL
 public final class CanaryClassic_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
 
     private final Server server;
+    private final HashMap<SynchronizedTask, Timer> tasks = new HashMap<SynchronizedTask, Timer>();
 
     public CanaryClassic_Server(Server server){
         this.server = server;
@@ -214,5 +218,22 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
     @Override
     public Logger getLogger(){
         return null;
+    }
+
+    @Override
+    public SynchronizedTask addTaskToServer(Runnable runnable, long delay){
+        CanaryClassicSyncRealmsTask ccsrt = new CanaryClassicSyncRealmsTask(runnable);
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(ccsrt, delay, delay);
+        tasks.put(ccsrt, timer);
+        return ccsrt;
+    }
+
+    @Override
+    public void removeTask(SynchronizedTask task){
+        Timer timer = tasks.remove(task);
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 }

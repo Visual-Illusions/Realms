@@ -70,11 +70,9 @@ public final class CanaryClassic_User extends CanaryClassic_Entity implements Mo
         player.setHealth(newHealth);
     }
 
-    @SuppressWarnings("deprecation")
-    // Damn it damagefilter...
     @Override
     public final void causeDamage(int amount){
-        player.applyDamage(PluginLoader.DamageType.SUFFOCATION, amount);
+        player.applyDamage(DamageType.SUFFOCATION, amount);
     }
 
     @Override

@@ -53,4 +53,8 @@ public interface Mod_Server{
     int getHighestY(int x, int z, String world, int dimension);
 
     Logger getLogger();
+
+    SynchronizedTask addTaskToServer(Runnable runnable, long delay);
+
+    void removeTask(SynchronizedTask task);
 }

@@ -52,14 +52,14 @@
       <url>http://repo.bukkit.org/content/groups/public</url>
     </repository>
     <repository>
-      <id>vi-repo</id>
-      <name>Visual Illusions Repository</name>
-      <url>http://repo.visualillusionsent.net/</url>
-    </repository>
-    <repository>
       <id>vi-snapshot-repo</id>
       <name>Visual Illusions Repository</name>
       <url>http://repo.visualillusionsent.net/snapshots/</url>
+    </repository>
+    <repository>
+      <id>vi-repo</id>
+      <name>Visual Illusions Repository</name>
+      <url>http://repo.visualillusionsent.net/</url>
     </repository>
   </repositories>
   <dependencies>

@@ -21,6 +21,8 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.interfaces.SynchronizedTask;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -31,6 +33,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * This file is part of Realms.
@@ -42,12 +45,14 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public final class Bukkit_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
 
-    private Server server;
-    private Logger system_logger;
+    private final Server server;
+    private final Logger system_logger;
+    private final JavaPlugin realms;
 
-    public Bukkit_Server(Server server, Logger system_logger){
+    public Bukkit_Server(JavaPlugin realms, Server server, Logger system_logger){
         this.server = server;
         this.system_logger = system_logger;
+        this.realms = realms;
     }
 
     @Override
@@ -170,5 +175,15 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public Logger getLogger(){
         return system_logger;
+    }
+
+    @Override
+    public SynchronizedTask addTaskToServer(Runnable runnable, long delay){
+        return new BukkitSyncRealmsTask(Bukkit.getScheduler().scheduleSyncRepeatingTask(realms, runnable, delay, delay));
+    }
+
+    @Override
+    public void removeTask(SynchronizedTask task){
+        Bukkit.getScheduler().cancelTask(((BukkitSyncRealmsTask) task).getTaskId());
     }
 }
