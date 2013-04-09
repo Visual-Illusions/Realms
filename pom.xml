@@ -38,8 +38,12 @@
   <distributionManagement>
     <repository>
       <id>vi-repo</id>
-      <url>ftp://repo.visualillusionsent.net/</url>
+      <url>ftp://visualillusionsent.net/repo/</url>
     </repository>
+    <snapshotRepository>
+      <id>vi-repo</id>
+      <url>ftp://visualillusionsent.net/repo/snapshots/</url>
+    </snapshotRepository>
   </distributionManagement>
   <repositories>
     <repository>
