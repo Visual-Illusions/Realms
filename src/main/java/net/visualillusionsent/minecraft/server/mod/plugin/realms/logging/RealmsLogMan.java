@@ -30,7 +30,12 @@ public final class RealmsLogMan{
     private static Logger logger;
     static {
         logger = new RLogger();
-        logger.setParent(Logger.getLogger("Minecraft-Sever"));
+        if (RealmsBase.getServer().isCanary() || RealmsBase.getServer().isBukkit()) {
+            logger.setParent(RealmsBase.getServer().getLogger());
+        }
+        else {
+            logger.setParent(Logger.getLogger("Minecraft-Sever"));
+        }
         logger.setLevel(Level.ALL);
     }
 
@@ -99,7 +104,7 @@ public final class RealmsLogMan{
             logger.log(RLevel.STACKTRACE, "Stacktrace: ", thrown);
         }
         else {
-            logger.warning("*** Enabled \"debug.stacktrace\" in the Realms.ini to view stacktraces ***");
+            logger.warning("*** Set \"debug.stacktrace\" to yes in the Realms.ini to view stacktraces ***");
         }
     }
 

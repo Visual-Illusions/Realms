@@ -16,6 +16,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
@@ -208,5 +209,10 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public boolean isBukkit(){
         return false;
+    }
+
+    @Override
+    public Logger getLogger(){
+        return null;
     }
 }

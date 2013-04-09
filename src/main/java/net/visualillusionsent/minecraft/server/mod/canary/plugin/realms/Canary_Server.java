@@ -15,6 +15,7 @@ package net.visualillusionsent.minecraft.server.mod.canary.plugin.realms;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import net.canarymod.Canary;
 import net.canarymod.api.Server;
 import net.canarymod.api.entity.living.animal.EntityAnimal;
@@ -42,14 +43,15 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
  */
 public class Canary_Server implements Mod_Server{
     private Server server;
+    private Logger system_logger;
 
-    public Canary_Server(Server server){
+    public Canary_Server(Server server, Logger system_logger){
         this.server = server;
+        this.system_logger = system_logger;
     }
 
     @Override
     public List<Mod_Entity> getAnimals(){
-        doubleCheckServerInstance();
         Collection<World> worlds = server.getWorldManager().getAllWorlds();
         List<Mod_Entity> animals = new ArrayList<Mod_Entity>();
         synchronized (worlds) {
@@ -65,7 +67,6 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public List<Mod_Entity> getMobs(){
-        doubleCheckServerInstance();
         Collection<World> worlds = server.getWorldManager().getAllWorlds();
         List<Mod_Entity> mobs = new ArrayList<Mod_Entity>();
         synchronized (worlds) {
@@ -81,7 +82,6 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public List<Mod_User> getUsers(){
-        doubleCheckServerInstance();
         Player[] current = server.getPlayerList().toArray(new Player[0]);
         List<Mod_User> users = new ArrayList<Mod_User>();
         for (Player player : current) {
@@ -92,7 +92,6 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public Mod_User getUser(String name){
-        doubleCheckServerInstance();
         Player player = server.getPlayer(name);
         if (player != null) {
             return new Canary_User(player);
@@ -102,7 +101,6 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world){
-        doubleCheckServerInstance();
         Block block = server.getWorldManager().getWorld(world, DimensionType.fromId(dimension == 1 ? -1 : dimension == 2 ? 1 : 0), false).getBlockAt(x, y, z);
         block.setTypeId((short) type);
         block.setData((short) data);
@@ -112,13 +110,11 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world){
-        doubleCheckServerInstance();
         return new Canary_Block(server.getWorldManager().getWorld(world, DimensionType.fromId(dimension == 1 ? -1 : dimension == 2 ? 1 : 0), false).getBlockAt(x, y, z));
     }
 
     @Override
     public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchs, String[] lore){
-        doubleCheckServerInstance();
         Item item = Canary.factory().getItemFactory().newItem(type, amount, damage);
         if (enchs != null) {
             for (Mod_ItemEnchantment ench : enchs) {
@@ -136,19 +132,16 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public final Mod_ItemEnchantment constructEnchantment(int id, int level){
-        doubleCheckServerInstance();
         return new Canary_ItemEnchantment(Canary.factory().getItemFactory().newEnchantment((short) id, (short) level));
     }
 
     @Override
     public final String getDefaultWorldName(){
-        doubleCheckServerInstance();
         return Canary.getServer().getDefaultWorld().getName();
     }
 
     @Override
     public final List<String> getAdminGroups(){
-        doubleCheckServerInstance();
         List<String> adminGroups = new ArrayList<String>();
         for (Group group : Canary.usersAndGroups().getGroups()) {
             if (group.isAdministratorGroup()) {
@@ -159,19 +152,12 @@ public class Canary_Server implements Mod_Server{
     }
 
     public final String getDefaultGroupName(){
-        doubleCheckServerInstance();
         return Canary.usersAndGroups().getDefaultGroup().getName();
     }
 
     @Override
     public final int getHighestY(int x, int z, String world, int dimension){
         return server.getWorldManager().getWorld(world, DimensionType.fromId(dimension == 1 ? -1 : dimension == 2 ? 1 : 0), false).getYHeighestBlockAt(x, z);
-    }
-
-    private void doubleCheckServerInstance(){
-        if (server == null) {
-            server = Canary.getServer();
-        }
     }
 
     @Override
@@ -187,5 +173,10 @@ public class Canary_Server implements Mod_Server{
     @Override
     public boolean isBukkit(){
         return false;
+    }
+
+    @Override
+    public Logger getLogger(){
+        return system_logger;
     }
 }

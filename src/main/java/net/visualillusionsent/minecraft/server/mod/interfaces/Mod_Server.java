@@ -11,6 +11,7 @@
 package net.visualillusionsent.minecraft.server.mod.interfaces;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
@@ -50,4 +51,6 @@ public interface Mod_Server{
     boolean isBukkit();
 
     int getHighestY(int x, int z, String world, int dimension);
+
+    Logger getLogger();
 }

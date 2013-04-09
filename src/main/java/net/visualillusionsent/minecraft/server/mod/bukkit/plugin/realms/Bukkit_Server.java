@@ -15,6 +15,7 @@ package net.visualillusionsent.minecraft.server.mod.bukkit.plugin.realms;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
@@ -42,9 +43,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 public final class Bukkit_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
 
     private Server server;
+    private Logger system_logger;
 
-    public Bukkit_Server(Server server){
+    public Bukkit_Server(Server server, Logger system_logger){
         this.server = server;
+        this.system_logger = system_logger;
     }
 
     @Override
@@ -162,5 +165,10 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public final boolean isBukkit(){
         return true;
+    }
+
+    @Override
+    public Logger getLogger(){
+        return system_logger;
     }
 }
