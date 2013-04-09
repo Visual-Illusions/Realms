@@ -28,11 +28,11 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.P
  * 
  * @author Jason (darkdiplomat)
  */
-public class Canary_Entity implements Mod_Entity{
+public class CanaryClassic_Entity implements Mod_Entity{
 
     private final BaseEntity entity;
 
-    public Canary_Entity(BaseEntity entity){
+    public CanaryClassic_Entity(BaseEntity entity){
         this.entity = entity;
     }
 
@@ -98,8 +98,8 @@ public class Canary_Entity implements Mod_Entity{
 
     @Override
     public boolean equals(Object obj){
-        if(obj instanceof Canary_Entity){
-            return entity.equals(((Canary_Entity)obj).getEntity());
+        if(obj instanceof CanaryClassic_Entity){
+            return entity.equals(((CanaryClassic_Entity)obj).getEntity());
         }
         else if(obj instanceof LivingEntity){
             return entity.equals(obj);

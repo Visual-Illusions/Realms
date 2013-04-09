@@ -27,12 +27,12 @@ import java.util.List;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Realms_CanaryPluginInterface implements PluginInterface{
+public final class Realms_CanaryClassicPluginInterface implements PluginInterface{
 
     private final String PARAMETER_INVALID = "[Realms] [API] A Plugin did not specify a proper parameter for '%s'";
     private final String PARAMETER_LENGTH = "[Realms] [API] A Plugin did not specify enough parameters for '%s'";
 
-    public Realms_CanaryPluginInterface(Realms plugin){
+    public Realms_CanaryClassicPluginInterface(Realms plugin){
         etc.getLoader().addCustomListener(this);
     }
 

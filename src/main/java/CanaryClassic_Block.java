@@ -17,7 +17,7 @@
  * 
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
-import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
+import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 
 /**
  * This file is part of Realms.
@@ -27,42 +27,67 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantmen
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_ItemEnchantment implements Mod_ItemEnchantment{
+public final class CanaryClassic_Block implements Mod_Block{
 
-    private final Enchantment enchantment;
+    private final Block block;
 
-    public Canary_ItemEnchantment(Enchantment enchantment){
-        this.enchantment = enchantment;
+    public CanaryClassic_Block(Block block){
+        this.block = block;
     }
 
     @Override
-    public final int getId(){
-        return enchantment.getType().getType();
+    public final int getType(){
+        return block.getType();
     }
 
     @Override
-    public final int getLevel(){
-        return enchantment.getLevel();
+    public final int getData(){
+        return block.getData();
     }
 
     @Override
-    public final Enchantment getBaseEnchantment(){
-        return enchantment;
+    public final int getX(){
+        return block.getX();
+    }
+
+    @Override
+    public final int getY(){
+        return block.getY();
+    }
+
+    @Override
+    public final int getZ(){
+        return block.getZ();
+    }
+
+    @Override
+    public final int getDimension(){
+        return block.getWorld().getType().toIndex();
+    }
+
+    @Override
+    public final String getWorld(){
+        return block.getWorld().getName();
+    }
+
+    @Override
+    public final Block getBlock(){
+        return block;
     }
 
     @Override
     public final boolean equals(Object obj){
-        if(obj instanceof Canary_ItemEnchantment){
-            return enchantment.equals(((Canary_ItemEnchantment)obj).getBaseEnchantment());
+        if(obj instanceof CanaryClassic_Block){
+            return block.equals(((CanaryClassic_Block)obj).getBlock());
         }
-        else if(obj instanceof Enchantment){
-            return enchantment.equals(obj);
+        else if(obj instanceof Block){
+            return block.equals(obj);
         }
         return false;
     }
 
     @Override
     public final int hashCode(){
-        return enchantment.hashCode();
+        return block.hashCode();
     }
 }

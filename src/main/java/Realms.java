@@ -35,7 +35,7 @@ public final class Realms extends Plugin{
 
     @Override
     public final void enable(){
-        base = new RealmsBase(new Canary_Server(etc.getServer()));
+        base = new RealmsBase(new CanaryClassic_Server(etc.getServer()));
     }
 
     @Override
@@ -50,8 +50,8 @@ public final class Realms extends Plugin{
     public final void initialize(){
         RealmsCommandHandler.initialize();
         RealmsTranslate.initialize();
-        new Realms_CanaryListener(this);
-        new Realms_CanaryPluginInterface(this);
+        new Realms_CanaryClassicListener(this);
+        new Realms_CanaryClassicPluginInterface(this);
         etc.getInstance().addCommand("/realms", "- Realms base command. Use /realms help for sub command help.");
     }
 }

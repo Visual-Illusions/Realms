@@ -33,11 +33,11 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsL
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
+public final class CanaryClassic_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
 
     private final Server server;
 
-    public Canary_Server(Server server){
+    public CanaryClassic_Server(Server server){
         this.server = server;
     }
 
@@ -54,17 +54,17 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
             List<Mob> endAnimals = Collections.synchronizedList(end.getAnimalList());
             synchronized (normAnimals) {
                 for (Mob animal : normAnimals) {
-                    animals.add(new Canary_Entity(animal));
+                    animals.add(new CanaryClassic_Entity(animal));
                 }
             }
             synchronized (nethAnimals) {
                 for (Mob animal : nethAnimals) {
-                    animals.add(new Canary_Entity(animal));
+                    animals.add(new CanaryClassic_Entity(animal));
                 }
             }
             synchronized (endAnimals) {
                 for (Mob animal : endAnimals) {
-                    animals.add(new Canary_Entity(animal));
+                    animals.add(new CanaryClassic_Entity(animal));
                 }
             }
         }
@@ -86,7 +86,7 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
                 try {
                     synchronized (normMobs) {
                         for (Mob mob : normMobs) {
-                            mobs.add(new Canary_Entity(mob));
+                            mobs.add(new CanaryClassic_Entity(mob));
                         }
                     }
                 }
@@ -96,7 +96,7 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
                 try {
                     synchronized (nethMobs) {
                         for (Mob mob : nethMobs) {
-                            mobs.add(new Canary_Entity(mob));
+                            mobs.add(new CanaryClassic_Entity(mob));
                         }
                     }
                 }
@@ -106,7 +106,7 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
                 try {
                     synchronized (endMobs) {
                         for (Mob mob : endMobs) {
-                            mobs.add(new Canary_Entity(mob));
+                            mobs.add(new CanaryClassic_Entity(mob));
                         }
                     }
                 }
@@ -123,7 +123,7 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
         Player[] current = etc.getServer().getPlayerList().toArray(new Player[0]);
         List<Mod_User> users = new ArrayList<Mod_User>();
         for (Player player : current) {
-            users.add(new Canary_User(player));
+            users.add(new CanaryClassic_User(player));
         }
         return users;
     }
@@ -132,7 +132,7 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
     public final Mod_User getUser(String name){
         Player player = server.getPlayer(name);
         if (player != null) {
-            return new Canary_User(player);
+            return new CanaryClassic_User(player);
         }
         return null;
     }
@@ -146,7 +146,7 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
     @Override
     public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world){
         Block block = etc.getServer().getWorld(world)[dimension].getBlockAt(x, y, z);
-        return new Canary_Block(block);
+        return new CanaryClassic_Block(block);
     }
 
     @Override
@@ -163,12 +163,12 @@ public final class Canary_Server implements net.visualillusionsent.minecraft.ser
         if (name != null) {
             item.setName(name);
         }
-        return new Canary_Item(item);
+        return new CanaryClassic_Item(item);
     }
 
     @Override
     public final Mod_ItemEnchantment constructEnchantment(int id, int level){
-        return new Canary_ItemEnchantment(new Enchantment(Enchantment.Type.fromId(id), level));
+        return new CanaryClassic_ItemEnchantment(new Enchantment(Enchantment.Type.fromId(id), level));
     }
 
     @Override

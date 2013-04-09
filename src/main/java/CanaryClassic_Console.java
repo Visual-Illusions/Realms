@@ -21,9 +21,9 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_Console implements Mod_Caller{
+public final class CanaryClassic_Console implements Mod_Caller{
 
-    public Canary_Console(){}
+    public CanaryClassic_Console(){}
 
     @Override
     public final void sendError(String transKey, Object... args){

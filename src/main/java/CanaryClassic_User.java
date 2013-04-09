@@ -22,11 +22,11 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_User extends Canary_Entity implements Mod_User{
+public final class CanaryClassic_User extends CanaryClassic_Entity implements Mod_User{
 
     private final Player player;
 
-    public Canary_User(Player player){
+    public CanaryClassic_User(Player player){
         super(player);
         this.player = player;
     }
@@ -113,7 +113,7 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
         Mod_Item[] its = new Mod_Item[40];
         for (int index = 0; index < 40; index++) {
             if (items[index] != null) {
-                its[index] = new Canary_Item(items[index].clone());
+                its[index] = new CanaryClassic_Item(items[index].clone());
             }
         }
         return its;
@@ -123,7 +123,7 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     public final void setInventoryContents(Mod_Item[] items){
         Item[] cIt = new Item[40];
         for (int index = 0; index < 40; index++) {
-            cIt[index] = items[index] != null ? ((Canary_Item) items[index]).getBaseItem() : null;
+            cIt[index] = items[index] != null ? ((CanaryClassic_Item) items[index]).getBaseItem() : null;
         }
         player.getInventory().setContents(cIt);
     }
@@ -155,8 +155,8 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
 
     @Override
     public final boolean equals(Object obj){
-        if (obj instanceof Canary_User) {
-            return ((Canary_User) obj).getPlayer().equals(player);
+        if (obj instanceof CanaryClassic_User) {
+            return ((CanaryClassic_User) obj).getPlayer().equals(player);
         }
         else if (obj instanceof Player) {
             return player.equals(obj);

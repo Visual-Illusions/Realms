@@ -30,11 +30,11 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantmen
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_Item implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item{
+public final class CanaryClassic_Item implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item{
 
     private final Item item;
 
-    public Canary_Item(Item item){
+    public CanaryClassic_Item(Item item){
         this.item = item;
     }
 
@@ -63,7 +63,7 @@ public final class Canary_Item implements net.visualillusionsent.minecraft.serve
         if(item.getEnchantments() != null){
             List<Mod_ItemEnchantment> enchants = new ArrayList<Mod_ItemEnchantment>();
             for(Enchantment ench : item.getEnchantments()){
-                enchants.add(new Canary_ItemEnchantment(ench));
+                enchants.add(new CanaryClassic_ItemEnchantment(ench));
             }
             return enchants.toArray(new Mod_ItemEnchantment[0]);
         }
@@ -82,8 +82,8 @@ public final class Canary_Item implements net.visualillusionsent.minecraft.serve
 
     @Override
     public final boolean equals(Object obj){
-        if(obj instanceof Canary_Item){
-            return item.equals(((Canary_Item)obj).getBaseItem());
+        if(obj instanceof CanaryClassic_Item){
+            return item.equals(((CanaryClassic_Item)obj).getBaseItem());
         }
         else if(obj instanceof Item){
             return item.equals(obj);

@@ -31,14 +31,14 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.P
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Realms_CanaryListener extends PluginListener{
+public final class Realms_CanaryClassicListener extends PluginListener{
 
     private final PluginLoader.HookResult ALLOW = PluginLoader.HookResult.DEFAULT_ACTION;
     private final PluginLoader.HookResult DENY = PluginLoader.HookResult.PREVENT_ACTION;
     private final ArrayList<Player> moded = new ArrayList<Player>();
     private final HashMap<Player, Minecart> cartInstance = new HashMap<Player, Minecart>(); // Cause FUCKING CANARY IS DERP IN THIS DEPT...!
 
-    public Realms_CanaryListener(Realms plugin){
+    public Realms_CanaryClassicListener(Realms plugin){
         PluginListener.Priority HIGH = PluginListener.Priority.HIGH;
         PluginListener.Priority NORMAL = PluginListener.Priority.MEDIUM;
         PluginLoader loader = etc.getLoader();
@@ -85,8 +85,8 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (block != null) {
-                Canary_Block cBlock = new Canary_Block(block);
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_Block cBlock = new CanaryClassic_Block(block);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(cBlock);
                 deny = !zone.permissionCheck(user, PermissionType.DESTROY);
                 RealmsLogMan.log(RLevel.BLOCK_BREAK, "Player: '" + player.getName() + "' Block: '" + (block != null ? block.toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
@@ -107,8 +107,8 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (block != null) {
-                Canary_Block cBlock = new Canary_Block(block);
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_Block cBlock = new CanaryClassic_Block(block);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(cBlock);
                 if (RealmsBase.getProperties().isInteractBlock(block.getType())) {
                     deny = !zone.permissionCheck(user, PermissionType.INTERACT);
@@ -131,7 +131,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (block.blockType == Block.Type.Sand || block.blockType == Block.Type.Gravel) {
-                Canary_Block cBlock = new Canary_Block(block);
+                CanaryClassic_Block cBlock = new CanaryClassic_Block(block);
                 Zone zone = ZoneLists.getInZone(cBlock);
                 deny = !zone.getPhysics();
                 RealmsLogMan.log(RLevel.BLOCK_PHYSICS, "Block: '" + block.toString() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
@@ -152,15 +152,15 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             Zone zone;
-            Canary_Block cBlock;
-            Canary_User user = new Canary_User(player);
+            CanaryClassic_Block cBlock;
+            CanaryClassic_User user = new CanaryClassic_User(player);
             if (blockP != null) {
-                cBlock = new Canary_Block(blockP);
+                cBlock = new CanaryClassic_Block(blockP);
                 zone = ZoneLists.getInZone(cBlock);
                 deny = !zone.permissionCheck(user, PermissionType.CREATE);
             }
             else {
-                cBlock = new Canary_Block(blockC);
+                cBlock = new CanaryClassic_Block(blockC);
                 zone = ZoneLists.getInZone(cBlock);
                 deny = !zone.permissionCheck(user, PermissionType.CREATE);
             }
@@ -182,8 +182,8 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (block != null) {
-                Canary_Block cBlock = new Canary_Block(block);
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_Block cBlock = new CanaryClassic_Block(block);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(cBlock);
                 if (item.getItemId() == RealmsBase.getProperties().getIntVal("wand.type")) {
                     return RealmsBase.getPlayerWand(user).wandClick(cBlock);
@@ -216,7 +216,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean allow = player.canUseCommandByDefault(command);
         try {
-            Canary_User user = new Canary_User(player);
+            CanaryClassic_User user = new CanaryClassic_User(player);
             Zone zone = ZoneLists.getInZone(user);
             String[] cmd = null;
             if (command != null) {
@@ -245,7 +245,7 @@ public final class Realms_CanaryListener extends PluginListener{
             return false;
         }
         boolean toRet = false;
-        Canary_User user = new Canary_User(player);
+        CanaryClassic_User user = new CanaryClassic_User(player);
         Zone zone = ZoneLists.getInZone(user);
         try {
             if (args[0].equals("/realms")) {
@@ -258,7 +258,7 @@ public final class Realms_CanaryListener extends PluginListener{
             }
             if (args[0].equals("/mode") && args.length > 2) {
                 Player p = etc.getServer().matchPlayer(args[2]);
-                Canary_User mUser = new Canary_User(p);
+                CanaryClassic_User mUser = new CanaryClassic_User(p);
                 if (args[1].equals("0")) {
                     if (p != null && moded.contains(p)) {
                         moded.remove(p);
@@ -282,7 +282,7 @@ public final class Realms_CanaryListener extends PluginListener{
                 if (args.length == 2) {
                     Warp warp = etc.getDataSource().getWarp(args[1]);
                     if (warp != null) {
-                        Canary_Block block = new Canary_Block(new Block(0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
+                        CanaryClassic_Block block = new CanaryClassic_Block(new Block(0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
                         zone = ZoneLists.getInZone(block);
                         if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                             player.notify("You do not have permission to enter that zone!");
@@ -297,10 +297,10 @@ public final class Realms_CanaryListener extends PluginListener{
                 else if (args.length > 2) { // Fix for onTeleport being derp -- Let VIMod Handle it if permchecks are passed
                     Player telep = etc.getServer().matchPlayer(args[2]);
                     if (telep != null) {
-                        Canary_User teleUser = new Canary_User(telep);
+                        CanaryClassic_User teleUser = new CanaryClassic_User(telep);
                         Warp warp = etc.getDataSource().getWarp(args[1]);
                         if (warp != null) {
-                            Canary_Block block = new Canary_Block(new Block(0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
+                            CanaryClassic_Block block = new CanaryClassic_Block(new Block(0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
                             zone = ZoneLists.getInZone(block);
                             if (!zone.permissionCheck(teleUser, PermissionType.ENTER)) {
                                 player.notify(telep.getName() + " does not have permission to enter that zone!");
@@ -318,7 +318,7 @@ public final class Realms_CanaryListener extends PluginListener{
                 if (args.length > 2) {
                     Player pto = etc.getServer().matchPlayer(args[1]);
                     if (pto != null) {
-                        Canary_User teleTo = new Canary_User(pto);
+                        CanaryClassic_User teleTo = new CanaryClassic_User(pto);
                         zone = ZoneLists.getInZone(teleTo);
                         if (!zone.permissionCheck(teleTo, PermissionType.ENTER)) {
                             player.notify("You do not have permission to enter that zone!");
@@ -335,7 +335,7 @@ public final class Realms_CanaryListener extends PluginListener{
                 if (args.length > 2) {
                     Player pto = etc.getServer().matchPlayer(args[1]);
                     if (pto != null) {
-                        Canary_User teleTo = new Canary_User(pto);
+                        CanaryClassic_User teleTo = new CanaryClassic_User(pto);
                         zone = ZoneLists.getInZone(teleTo);
                         if (!zone.permissionCheck(teleTo, PermissionType.ENTER)) {
                             player.notify(pto.getName() + " does not have permission to enter this zone!");
@@ -363,7 +363,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         try {
             if (args[0].equals("realms")) {
-                RealmsCommandHandler.parseRealmsCommand(new Canary_Console(), args.length > 1 ? args[1] : "INVALID", RealmsBase.commandAdjustment(args, 2));
+                RealmsCommandHandler.parseRealmsCommand(new CanaryClassic_Console(), args.length > 1 ? args[1] : "INVALID", RealmsBase.commandAdjustment(args, 2));
                 return true;
             }
         }
@@ -392,7 +392,7 @@ public final class Realms_CanaryListener extends PluginListener{
 
         try {
             if (defender.isPlayer()) {
-                Canary_User user = new Canary_User(defender.getPlayer());
+                CanaryClassic_User user = new CanaryClassic_User(defender.getPlayer());
                 Zone zone = ZoneLists.getInZone(user);
                 switch (type) {
                     case ENTITY:
@@ -448,7 +448,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         try {
             if (entity.isPlayer()) {
-                Canary_User user = new Canary_User(entity.getPlayer());
+                CanaryClassic_User user = new CanaryClassic_User(entity.getPlayer());
                 RealmsBase.removePlayerWand(user);
             }
         }
@@ -464,7 +464,7 @@ public final class Realms_CanaryListener extends PluginListener{
             return;
         }
         try {
-            Canary_User user = new Canary_User(player);
+            CanaryClassic_User user = new CanaryClassic_User(player);
             RealmsBase.removePlayerWand(user);
         }
         catch (Exception ex) {
@@ -480,7 +480,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Block cBlock = new Canary_Block(dispenser.getBlock());
+            CanaryClassic_Block cBlock = new CanaryClassic_Block(dispenser.getBlock());
             Zone zone = ZoneLists.getInZone(cBlock);
             deny = !zone.getDispensers();
             RealmsLogMan.log(RLevel.DISPENSE, "Block: '" + dispenser.toString() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
@@ -499,7 +499,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_User user = new Canary_User(player);
+            CanaryClassic_User user = new CanaryClassic_User(player);
             Zone zone = ZoneLists.getInZone(user);
             deny = !zone.permissionCheck(user, PermissionType.EAT);
             RealmsLogMan.log(RLevel.EAT, "Player: '" + player.getName() + "' Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
@@ -518,7 +518,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Entity cent = new Canary_Entity(entity);
+            CanaryClassic_Entity cent = new CanaryClassic_Entity(entity);
             Zone zone = ZoneLists.getInZone(cent);
             deny = !zone.getEnderman();
             RealmsLogMan.log(RLevel.ENDERMAN, "'Enderman' attempted to place Block: '" + (block != null ? block.toString() : "NULL") + "' in Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
@@ -537,7 +537,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Entity cent = new Canary_Entity(entity);
+            CanaryClassic_Entity cent = new CanaryClassic_Entity(entity);
             Zone zone = ZoneLists.getInZone(cent);
             deny = !zone.getEnderman();
             RealmsLogMan.log(RLevel.ENDERMAN, "Block: '" + (block != null ? block.toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
@@ -557,7 +557,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (entityClicked != null) {
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 deny = !zone.permissionCheck(user, PermissionType.INTERACT);
                 RealmsLogMan.log(RLevel.ENTITY_RIGHTCLICK, "Player: '" + player.getName() + "' Entity: '" + entityClicked.getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "Denied" : "Allow"));
@@ -577,10 +577,10 @@ public final class Realms_CanaryListener extends PluginListener{
             return false;
         }
         try {
-            Canary_Block cBlock;
+            CanaryClassic_Block cBlock;
             Iterator<Block> blown = ((List<Block>) blocksaffected).iterator();
             while (blown.hasNext()) {
-                cBlock = new Canary_Block(blown.next());
+                cBlock = new CanaryClassic_Block(blown.next());
                 Zone zone = ZoneLists.getInZone(cBlock);
                 if (!zone.getExplode()) {
                     blown.remove();
@@ -602,8 +602,8 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Block cFrom = new Canary_Block(from);
-            Canary_Block cTo = new Canary_Block(to);
+            CanaryClassic_Block cFrom = new CanaryClassic_Block(from);
+            CanaryClassic_Block cTo = new CanaryClassic_Block(to);
             Zone zone1 = ZoneLists.getInZone(cFrom);
             Zone zone2 = ZoneLists.getInZone(cTo);
             if (!zone1.getFlow()) {
@@ -629,7 +629,7 @@ public final class Realms_CanaryListener extends PluginListener{
         Float result = newLevel;
         try {
             if (oldLevel.floatValue() > newLevel.floatValue()) {
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 if (!zone.getStarve()) {
                     result = oldLevel;
@@ -652,7 +652,7 @@ public final class Realms_CanaryListener extends PluginListener{
         int result = newFoodLevel;
         if (oldFoodLevel > newFoodLevel) {
             try {
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 if (!zone.getStarve()) {
                     result = oldFoodLevel;
@@ -675,7 +675,7 @@ public final class Realms_CanaryListener extends PluginListener{
         Float result = newLevel;
         if (oldLevel.floatValue() > newLevel.floatValue()) {
             try {
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 if (!zone.getStarve()) {
                     result = oldLevel;
@@ -698,7 +698,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (source.getDamagingEntity() != null && source.getDamagingEntity().isPlayer()) {
-                Canary_User user = new Canary_User(source.getDamagingEntity().getPlayer());
+                CanaryClassic_User user = new CanaryClassic_User(source.getDamagingEntity().getPlayer());
                 Zone zone = ZoneLists.getInZone(user);
                 deny = !zone.permissionCheck(user, PermissionType.DESTROY);
             }
@@ -718,7 +718,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (block != null) {
-                Canary_Block cBlock = new Canary_Block(block);
+                CanaryClassic_Block cBlock = new CanaryClassic_Block(block);
                 Zone zone = ZoneLists.getInZone(cBlock);
                 int bs = block.getStatus();
                 if (bs == 1 || bs == 3 || bs == 4 || bs == 5 || (bs == 6 && player == null)) {
@@ -726,7 +726,7 @@ public final class Realms_CanaryListener extends PluginListener{
                     RealmsLogMan.log(RLevel.BURN, "Type: 'BURN' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
                 }
                 else if (player != null && (bs == 2 || bs == 6)) {
-                    deny = !zone.permissionCheck(new Canary_User(player), PermissionType.IGNITE) || !zone.getBurn();
+                    deny = !zone.permissionCheck(new CanaryClassic_User(player), PermissionType.IGNITE) || !zone.getBurn();
                     // RealmsLogMan.log(RLevel.BURN, "Type: 'IGNITE' Player: '" + player.getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
                 }
             }
@@ -745,7 +745,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_User user = new Canary_User(player);
+            CanaryClassic_User user = new CanaryClassic_User(player);
             Zone zone = ZoneLists.getInZone(user);
             deny = (zone.getCreative() && (player.getCreativeMode() == 1));
             RealmsLogMan.log(RLevel.ITEM_DROP, "Player: '" + player.getName() + "' Zone: '" + zone.getName() + "' Drop Result: " + (deny ? "'Denied'" : "'Allowed'"));
@@ -766,10 +766,10 @@ public final class Realms_CanaryListener extends PluginListener{
         try {
             if (item != null) {
                 if (RealmsBase.getProperties().isInteractItem(item.getItemId())) {
-                    Canary_User user = new Canary_User(player);
+                    CanaryClassic_User user = new CanaryClassic_User(player);
                     Zone zone = null;
                     if (blockClicked != null) {
-                        zone = ZoneLists.getInZone(new Canary_Block(blockClicked));
+                        zone = ZoneLists.getInZone(new CanaryClassic_Block(blockClicked));
                     }
                     else {
                         zone = ZoneLists.getInZone(user);
@@ -793,7 +793,7 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Entity entity = new Canary_Entity(mob);
+            CanaryClassic_Entity entity = new CanaryClassic_Entity(mob);
             Zone zone = ZoneLists.getInZone(entity);
             if (mob.isMob() && zone.getSanctuary() && !RealmsBase.getProperties().getBooleanVal("sanctuary.mobs")) {
                 deny = true;
@@ -818,7 +818,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (entity.isMob()) {
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 deny = zone.getSanctuary();
                 RealmsLogMan.log(RLevel.MOB_TARGET, "Mob: '" + entity.getName() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
@@ -842,8 +842,8 @@ public final class Realms_CanaryListener extends PluginListener{
                 Player player = openInventory.getPlayer();
                 Minecart minecart = cartInstance.get(player);
                 if (minecart != null) {
-                    Zone zone = ZoneLists.getInZone(new Canary_User((Player) player));
-                    Zone mZone = ZoneLists.getInZone(new Canary_Entity(minecart));
+                    Zone zone = ZoneLists.getInZone(new CanaryClassic_User((Player) player));
+                    Zone mZone = ZoneLists.getInZone(new CanaryClassic_Entity(minecart));
                     if (!zone.equals(mZone) && (zone.getCreative() || mZone.getCreative())) {
                         if (!player.canUseCommandByDefault("/mode") && !moded.contains(player)) {
                             deny = true;
@@ -867,8 +867,8 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Block piston = new Canary_Block(block);
-            Canary_Block pushing = new Canary_Block(getPistonTouch(block));
+            CanaryClassic_Block piston = new CanaryClassic_Block(block);
+            CanaryClassic_Block pushing = new CanaryClassic_Block(getPistonTouch(block));
             Zone piszone = ZoneLists.getInZone(piston);
             Zone pushzone = ZoneLists.getInZone(pushing);
             deny = !piszone.getPistons() || !pushzone.getPistons();
@@ -888,8 +888,8 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_Block piston = new Canary_Block(block);
-            Canary_Block pushing = new Canary_Block(getPistonTouch(block));
+            CanaryClassic_Block piston = new CanaryClassic_Block(block);
+            CanaryClassic_Block pushing = new CanaryClassic_Block(getPistonTouch(block));
             Zone piszone = ZoneLists.getInZone(piston);
             Zone pushzone = ZoneLists.getInZone(pushing);
             deny = !piszone.getPistons() || !pushzone.getPistons();
@@ -908,7 +908,7 @@ public final class Realms_CanaryListener extends PluginListener{
             return;
         }
         try {
-            Canary_User user = new Canary_User(player);
+            CanaryClassic_User user = new CanaryClassic_User(player);
             Zone zone = ZoneLists.getInZone(user);
             // Start Enter Zone Checks
             if (!zone.permissionCheck(user, PermissionType.ENTER)) {
@@ -987,8 +987,8 @@ public final class Realms_CanaryListener extends PluginListener{
         }
         boolean deny = false;
         try {
-            Canary_User user = new Canary_User(player);
-            Canary_Block block = new Canary_Block(to.getWorld().getBlockAt((int) to.x, (int) to.y, (int) to.z));
+            CanaryClassic_User user = new CanaryClassic_User(player);
+            CanaryClassic_Block block = new CanaryClassic_Block(to.getWorld().getBlockAt((int) to.x, (int) to.y, (int) to.z));
             Zone zFrom = ZoneLists.getInZone(user);
             Zone zTo = ZoneLists.getInZone(block);
             deny = !zFrom.permissionCheck(user, PermissionType.TELEPORT);
@@ -1024,7 +1024,7 @@ public final class Realms_CanaryListener extends PluginListener{
         boolean deny = false;
         try {
             if (entity.isPlayer()) {
-                Canary_User user = new Canary_User(entity.getPlayer());
+                CanaryClassic_User user = new CanaryClassic_User(entity.getPlayer());
                 Zone zone = ZoneLists.getInZone(user);
                 deny = !zone.getPotion();
                 RealmsLogMan.log(RLevel.POTION_EFFECT, "Player: '" + entity.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
@@ -1064,7 +1064,7 @@ public final class Realms_CanaryListener extends PluginListener{
         try {
             if (vehicle.getRiddenByEntity() != null && vehicle.getRiddenByEntity().isPlayer()) {
                 Player player = vehicle.getRiddenByEntity().getPlayer();
-                Canary_User user = new Canary_User(player);
+                CanaryClassic_User user = new CanaryClassic_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 // Start Enter Zone Checks
                 if (!zone.permissionCheck(user, PermissionType.ENTER)) {

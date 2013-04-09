@@ -65,7 +65,7 @@ public final class Canary_RealmsAPIListener{
         if(player == null){
             return new String[]{ "none" };
         }
-        Canary_User user = new Canary_User(player);
+        CanaryClassic_User user = new CanaryClassic_User(player);
         return zch.getPlayerZoneNames(user);
     }
 
@@ -173,8 +173,8 @@ public final class Canary_RealmsAPIListener{
      * @return {@code true} if allowed, {@code false} if denied, {@code null} if error
      */
     public final static Boolean checkZonePermission(Player player, Block block, String permType){
-        Canary_User user = new Canary_User(player);
-        Canary_Block cBlock = new Canary_Block(block);
+        CanaryClassic_User user = new CanaryClassic_User(player);
+        CanaryClassic_Block cBlock = new CanaryClassic_Block(block);
         return zch.checkZonePermission(user, cBlock, permType);
     }
 
@@ -190,7 +190,7 @@ public final class Canary_RealmsAPIListener{
      * @return {@code true} if allowed, {@code false} if denied, {@code null} if error
      */
     public final static Boolean checkZonePermission(Player player, String zoneName, String permType){
-        Canary_User user = new Canary_User(player);
+        CanaryClassic_User user = new CanaryClassic_User(player);
         return zch.checkZonePermission(user, zoneName, permType);
     }
 }
