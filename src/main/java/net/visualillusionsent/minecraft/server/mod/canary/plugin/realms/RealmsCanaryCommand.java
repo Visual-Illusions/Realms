@@ -14,21 +14,21 @@ package net.visualillusionsent.minecraft.server.mod.canary.plugin.realms;
 
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.chat.MessageReceiver;
-import net.canarymod.commandsys.CanaryCommand;
+import net.canarymod.commandsys.Command;
+import net.canarymod.commandsys.CommandListener;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.commands.RealmsCommandHandler;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 
-public final class RealmsCanaryCommand extends CanaryCommand{
+public final class RealmsCanaryCommand implements CommandListener{
 
-    public RealmsCanaryCommand(){
-        super("realms", "Realms base command. Use /realms help for sub command help.");
-    }
-
-    @Override
-    protected void execute(MessageReceiver msgrec, String[] args){
+    @Command(aliases = { "realms" },
+            description = "Realms base command. Use /realms help for sub command help.",
+            permissions = { "realms" },
+            toolTip = "/realms <subcommand> <subargs>")
+    public void realmsExecute(MessageReceiver msgrec, String[] args){
         try {
             Mod_Caller caller = null;
             if (msgrec instanceof Player) {

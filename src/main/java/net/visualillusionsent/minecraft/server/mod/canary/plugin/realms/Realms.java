@@ -13,6 +13,7 @@
 package net.visualillusionsent.minecraft.server.mod.canary.plugin.realms;
 
 import net.canarymod.Canary;
+import net.canarymod.commandsys.CommandDependencyException;
 import net.canarymod.plugin.Plugin;
 import net.visualillusionsent.lang.InitializationError;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
@@ -48,7 +49,13 @@ public final class Realms extends Plugin{
         }
         RealmsCommandHandler.initialize();
         new Realms_CanaryHookHandler(this);
-        Canary.commands().registerCommand("realms", new RealmsCanaryCommand(), this, false);
+        try {
+            Canary.commands().registerCommands(new RealmsCanaryCommand(), this, false);
+        }
+        catch (CommandDependencyException ex) {
+            RealmsLogMan.stacktrace(ex);
+            return false;
+        }
         return true;
     }
 }
