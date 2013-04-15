@@ -204,10 +204,13 @@ public final class PolygonArea{
         this.workingVertices.clear();
     }
 
-    public final void delete(){
+    public final void delete(boolean saveZone){
         this.mode = Mode.DELETED;
         zone.setPolygon(null);
-        zone.save();
+        if (saveZone) {
+            zone.save();
+        }
+        this.zone = null;
     }
 
     public final void removeWorkingVertex(Mod_Block block){

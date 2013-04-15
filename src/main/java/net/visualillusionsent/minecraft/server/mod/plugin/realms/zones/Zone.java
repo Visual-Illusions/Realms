@@ -628,6 +628,12 @@ public final class Zone{
     // Delete the zone
     public final void delete(){
         this.deleted = true;
+        this.polygon.delete(false);
+        for (Zone child : children) {
+            child.setParent(parent);
+        }
+        parent.removeChild(this);
+        parent = null;
         ZoneLists.removeZonefromPlayerZoneList(this);
         ZoneLists.removeZone(this);
         RealmsBase.getDataSourceHandler().addToQueue(OutputAction.DELETE_ZONE, this);
@@ -640,17 +646,14 @@ public final class Zone{
 
     // Does this zone contain zero area?
     public final boolean isEmpty(){
-        return polygon == null || polygon.isEmpty();
+        return polygon == null || polygon.isEmpty() || this.deleted;
     }
 
     public final boolean contains(Mod_Block block){
-        if (this.deleted) {
-            return false;
-        }
-        if (name.equals("EVERYWHERE-" + block.getWorld().toUpperCase() + "-DIM" + block.getDimension())) {
-            return true;
-        }
         if (isEmpty()) {
+            if (name.equals("EVERYWHERE-" + block.getWorld().toUpperCase() + "-DIM" + block.getDimension())) {
+                return true;
+            }
             return false;
         }
         if (isInWorld(block.getWorld(), block.getDimension())) {
@@ -660,13 +663,10 @@ public final class Zone{
     }
 
     public final boolean contains(Mod_Entity entity){
-        if (this.deleted) {
-            return false;
-        }
-        if (name.equals("EVERYWHERE-" + entity.getWorld().toUpperCase() + "-DIM" + entity.getDimension())) {
-            return true;
-        }
         if (isEmpty()) {
+            if (name.equals("EVERYWHERE-" + entity.getWorld().toUpperCase() + "-DIM" + entity.getDimension())) {
+                return true;
+            }
             return false;
         }
         if (isInWorld(entity.getWorld(), entity.getDimension())) {
@@ -676,13 +676,10 @@ public final class Zone{
     }
 
     public final boolean contains(Zone zone){
-        if (this.deleted) {
-            return false;
-        }
-        if (name.equals("EVERYWHERE-" + zone.getWorld() + "-DIM" + zone.getDimension())) {
-            return true;
-        }
         if (isEmpty()) {
+            if (name.equals("EVERYWHERE-" + zone.getWorld().toUpperCase() + "-DIM" + zone.getDimension())) {
+                return true;
+            }
             return false;
         }
         if (isInWorld(zone.getWorld(), zone.getDimension())) {
