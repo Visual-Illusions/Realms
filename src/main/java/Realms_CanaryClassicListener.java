@@ -698,8 +698,9 @@ public final class Realms_CanaryClassicListener extends PluginListener{
         boolean deny = false;
         try {
             if (source.getDamagingEntity() != null && source.getDamagingEntity().isPlayer()) {
+                CanaryClassic_Entity entity = new CanaryClassic_Entity(baseEntity);
                 CanaryClassic_User user = new CanaryClassic_User(source.getDamagingEntity().getPlayer());
-                Zone zone = ZoneLists.getInZone(user);
+                Zone zone = ZoneLists.getInZone(entity);
                 deny = !zone.permissionCheck(user, PermissionType.DESTROY);
             }
         }

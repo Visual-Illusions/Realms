@@ -147,8 +147,8 @@ public final class RealmsBase{
             wand.softReset();
         }
         wands.clear();
-        RealmsLogMan.killLogger();
         $ = null;
+        RealmsLogMan.killLogger();
     }
 
     public final static boolean isLoaded(){

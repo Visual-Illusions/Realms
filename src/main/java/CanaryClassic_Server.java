@@ -217,7 +217,7 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
 
     @Override
     public Logger getLogger(){
-        return null;
+        return Main.log;
     }
 
     @Override

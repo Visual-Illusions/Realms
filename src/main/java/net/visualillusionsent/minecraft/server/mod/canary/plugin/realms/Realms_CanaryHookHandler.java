@@ -532,7 +532,8 @@ public final class Realms_CanaryHookHandler implements PluginListener{
         boolean deny = false;
         try {
             Canary_User user = new Canary_User(hook.getPlayer());
-            Zone zone = ZoneLists.getInZone(user);
+            Canary_Entity entity = new Canary_Entity(hook.getPainting());
+            Zone zone = ZoneLists.getInZone(entity);
             deny = !zone.permissionCheck(user, PermissionType.DESTROY);
         }
         catch (Exception ex) {

@@ -16,12 +16,13 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.data.RealmsProps;
 
 /**
  * This file is part of Realms.
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
  * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * Source Code available @ https://github.com/Visual-Illusions/Realms
  * 
  * @author Jason (darkdiplomat)
  */
@@ -30,29 +31,25 @@ public final class RealmsLogMan{
     private static Logger logger;
     static {
         logger = new RLogger();
-        if (RealmsBase.getServer().isCanary() || RealmsBase.getServer().isBukkit()) {
-            logger.setParent(RealmsBase.getServer().getLogger());
-        }
-        else {
-            logger.setParent(Logger.getLogger("Minecraft-Sever"));
-        }
+        logger.setParent(RealmsBase.getServer().getLogger());
         logger.setLevel(Level.ALL);
     }
 
     private static class RLogger extends Logger{
 
         RLogger(){
-            super("Realms-Logger", null);
+            super("Realms-Log", null);
         }
 
         @Override
         public void log(LogRecord logRecord){
             Level lvl = logRecord.getLevel();
             String message = logRecord.getMessage();
+            RealmsProps rprop = RealmsBase.getProperties();
             if (lvl instanceof RLevel) {
-                Boolean all = RealmsBase.getProperties().getBooleanVal("debug.all");
+                Boolean all = rprop.getBooleanVal("debug.all");
                 if (all == null || !all) {
-                    Boolean prop = RealmsBase.getProperties().getBooleanVal(lvl.getName().replace('-', '.').replace("REALMS.", "").toLowerCase());
+                    Boolean prop = rprop.getBooleanVal(lvl.getName().replace('-', '.').replace("REALMS.", "").toLowerCase());
                     if (prop == null || !prop) {
                         return;
                     }
@@ -76,30 +73,44 @@ public final class RealmsLogMan{
     private RealmsLogMan(){}
 
     public static void info(String msg){
+        if (logger == null)
+            return;
         logger.info(msg);
     }
 
     public static void info(String msg, Throwable thrown){
+        if (logger == null)
+            return;
         logger.log(Level.INFO, msg, thrown);
     }
 
     public static void warning(String msg){
+        if (logger == null)
+            return;
         logger.warning(msg);
     }
 
     public static void warning(String msg, Throwable thrown){
+        if (logger == null)
+            return;
         logger.log(Level.WARNING, msg, thrown);
     }
 
     public static void severe(String msg){
+        if (logger == null)
+            return;
         logger.severe(msg);
     }
 
     public static void severe(String msg, Throwable thrown){
+        if (logger == null)
+            return;
         logger.log(Level.SEVERE, msg, thrown);
     }
 
     public static void stacktrace(Throwable thrown){
+        if (logger == null)
+            return;
         if (RealmsBase.getProperties().getBooleanVal("debug.stacktrace") || RealmsBase.getProperties().getBooleanVal("debug.all")) {
             logger.log(RLevel.STACKTRACE, "Stacktrace: ", thrown);
         }
@@ -109,14 +120,20 @@ public final class RealmsLogMan{
     }
 
     public static void log(RLevel lvl, String msg){
+        if (logger == null)
+            return;
         logger.log(lvl, msg);
     }
 
     public static void log(RLevel lvl, String msg, Throwable thrown){
+        if (logger == null)
+            return;
         logger.log(lvl, msg, thrown);
     }
 
     public static void killLogger(){
+        if (logger == null)
+            return;
         logger.setLevel(Level.OFF);
         logger = null;
     }
