@@ -644,6 +644,9 @@ public final class Zone{
     }
 
     public final boolean contains(Mod_Block block){
+        if (this.deleted) {
+            return false;
+        }
         if (name.equals("EVERYWHERE-" + block.getWorld().toUpperCase() + "-DIM" + block.getDimension())) {
             return true;
         }
@@ -657,6 +660,9 @@ public final class Zone{
     }
 
     public final boolean contains(Mod_Entity entity){
+        if (this.deleted) {
+            return false;
+        }
         if (name.equals("EVERYWHERE-" + entity.getWorld().toUpperCase() + "-DIM" + entity.getDimension())) {
             return true;
         }
@@ -670,6 +676,9 @@ public final class Zone{
     }
 
     public final boolean contains(Zone zone){
+        if (this.deleted) {
+            return false;
+        }
         if (name.equals("EVERYWHERE-" + zone.getWorld() + "-DIM" + zone.getDimension())) {
             return true;
         }
