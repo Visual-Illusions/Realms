@@ -163,7 +163,7 @@ public class Canary_Server implements Mod_Server{
 
     @Override
     public final int getHighestY(int x, int z, String world, int dimension){
-        return server.getWorldManager().getWorld(world, DimensionType.fromId(dimension == 1 ? -1 : dimension == 2 ? 1 : 0), false).getYHeighestBlockAt(x, z);
+        return server.getWorldManager().getWorld(world, DimensionType.fromId(dimension == 1 ? -1 : dimension == 2 ? 1 : 0), false).getHighestBlockAt(x, z);
     }
 
     @Override

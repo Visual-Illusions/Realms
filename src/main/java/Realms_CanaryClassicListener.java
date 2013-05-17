@@ -397,8 +397,11 @@ public final class Realms_CanaryClassicListener extends PluginListener{
                 switch (type) {
                     case ENTITY:
                         if (attacker != null) {
-                            if (attacker.isPlayer() || (attacker.getName().equals("Wolf") && (new Wolf((OEntityWolf) attacker.getEntity()).isTame()))) {
+                            if (attacker.isPlayer() || (attacker.getName().equals("Wolf") && (new Wolf((OEntityWolf) attacker.getEntity()).isTame()) || attacker.getName().equals("Arrow"))) {
                                 deny = (!zone.getPVP()) || zone.getSanctuary();
+                            }
+                            else {
+                                deny = zone.getSanctuary();
                             }
                         }
                         break;
