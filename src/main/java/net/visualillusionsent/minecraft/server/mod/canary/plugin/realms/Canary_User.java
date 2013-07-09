@@ -13,6 +13,7 @@ package net.visualillusionsent.minecraft.server.mod.canary.plugin.realms;
  * If not, see http://www.gnu.org/licenses/gpl.html
  * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 import net.canarymod.api.DamageType;
+import net.canarymod.api.GameMode;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.api.inventory.Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
@@ -27,17 +28,17 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Canary_User extends Canary_Entity implements Mod_User{
+public final class Canary_User extends Canary_Entity implements Mod_User {
 
     private final Player player;
 
-    public Canary_User(Player player){
+    public Canary_User(Player player) {
         super(player);
         this.player = player;
     }
 
     @Override
-    public final void sendError(String transKey, Object... args){
+    public final void sendError(String transKey, Object... args) {
         if (args == null) {
             player.notice(RealmsTranslate.transMessage(transKey));
         }
@@ -47,71 +48,71 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     }
 
     @Override
-    public final void sendMessage(String transKey, Object... args){
+    public final void sendMessage(String transKey, Object... args) {
         if (args == null) {
-            player.sendMessage(RealmsTranslate.transMessage(transKey));
+            player.message(RealmsTranslate.transMessage(transKey));
         }
         else {
-            player.sendMessage(RealmsTranslate.transformMessage(transKey, args));
+            player.message(RealmsTranslate.transformMessage(transKey, args));
         }
     }
 
     @Override
-    public final int getHealth(){
-        return player.getHealth();
+    public final int getHealth() {
+        return (int) player.getHealth();
     }
 
     @Override
-    public final int getMaxHealth(){
-        return player.getMaxHealth();
+    public final int getMaxHealth() {
+        return 20;
     }
 
     @Override
-    public final void heal(int amount){
+    public final void heal(int amount) {
         int newHealth = getHealth() + amount;
-        if (newHealth > player.getMaxHealth()) {
-            newHealth = player.getMaxHealth();
+        if (newHealth > 20) {
+            newHealth = 20;
         }
         player.setHealth(newHealth);
     }
 
     @Override
-    public final void causeDamage(int amount){
+    public final void causeDamage(int amount) {
         player.dealDamage(DamageType.SUFFOCATION, amount);
     }
 
     @Override
-    public final boolean isDead(){
+    public final boolean isDead() {
         return player.getHealth() <= 0;
     }
 
     @Override
-    public final boolean isCreative(){
-        return player.getMode() == 1;
+    public final boolean isCreative() {
+        return player.getMode() == GameMode.CREATIVE;
     }
 
     @Override
-    public final boolean isAdventure(){
-        return player.getMode() == 2;
+    public final boolean isAdventure() {
+        return player.getMode() == GameMode.ADVENTURE;
     }
 
     @Override
-    public final boolean isDamageDisabled(){
-        return player.isDamageDisabled();
+    public final boolean isDamageDisabled() {
+        return player.getCapabilities().isInvulnerable();
     }
 
     @Override
-    public final boolean isInGroup(String group){
+    public final boolean isInGroup(String group) {
         return player.isInGroup(group, true);
     }
 
     @Override
-    public final boolean hasPermission(String perm){
+    public final boolean hasPermission(String perm) {
         return player.hasPermission(perm);
     }
 
     @Override
-    public final Mod_Item[] getInventoryContents(){
+    public final Mod_Item[] getInventoryContents() {
         Item[] items = player.getInventory().getContents();
         Mod_Item[] its = new Mod_Item[40];
         for (int index = 0; index < 40; index++) {
@@ -123,7 +124,7 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     }
 
     @Override
-    public final void setInventoryContents(Mod_Item[] items){
+    public final void setInventoryContents(Mod_Item[] items) {
         Item[] cIt = new Item[40];
         for (int index = 0; index < 40; index++) {
             cIt[index] = items[index] != null ? ((Canary_Item) items[index]).getBaseItem() : null;
@@ -132,32 +133,32 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     }
 
     @Override
-    public final void clearInventoryContents(){
+    public final void clearInventoryContents() {
         player.getInventory().clearContents();
     }
 
     @Override
-    public final boolean isConsole(){
+    public final boolean isConsole() {
         return false;
     }
 
     @Override
-    public final boolean isBukkit(){
+    public final boolean isBukkit() {
         return false;
     }
 
     @Override
-    public final boolean isCanary(){
+    public final boolean isCanary() {
         return true;
     }
 
     @Override
-    public final Player getPlayer(){
+    public final Player getPlayer() {
         return player;
     }
 
     @Override
-    public final boolean equals(Object obj){
+    public final boolean equals(Object obj) {
         if (obj instanceof Canary_User) {
             return ((Canary_User) obj).getPlayer().equals(player);
         }
@@ -168,7 +169,7 @@ public final class Canary_User extends Canary_Entity implements Mod_User{
     }
 
     @Override
-    public final int hashCode(){
+    public final int hashCode() {
         return player.hashCode();
     }
 }

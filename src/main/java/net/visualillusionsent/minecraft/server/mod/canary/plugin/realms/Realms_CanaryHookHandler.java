@@ -17,6 +17,7 @@ import java.util.Iterator;
 import net.canarymod.Canary;
 import net.canarymod.ToolBox;
 import net.canarymod.api.DamageType;
+import net.canarymod.api.GameMode;
 import net.canarymod.api.entity.Entity;
 import net.canarymod.api.entity.living.EntityLiving;
 import net.canarymod.api.entity.living.humanoid.Player;
@@ -58,15 +59,16 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.P
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Realms_CanaryHookHandler implements PluginListener{
+public final class Realms_CanaryHookHandler implements PluginListener {
+
     private final ArrayList<Player> moded = new ArrayList<Player>();
 
-    public Realms_CanaryHookHandler(Realms realms){
+    public Realms_CanaryHookHandler(Realms realms) {
         Canary.hooks().registerListener(this, realms);
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void blockDestroy(BlockDestroyHook hook){
+    public final void blockDestroy(BlockDestroyHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -90,7 +92,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void blockLeftClick(BlockLeftClickHook hook){
+    public final void blockLeftClick(BlockLeftClickHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -116,7 +118,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void blockPhysics(BlockPhysicsHook hook){
+    public final void blockPhysics(BlockPhysicsHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -139,7 +141,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void onBlockPlace(BlockPlaceHook hook){
+    public final void onBlockPlace(BlockPlaceHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -159,7 +161,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
                 deny = !zone.permissionCheck(user, PermissionType.CREATE);
             }
             RealmsLogMan.log(RLevel.BLOCK_PLACE, "Player: '" + hook.getPlayer().getName() + "'" + " BlockPlaced: '" + (hook.getBlockPlaced() != null ? hook.getBlockPlaced().toString() : "NULL") + "'" + " BlockClicked: '" + (hook.getBlockClicked() != null ? hook.getBlockClicked().toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: "
-                    + (deny ? "'Denied'" : "'Allowed'"));
+                + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PLACE. Caused by: " + ex.getClass().getName());
@@ -171,7 +173,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void blockRightClick(BlockRightClickHook hook){
+    public final void blockRightClick(BlockRightClickHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -197,7 +199,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
                     }
                 }
                 RealmsLogMan.log(RLevel.BLOCK_RIGHTCLICK, "Player: '" + hook.getPlayer().getName() + "'" + " BlockClicked: '" + (hook.getBlockClicked() != null ? hook.getBlockClicked().toString() : "NULL") + "'" + " ItemInHand: '" + (hook.getPlayer().getItemHeld() != null ? hook.getPlayer().getItemHeld().toString() : "NULL") + "'" + " Zone: '"
-                        + (zone == null ? "Not Checked" : zone.getName()) + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
+                    + (zone == null ? "Not Checked" : zone.getName()) + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
             }
         }
         catch (Exception ex) {
@@ -210,7 +212,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void damage(DamageHook hook){
+    public final void damage(DamageHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -270,7 +272,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler
-    public final void playerDeath(PlayerDeathHook hook){
+    public final void playerDeath(PlayerDeathHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -285,7 +287,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler
-    public final void disconnection(DisconnectionHook hook){
+    public final void disconnection(DisconnectionHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -300,7 +302,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final boolean dispense(DispenseHook hook){
+    public final boolean dispense(DispenseHook hook) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -319,7 +321,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void eat(EatHook hook){
+    public final void eat(EatHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -340,7 +342,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void endermanDropBlock(EndermanDropBlockHook hook){
+    public final void endermanDropBlock(EndermanDropBlockHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -361,7 +363,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void endermanPickupBlock(EndermanPickupBlockHook hook){
+    public final void endermanPickupBlock(EndermanPickupBlockHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -382,7 +384,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void entityRightClick(EntityRightClickHook hook){
+    public final void entityRightClick(EntityRightClickHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -405,7 +407,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void explosion(ExplosionHook hook){
+    public final void explosion(ExplosionHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -428,7 +430,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void flow(FlowHook hook){
+    public final void flow(FlowHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -456,7 +458,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public void foodExhaustion(FoodExhaustionHook hook){
+    public void foodExhaustion(FoodExhaustionHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -479,7 +481,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public void foodLevel(FoodLevelHook hook){
+    public void foodLevel(FoodLevelHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -502,7 +504,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public void foodSaturation(FoodSaturationHook hook){
+    public void foodSaturation(FoodSaturationHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -525,7 +527,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void hangingEntityDestroy(HangingEntityDestroyHook hook){
+    public final void hangingEntityDestroy(HangingEntityDestroyHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -546,7 +548,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void ignition(IgnitionHook hook){
+    public final void ignition(IgnitionHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -576,7 +578,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void itemDrop(ItemDropHook hook){
+    public final void itemDrop(ItemDropHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -584,7 +586,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
         try {
             Canary_User user = new Canary_User(hook.getPlayer());
             Zone zone = ZoneLists.getInZone(user);
-            deny = (zone.getCreative() && (hook.getPlayer().getMode() == 1));
+            deny = (zone.getCreative() && (hook.getPlayer().getMode() == GameMode.CREATIVE));
             RealmsLogMan.log(RLevel.ITEM_DROP, "Player: '" + hook.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Drop Result: " + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
@@ -597,7 +599,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void itemUse(ItemUseHook hook){
+    public final void itemUse(ItemUseHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -620,7 +622,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void entitySpawn(EntitySpawnHook hook){
+    public final void entitySpawn(EntitySpawnHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -648,7 +650,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void mobTarget(MobTargetHook hook){
+    public final void mobTarget(MobTargetHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -671,7 +673,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void pistonExtend(PistonExtendHook hook){
+    public final void pistonExtend(PistonExtendHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -694,7 +696,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void pistonRetract(PistonRetractHook hook){
+    public final void pistonRetract(PistonRetractHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -717,7 +719,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void playerMove(PlayerMoveHook hook){
+    public final void playerMove(PlayerMoveHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -734,31 +736,31 @@ public final class Realms_CanaryHookHandler implements PluginListener{
             // Start Creative/Adventure Zone Checks
             if (!hook.getPlayer().hasPermission("canary.command.mode") && !moded.contains(hook.getPlayer())) {
                 if (zone.getCreative()) {
-                    if (hook.getPlayer().getMode() != 1) {
+                    if (hook.getPlayer().getMode() != GameMode.CREATIVE) {
                         RealmsBase.handleInventory(user, true);
-                        hook.getPlayer().setMode(1);
+                        hook.getPlayer().setMode(GameMode.CREATIVE);
                     }
                     if (!ZoneLists.isInCreative(user)) {
                         ZoneLists.addInCreative(user);
                     }
                 }
                 else if (zone.getAdventure()) {
-                    if (hook.getPlayer().getMode() != 2) {
-                        hook.getPlayer().setMode(2);
+                    if (hook.getPlayer().getMode() != GameMode.ADVENTURE) {
+                        hook.getPlayer().setMode(GameMode.ADVENTURE);
                     }
                     if (!ZoneLists.isInAdventure(user)) {
                         ZoneLists.addInAdventure(user);
                     }
                 }
-                else if (hook.getPlayer().getMode() != 0) {
-                    if (hook.getPlayer().getMode() == 1 && ZoneLists.isInCreative(user)) {
+                else if (hook.getPlayer().getMode() != GameMode.SURVIVAL) {
+                    if (hook.getPlayer().getMode() == GameMode.CREATIVE && ZoneLists.isInCreative(user)) {
                         ZoneLists.removeInCreative(user);
                         RealmsBase.handleInventory(user, false);
-                        hook.getPlayer().setMode(0);
+                        hook.getPlayer().setMode(GameMode.SURVIVAL);
                     }
-                    else if (hook.getPlayer().getMode() == 2 && ZoneLists.isInAdventure(user)) {
+                    else if (hook.getPlayer().getMode() == GameMode.ADVENTURE && ZoneLists.isInAdventure(user)) {
                         ZoneLists.removeInAdventure(user);
-                        hook.getPlayer().setMode(0);
+                        hook.getPlayer().setMode(GameMode.SURVIVAL);
                     }
                 }
             }
@@ -794,7 +796,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void portalUse(PortalUseHook hook){
+    public final void portalUse(PortalUseHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -833,17 +835,17 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void potionEffectApplied(PotionEffectAppliedHook hook){
+    public final void potionEffectApplied(PotionEffectAppliedHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
         boolean deny = false;
         try {
             if (hook.getEntity().isPlayer()) {
-                Canary_User user = new Canary_User(hook.getEntity().getPlayer());
+                Canary_User user = new Canary_User((Player) hook.getEntity());
                 Zone zone = ZoneLists.getInZone(user);
                 deny = !zone.getPotion();
-                RealmsLogMan.log(RLevel.POTION_EFFECT, "Player: '" + hook.getEntity().getPlayer().getName() + "' Zone: '" + zone.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
+                RealmsLogMan.log(RLevel.POTION_EFFECT, "Player: '" + hook.getEntity().getName() + "' Zone: '" + zone.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
             }
         }
         catch (Exception ex) {
@@ -856,13 +858,13 @@ public final class Realms_CanaryHookHandler implements PluginListener{
     }
 
     @HookHandler(priority = Priority.HIGH)
-    public final void vehicleMove(VehicleMoveHook hook){
+    public final void vehicleMove(VehicleMoveHook hook) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
         try {
             if (hook.getVehicle().getPassenger() != null && ((EntityLiving) hook.getVehicle().getPassenger()).isPlayer()) {
-                Player player = ((EntityLiving) hook.getVehicle().getPassenger()).getPlayer();
+                Player player = (Player) hook.getVehicle().getPassenger();
                 Canary_User user = new Canary_User(player);
                 Zone zone = ZoneLists.getInZone(user);
                 // Start Enter Zone Checks
@@ -870,28 +872,28 @@ public final class Realms_CanaryHookHandler implements PluginListener{
                     Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint());
                     player.teleportTo(thrown.x, thrown.y, thrown.z, player.getRotation(), player.getPitch());
                     if (hook.getVehicle().getName().equals("Boat")) {
-                        player.sendMessage("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your boat! Need some help?");
+                        player.message("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your boat! Need some help?");
                     }
                     else {
-                        player.sendMessage("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your minecart! Need some help?");
+                        player.message("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your minecart! Need some help?");
                     }
                     return;
                 }
                 // End Enter Zone Checks
                 // Start Creative Zone Checks
                 if (zone.getCreative()) {
-                    if (player.getMode() != 1 && !player.hasPermission("canary.command.mode") && !moded.contains(player) && !ZoneLists.isInCreative(user)) {
-                        player.setMode(1);
+                    if (player.getMode() != GameMode.CREATIVE && !player.hasPermission("canary.command.mode") && !moded.contains(player) && !ZoneLists.isInCreative(user)) {
+                        player.setMode(GameMode.CREATIVE);
                         RealmsBase.handleInventory(user, true);
                     }
                 }
                 else if (zone.getAdventure()) {
-                    if (player.getMode() != 2 && !player.hasPermission("canary.command.mode") && !moded.contains(player) && !ZoneLists.isInAdventure(user)) {
-                        player.setMode(2);
+                    if (player.getMode() != GameMode.ADVENTURE && !player.hasPermission("canary.command.mode") && !moded.contains(player) && !ZoneLists.isInAdventure(user)) {
+                        player.setMode(GameMode.ADVENTURE);
                     }
                 }
-                else if (player.getMode() != 0 && !player.hasPermission("canary.command.mode") && (ZoneLists.isInCreative(user) || ZoneLists.isInAdventure(user))) {
-                    player.setMode(0);
+                else if (player.getMode() != GameMode.SURVIVAL && !player.hasPermission("canary.command.mode") && (ZoneLists.isInCreative(user) || ZoneLists.isInAdventure(user))) {
+                    player.setMode(GameMode.SURVIVAL);
                     ZoneLists.removeInCreative(user);
                     ZoneLists.removeInAdventure(user);
                     RealmsBase.handleInventory(user, false);
@@ -908,7 +910,7 @@ public final class Realms_CanaryHookHandler implements PluginListener{
                 // Start Restricted Zone Checks
                 if (zone.getRestricted()) {
                     if (!zone.permissionCheck(user, PermissionType.AUTHED)) {
-                        if (!ZoneLists.isInRestricted(user) && player.getMode() != 1 && !player.isDamageDisabled()) {
+                        if (!ZoneLists.isInRestricted(user) && player.getMode() != GameMode.CREATIVE && !player.getCapabilities().isInvulnerable()) {
                             ZoneLists.addInRestricted(user);
                             player.notice(RealmsBase.getProperties().getStringVal("restrict.message"));
                         }

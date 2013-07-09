@@ -31,14 +31,14 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.P
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Realms_CanaryClassicListener extends PluginListener{
+public final class Realms_CanaryClassicListener extends PluginListener {
 
     private final PluginLoader.HookResult ALLOW = PluginLoader.HookResult.DEFAULT_ACTION;
     private final PluginLoader.HookResult DENY = PluginLoader.HookResult.PREVENT_ACTION;
     private final ArrayList<Player> moded = new ArrayList<Player>();
     private final HashMap<Player, Minecart> cartInstance = new HashMap<Player, Minecart>(); // Cause FUCKING CANARY IS DERP IN THIS DEPT...!
 
-    public Realms_CanaryClassicListener(Realms plugin){
+    public Realms_CanaryClassicListener(Realms plugin) {
         PluginListener.Priority HIGH = PluginListener.Priority.HIGH;
         PluginListener.Priority NORMAL = PluginListener.Priority.MEDIUM;
         PluginLoader loader = etc.getLoader();
@@ -78,7 +78,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onBlockBreak(Player player, Block block){
+    public final boolean onBlockBreak(Player player, Block block) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -100,7 +100,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onBlockDestroy(Player player, Block block){
+    public final boolean onBlockDestroy(Player player, Block block) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -124,7 +124,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onBlockPhysics(Block block, boolean placed){
+    public final boolean onBlockPhysics(Block block, boolean placed) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -145,7 +145,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onBlockPlace(Player player, Block blockP, Block blockC, Item item){
+    public final boolean onBlockPlace(Player player, Block blockP, Block blockC, Item item) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -165,7 +165,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
                 deny = !zone.permissionCheck(user, PermissionType.CREATE);
             }
             RealmsLogMan.log(RLevel.BLOCK_PLACE, "Player: '" + player.getName() + "'" + " BlockPlaced: '" + (blockP != null ? blockP.toString() : "NULL") + "'" + " BlockClicked: '" + (blockC != null ? blockC.toString() : "NULL") + "'" + " ItemInHand: '" + (item != null ? item.toString() : "NULL") + "'" + " Zone: '" + zone.getName() + "' Result: "
-                    + (deny ? "'Denied'" : "'Allowed'"));
+                + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PLACE. Caused by: " + ex.getClass().getName());
@@ -175,7 +175,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onBlockRightClick(Player player, Block block, Item item){
+    public final boolean onBlockRightClick(Player player, Block block, Item item) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -210,7 +210,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final PluginLoader.HookResult canPlayerUseCommand(Player player, String command){
+    public final PluginLoader.HookResult canPlayerUseCommand(Player player, String command) {
         if (!RealmsBase.isLoaded()) {
             return ALLOW;
         }
@@ -240,7 +240,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onCommand(Player player, String[] args){
+    public final boolean onCommand(Player player, String[] args) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -357,7 +357,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onConsoleCommand(String[] args){
+    public final boolean onConsoleCommand(String[] args) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -380,7 +380,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final HookParametersDamage onDamage(HookParametersDamage hpDamage){
+    public final HookParametersDamage onDamage(HookParametersDamage hpDamage) {
         if (!RealmsBase.isLoaded()) {
             return hpDamage;
         }
@@ -389,6 +389,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
         BaseEntity defender = hpDamage.getDefender();
         BaseEntity attacker = hpDamage.getAttacker();
         DamageType type = hpDamage.getDamageSource().getDamageType();
+        DamageSource source = hpDamage.getDamageSource();
 
         try {
             if (defender.isPlayer()) {
@@ -397,8 +398,17 @@ public final class Realms_CanaryClassicListener extends PluginListener{
                 switch (type) {
                     case ENTITY:
                         if (attacker != null) {
-                            if (attacker.isPlayer() || (attacker.getName().equals("Wolf") && (new Wolf((OEntityWolf) attacker.getEntity()).isTame()) || attacker.getName().equals("Arrow"))) {
+                            if (attacker.isPlayer() || (attacker.getName().equals("Wolf") && (new Wolf((OEntityWolf) attacker.getEntity()).isTame()))) {
                                 deny = (!zone.getPVP()) || zone.getSanctuary();
+                            }
+                            else if (attacker.getName().equals("Arrow")) {
+                                Arrow arrow = new Arrow((OEntityArrow) source.getDamagingEntity().getEntity());
+                                if (arrow.getShooter().isPlayer()) {
+                                    deny = (!zone.getPVP()) || zone.getSanctuary();
+                                }
+                                else {
+                                    deny = zone.getSanctuary();
+                                }
                             }
                             else {
                                 deny = zone.getSanctuary();
@@ -445,7 +455,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final void onDeath(LivingEntity entity){
+    public final void onDeath(LivingEntity entity) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -462,7 +472,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final void onDisconnect(Player player){
+    public final void onDisconnect(Player player) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -477,7 +487,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onDispense(Dispenser dispenser, BaseEntity tobedispensed){
+    public final boolean onDispense(Dispenser dispenser, BaseEntity tobedispensed) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -496,7 +506,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onEat(Player player, Item item){
+    public final boolean onEat(Player player, Item item) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -515,7 +525,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onEndermanDrop(Enderman entity, Block block){
+    public final boolean onEndermanDrop(Enderman entity, Block block) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -534,7 +544,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onEndermanPickup(Enderman entity, Block block){
+    public final boolean onEndermanPickup(Enderman entity, Block block) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -553,7 +563,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final PluginLoader.HookResult onEntityRightClick(Player player, BaseEntity entityClicked, Item itemInHand){
+    public final PluginLoader.HookResult onEntityRightClick(Player player, BaseEntity entityClicked, Item itemInHand) {
         if (!RealmsBase.isLoaded()) {
             return ALLOW;
         }
@@ -575,7 +585,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public final boolean onExplosion(Block block, BaseEntity entity, List blocksaffected){
+    public final boolean onExplosion(Block block, BaseEntity entity, List blocksaffected) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -599,7 +609,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onFlow(Block from, Block to){
+    public final boolean onFlow(Block from, Block to) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -625,7 +635,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public Float onFoodExhaustionChange(Player player, Float oldLevel, Float newLevel){
+    public Float onFoodExhaustionChange(Player player, Float oldLevel, Float newLevel) {
         if (!RealmsBase.isLoaded()) {
             return newLevel;
         }
@@ -648,7 +658,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public int onFoodLevelChange(Player player, int oldFoodLevel, int newFoodLevel){
+    public int onFoodLevelChange(Player player, int oldFoodLevel, int newFoodLevel) {
         if (!RealmsBase.isLoaded()) {
             return newFoodLevel;
         }
@@ -671,7 +681,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public Float onFoodSaturationChange(Player player, Float oldLevel, Float newLevel){
+    public Float onFoodSaturationChange(Player player, Float oldLevel, Float newLevel) {
         if (!RealmsBase.isLoaded()) {
             return newLevel;
         }
@@ -694,15 +704,28 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onHangingEntityDestroyed(HangingEntity baseEntity, DamageSource source){
+    public final boolean onHangingEntityDestroyed(HangingEntity baseEntity, DamageSource source) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
         boolean deny = false;
         try {
-            if (source.getDamagingEntity() != null && source.getDamagingEntity().isPlayer()) {
+            if (source.getDamagingEntity() != null) {
+                CanaryClassic_User user;
+                if (source.getDamagingEntity().isPlayer()) {
+                    user = new CanaryClassic_User(source.getDamagingEntity().getPlayer());
+                }
+                else if (source.getDamagingEntity().getName() == "Arrow") {
+                    Arrow arrow = new Arrow((OEntityArrow) source.getDamagingEntity().getEntity());
+                    if (!arrow.getShooter().isPlayer()) {
+                        return false; //Skip rest...
+                    }
+                    user = new CanaryClassic_User(arrow.getShooter().getPlayer());
+                }
+                else {
+                    return false;
+                }
                 CanaryClassic_Entity entity = new CanaryClassic_Entity(baseEntity);
-                CanaryClassic_User user = new CanaryClassic_User(source.getDamagingEntity().getPlayer());
                 Zone zone = ZoneLists.getInZone(entity);
                 deny = !zone.permissionCheck(user, PermissionType.DESTROY);
             }
@@ -715,7 +738,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onIgnite(Block block, Player player){
+    public final boolean onIgnite(Block block, Player player) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -743,7 +766,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onItemDrop(Player player, ItemEntity item){
+    public final boolean onItemDrop(Player player, ItemEntity item) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -762,7 +785,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onItemUse(Player player, Block blockPlaced, Block blockClicked, Item item){
+    public final boolean onItemUse(Player player, Block blockPlaced, Block blockClicked, Item item) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -791,7 +814,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onMobSpawn(Mob mob){
+    public final boolean onMobSpawn(Mob mob) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -815,7 +838,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onMobTarget(Player player, LivingEntity entity){
+    public final boolean onMobTarget(Player player, LivingEntity entity) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -836,7 +859,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onOpenInventory(HookParametersOpenInventory openInventory){
+    public final boolean onOpenInventory(HookParametersOpenInventory openInventory) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -865,7 +888,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onPistonExtend(Block block, boolean isSticky){
+    public final boolean onPistonExtend(Block block, boolean isSticky) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -886,7 +909,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onPistonRetract(Block block, boolean isSticky){
+    public final boolean onPistonRetract(Block block, boolean isSticky) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -907,7 +930,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final void onPlayerMove(Player player, Location from, Location to){
+    public final void onPlayerMove(Player player, Location from, Location to) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -985,7 +1008,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final boolean onPortalUse(Player player, Location to){
+    public final boolean onPortalUse(Player player, Location to) {
         if (!RealmsBase.isLoaded()) {
             return false;
         }
@@ -1021,7 +1044,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final PotionEffect onPotionEffect(LivingEntity entity, PotionEffect potionEffect){
+    public final PotionEffect onPotionEffect(LivingEntity entity, PotionEffect potionEffect) {
         if (!RealmsBase.isLoaded()) {
             return potionEffect;
         }
@@ -1042,7 +1065,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final void onVehicleEnter(BaseVehicle vehicle, HumanEntity humEnt){ // For somereason this is called when opening a StorageCart
+    public final void onVehicleEnter(BaseVehicle vehicle, HumanEntity humEnt) { // For somereason this is called when opening a StorageCart
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -1061,7 +1084,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
     }
 
     @Override
-    public final void onVehiclePositionChange(BaseVehicle vehicle, int x, int y, int z){
+    public final void onVehiclePositionChange(BaseVehicle vehicle, int x, int y, int z) {
         if (!RealmsBase.isLoaded()) {
             return;
         }
@@ -1135,7 +1158,7 @@ public final class Realms_CanaryClassicListener extends PluginListener{
         }
     }
 
-    private final Block getPistonTouch(Block piston){
+    private final Block getPistonTouch(Block piston) {
         Block pushing = null;
         int x = piston.getX(), y = piston.getY(), z = piston.getZ();
         RealmsLogMan.log(RLevel.GENERAL, String.valueOf(piston.getData()));
