@@ -15,6 +15,7 @@ package net.visualillusionsent.minecraft.server.mod.plugin.realms.data;
 import java.io.File;
 import java.util.ArrayList;
 import net.visualillusionsent.lang.DataSourceType;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
 import net.visualillusionsent.utils.FileUtils;
 import net.visualillusionsent.utils.PropertiesFile;
@@ -28,7 +29,7 @@ import net.visualillusionsent.utils.UtilityException;
  * 
  * @author Jason (darkdiplomat)
  */
-public class RealmsProps{
+public class RealmsProps {
 
     private final String dir_Path = "plugins" + File.separator + "Realms" + File.separator;
     private final String props_Path = dir_Path.concat("Realms.ini");
@@ -43,9 +44,9 @@ public class RealmsProps{
      * 
      * @param rhandle
      */
-    public RealmsProps(){}
+    public RealmsProps() {}
 
-    public synchronized boolean initialize(){
+    public synchronized boolean initialize() {
         RealmsLogMan.info("Initializing properties...");
         if (isInitialized) {
             RealmsLogMan.severe("HERP DERP...");
@@ -65,7 +66,7 @@ public class RealmsProps{
         if (!props.exists()) { // Create a new one if non-existent
             RealmsLogMan.info("Creating default properties...");
             try {
-                FileUtils.cloneFileFromJar(new File("plugins/Realms.jar").getAbsolutePath(), "resources/default_config.ini", props_Path);
+                FileUtils.cloneFileFromJar(new File(RealmsBase.getJarPath()).getAbsolutePath(), "resources/default_config.ini", props_Path);
             }
             catch (UtilityException ue) {
                 RealmsLogMan.severe("Failed to create Properties..." + ue.getMessage());
@@ -125,7 +126,7 @@ public class RealmsProps{
      * 
      * @param ids
      */
-    private void addInteractBlock(String[] ids){
+    private void addInteractBlock(String[] ids) {
         if (ids != null) {
             int bid = 0;
             for (String id : ids) {
@@ -146,7 +147,7 @@ public class RealmsProps{
      * 
      * @param ids
      */
-    private void addInteractItem(String[] ids){
+    private void addInteractItem(String[] ids) {
         if (ids != null) {
             int bid = 0;
             for (String id : ids) {
@@ -167,7 +168,7 @@ public class RealmsProps{
      * 
      * @param cmds
      */
-    private void addOverrideCommands(String[] cmds){
+    private void addOverrideCommands(String[] cmds) {
         if (cmds != null) {
             for (String cmd : cmds) {
                 commandOverride.add(cmd.trim());
@@ -175,7 +176,7 @@ public class RealmsProps{
         }
     }
 
-    public final String getStringVal(String key){
+    public final String getStringVal(String key) {
         try {
             return props_File.getString(key);
         }
@@ -185,7 +186,7 @@ public class RealmsProps{
         return "*MISSING VALUE*";
     }
 
-    public final int getIntVal(String key){
+    public final int getIntVal(String key) {
         try {
             return props_File.getInt(key);
         }
@@ -195,7 +196,7 @@ public class RealmsProps{
         return (int) Double.NaN; // will probably blow up
     }
 
-    public final long getLongVal(String key){
+    public final long getLongVal(String key) {
         try {
             return props_File.getInt(key);
         }
@@ -205,7 +206,7 @@ public class RealmsProps{
         return (long) Double.NaN; // will probably blow up
     }
 
-    public final Boolean getBooleanVal(String key){
+    public final Boolean getBooleanVal(String key) {
         try {
             return props_File.getBoolean(key);
         }
@@ -215,7 +216,7 @@ public class RealmsProps{
         return null;
     }
 
-    public final boolean isCommandAllowed(String[] args){
+    public final boolean isCommandAllowed(String[] args) {
         int argc = 0;
         StringBuilder verify = new StringBuilder();
         while (argc < args.length) {
@@ -229,15 +230,15 @@ public class RealmsProps{
         return false;
     }
 
-    public final boolean isInteractBlock(int id){
+    public final boolean isInteractBlock(int id) {
         return interact_Block.contains(id);
     }
 
-    public final boolean isInteractItem(int id){
+    public final boolean isInteractItem(int id) {
         return interact_Item.contains(id);
     }
 
-    public final void reload(){
+    public final void reload() {
         props_File.reload();
     }
 }

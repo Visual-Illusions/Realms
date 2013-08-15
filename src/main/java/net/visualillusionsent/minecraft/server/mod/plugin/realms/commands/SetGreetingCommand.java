@@ -29,10 +29,10 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permissio
  * @author Jason (darkdiplomat)
  */
 @RCommand(desc = "Sets the greeting for a zone", name = "setgreeting", usage = "<zone|*> [greeting]")
-final class SetGreetingCommand extends RealmsCommand{
+final class SetGreetingCommand extends RealmsCommand {
 
     @Override
-    final void execute(Mod_Caller caller, String[] args){
+    final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller instanceof Mod_User ? (Mod_User) caller : null;
         try {
             if (args[0].equals("*") && user == null) {
@@ -51,7 +51,7 @@ final class SetGreetingCommand extends RealmsCommand{
             }
             String msg = greeting.toString().trim();
             zone.setGreeting(msg.isEmpty() ? null : msg);
-            caller.sendMessage("msg.rvm", "GREETING", msg.isEmpty() ? "" : msg.replaceAll("@", MCChatForm.MARKER.toString()));
+            caller.sendMessage(msg.isEmpty() ? "msg.rmv" : "msg.set", "GREETING", msg.isEmpty() ? "" : msg.replaceAll("@", MCChatForm.MARKER.toString()));
         }
         catch (ZoneNotFoundException znfe) {
             caller.sendError(znfe.getMessage());

@@ -29,10 +29,10 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permissio
  * @author Jason (darkdiplomat)
  */
 @RCommand(desc = "Sets the farewell for a zone", name = "setfarewell", usage = "<zone|*> [farewell]")
-final class SetFarewellCommand extends RealmsCommand{
+final class SetFarewellCommand extends RealmsCommand {
 
     @Override
-    final void execute(Mod_Caller caller, String[] args){
+    final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
         try {
             if (args[0].equals("*") && user == null) {
@@ -51,7 +51,7 @@ final class SetFarewellCommand extends RealmsCommand{
             }
             String msg = farewell.toString().trim();
             zone.setFarewell(msg.isEmpty() ? null : msg);
-            caller.sendMessage("msg.rvm", "FAREWELL", msg.isEmpty() ? "" : msg.replaceAll("@", MCChatForm.MARKER.toString()));
+            caller.sendMessage(msg.isEmpty() ? "msg.rmv" : "msg.set", "FAREWELL", msg.isEmpty() ? "" : msg.replaceAll("@", MCChatForm.MARKER.toString()));
         }
         catch (ZoneNotFoundException znfe) {
             caller.sendError(znfe.getMessage());

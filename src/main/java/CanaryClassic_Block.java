@@ -27,67 +27,67 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class CanaryClassic_Block implements Mod_Block{
+public final class CanaryClassic_Block implements Mod_Block {
 
     private final Block block;
 
-    public CanaryClassic_Block(Block block){
+    public CanaryClassic_Block(Block block) {
         this.block = block;
     }
 
     @Override
-    public final int getType(){
+    public final int getType() {
         return block.getType();
     }
 
     @Override
-    public final int getData(){
+    public final int getData() {
         return block.getData();
     }
 
     @Override
-    public final int getX(){
+    public final int getX() {
         return block.getX();
     }
 
     @Override
-    public final int getY(){
+    public final int getY() {
         return block.getY();
     }
 
     @Override
-    public final int getZ(){
+    public final int getZ() {
         return block.getZ();
     }
 
     @Override
-    public final int getDimension(){
+    public final int getDimension() {
         return block.getWorld().getType().toIndex();
     }
 
     @Override
-    public final String getWorld(){
+    public final String getWorld() {
         return block.getWorld().getName();
     }
 
     @Override
-    public final Block getBlock(){
+    public final Block getBlock() {
         return block;
     }
 
     @Override
-    public final boolean equals(Object obj){
-        if(obj instanceof CanaryClassic_Block){
-            return block.equals(((CanaryClassic_Block)obj).getBlock());
+    public final boolean equals(Object obj) {
+        if (obj instanceof CanaryClassic_Block) {
+            return block.equals(((CanaryClassic_Block) obj).getBlock());
         }
-        else if(obj instanceof Block){
+        else if (obj instanceof Block) {
             return block.equals(obj);
         }
         return false;
     }
 
     @Override
-    public final int hashCode(){
+    public final int hashCode() {
         return block.hashCode();
     }
 }

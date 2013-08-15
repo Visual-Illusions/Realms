@@ -50,7 +50,7 @@ import net.visualillusionsent.utils.VersionChecker;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class RealmsBase{
+public final class RealmsBase {
 
     private static RealmsBase $;
     private final Mod_Server server;
@@ -68,7 +68,7 @@ public final class RealmsBase{
     private ProgramStatus status;
     private static boolean loaded;
 
-    public RealmsBase(Mod_Server server){
+    public RealmsBase(Mod_Server server) {
         if ($ == null) {
             $ = this;
             this.server = server;
@@ -108,7 +108,7 @@ public final class RealmsBase{
         }
     }
 
-    private final String genJarPath(){ // For when the jar isn't Realms.jar
+    private final String genJarPath() { // For when the jar isn't Realms.jar
         try {
             CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
             return codeSource.getLocation().toURI().getPath();
@@ -117,7 +117,7 @@ public final class RealmsBase{
         return "plugins/Realms.jar";
     }
 
-    private final void initializeThreads(){
+    private final void initializeThreads() {
         if (!props.getBooleanVal("sanctuary.mobs") && props.getLongVal("sanctuary.timeout") > 0) { // If allowing all mobs into Sanctuary area don't bother scheduling
             mobdes = server.addTaskToServer(new MobRemover(this), props.getLongVal("sanctuary.timeout"));
         }
@@ -135,7 +135,7 @@ public final class RealmsBase{
     /**
      * Terminates the threadhandler and closes the log file
      */
-    public final void terminate(){
+    public final void terminate() {
         loaded = false;
         server.removeTask($.mobdes);
         server.removeTask($.animaldes);
@@ -151,23 +151,23 @@ public final class RealmsBase{
         RealmsLogMan.killLogger();
     }
 
-    public final static boolean isLoaded(){
+    public final static boolean isLoaded() {
         return loaded;
     }
 
-    public final static DataSourceHandler getDataSourceHandler(){
+    public final static DataSourceHandler getDataSourceHandler() {
         return $.source_handler;
     }
 
-    public final static Mod_Server getServer(){
+    public final static Mod_Server getServer() {
         return $.server;
     }
 
-    public final static RealmsProps getProperties(){
+    public final static RealmsProps getProperties() {
         return $.props;
     }
 
-    public final static Wand getPlayerWand(Mod_User user){
+    public final static Wand getPlayerWand(Mod_User user) {
         if ($.wands.containsKey(user)) {
             return $.wands.get(user);
         }
@@ -176,7 +176,7 @@ public final class RealmsBase{
         return wand;
     }
 
-    public final static void removePlayerWand(Mod_User user){
+    public final static void removePlayerWand(Mod_User user) {
         synchronized ($.wands) {
             if ($.wands.containsKey(user)) {
                 $.wands.get(user).softReset();
@@ -185,7 +185,7 @@ public final class RealmsBase{
         }
     }
 
-    public final static void playerMessage(Mod_User user){
+    public final static void playerMessage(Mod_User user) {
         List<Zone> oldZoneList = ZoneLists.getplayerZones(user);
         Zone everywhere = ZoneLists.getEverywhere(user);
         List<Zone> newZoneList = ZoneLists.getZonesPlayerIsIn(everywhere, user);
@@ -208,7 +208,7 @@ public final class RealmsBase{
         }
     }
 
-    public final static void handleInventory(Mod_User user, boolean store){
+    public final static void handleInventory(Mod_User user, boolean store) {
         if (store) {
             if (!$.inventories.containsKey(user.getName())) {
                 Mod_Item[] items = user.getInventoryContents();
@@ -224,43 +224,43 @@ public final class RealmsBase{
         }
     }
 
-    public final static void storeInventory(String name, Mod_Item[] items){
+    public final static void storeInventory(String name, Mod_Item[] items) {
         if (!$.inventories.containsKey(name)) {
             $.inventories.put(name, items);
         }
     }
 
-    public final static boolean isLatest(){
+    public final static boolean isLatest() {
         return $.vc.isLatest();
     }
 
-    public final static String getCurrent(){
+    public final static String getCurrent() {
         return $.vc.getCurrentVersion();
     }
 
-    public final static String getVersion(){
+    public final static String getVersion() {
         if ($.version == null) {
             $.generateVersion();
         }
         return $.version.concat(".").concat($.build);
     }
 
-    private final String getRawVersion(){
+    private final String getRawVersion() {
         if ($.version == null) {
             $.generateVersion();
         }
         return $.version;
     }
 
-    public final static boolean isBeta(){
+    public final static boolean isBeta() {
         return $.status == ProgramStatus.BETA;
     }
 
-    public final static boolean isReleaseCandidate(){
+    public final static boolean isReleaseCandidate() {
         return $.status == ProgramStatus.RELEASE_CANDIDATE;
     }
 
-    private void generateVersion(){
+    private void generateVersion() {
         try {
             Manifest manifest = getManifest();
             Attributes mainAttribs = manifest.getMainAttributes();
@@ -284,7 +284,7 @@ public final class RealmsBase{
         }
     }
 
-    private final Manifest getManifest() throws Exception{
+    private final Manifest getManifest() throws Exception {
         Manifest toRet = null;
         Exception ex = null;
         JarFile jar = null;
@@ -309,7 +309,7 @@ public final class RealmsBase{
         return toRet;
     }
 
-    public final static String[] commandAdjustment(String[] args, int adjust){
+    public final static String[] commandAdjustment(String[] args, int adjust) {
         String[] newArgs = new String[0];
         if (args.length > adjust) {
             newArgs = new String[args.length - adjust];
@@ -323,7 +323,7 @@ public final class RealmsBase{
         return newArgs;
     }
 
-    public final static Point throwBack(Zone zone, Point oPoint){
+    public final static Point throwBack(Zone zone, Point oPoint) {
         PolygonArea area = zone.getPolygon();
         Point temp = oPoint.clone();
         if (area != null) {
@@ -342,5 +342,9 @@ public final class RealmsBase{
             temp.y = $.server.getHighestY(temp.x, temp.z, zone.getWorld(), zone.getDimension());
         }
         return temp;
+    }
+
+    public final static String getJarPath() {
+        return $.jar_Path;
     }
 }

@@ -89,7 +89,7 @@
    <dependency>
     <groupId>net.canarymod</groupId>
     <artifactId>CanaryLib</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
    </dependency>
    <dependency>
     <groupId>org.xerial</groupId>
@@ -103,24 +103,6 @@
    </dependency>
   </dependencies>
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>plugin.yml</include>
-          <include>Canary.inf</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>**/*.*</include>
-        </includes>
-        <excludes>
-          <exclude>**/.gitignore</exclude>
-        </excludes>
-      </resource>
-    </resources>
     <plugins>
       <!-- Start: Generate Timestamp -->
       <plugin>
@@ -164,7 +146,7 @@
                 <ProgramStatus>${ProgramStatus}</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
-                <Class-Path>../lib/viutils-1.0.3.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
+                <Class-Path>../lib/viutils.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>
