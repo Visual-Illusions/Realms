@@ -19,18 +19,18 @@ import java.util.List;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
+import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
 
 /**
- * This file is part of Realms.
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * Polygon Area
  * 
+ * @author impact
+ * @author durron597
  * @author Jason (darkdiplomat)
  */
-public final class PolygonArea{
+public final class PolygonArea {
 
     private enum Mode {
         DELETED, //
@@ -48,8 +48,8 @@ public final class PolygonArea{
     private Mode mode = Mode.SAVED;
     private Point centroid = null;
     private double radius = 0;
-    private int area = 0;
-    private int volume = 0;
+    private long area = 0;
+    private long volume = 0;
 
     /**
      * PolygonArea Constructor
@@ -57,16 +57,16 @@ public final class PolygonArea{
      * @param realm
      * @param zone
      */
-    public PolygonArea(Zone zone){
+    public PolygonArea(Zone zone) {
         this.zone = zone;
-        this.ceiling = 1000;
-        this.floor = 0;
+        this.ceiling = RealmsBase.getProperties().getIntVal("default.zone.ceiling");
+        this.floor = RealmsBase.getProperties().getIntVal("default.zone.floor");
     }
 
     /**
      * PolygonArea Constructor from DataSource
      */
-    public PolygonArea(Zone zone, String... args) throws PolygonConstructException{
+    public PolygonArea(Zone zone, String... args) throws PolygonConstructException {
         try {
             this.zone = zone;
             this.ceiling = Integer.parseInt(args[0]);
@@ -88,63 +88,63 @@ public final class PolygonArea{
     }
 
     /* Accessor Methods */
-    public final Zone getZone(){
+    public final Zone getZone() {
         return zone;
     }
 
-    public final List<Point> getVertices(){
+    public final List<Point> getVertices() {
         return vertices;
     }
 
-    public final int getCeiling(){
+    public final int getCeiling() {
         return ceiling;
     }
 
-    public final int getFloor(){
+    public final int getFloor() {
         return floor;
     }
 
-    public final Point getCentroid(){
+    public final Point getCentroid() {
         return centroid;
     }
 
-    public final double getRadius(){
+    public final double getRadius() {
         return radius;
     }
 
-    public final int getArea(){
+    public final long getArea() {
         return area;
     }
 
-    public final int getVolume(){
+    public final long getVolume() {
         return volume;
     }
 
-    public final String getMode(){
+    public final String getMode() {
         return mode.toString().toLowerCase();
     }
 
-    public final boolean isEmpty(){
+    public final boolean isEmpty() {
         return vertices.size() < 3;
     }
 
-    public final boolean workingVerticesCleared(){
+    public final boolean workingVerticesCleared() {
         return workingVertices.size() == 0;
     }
 
     /* Mutator Methods */
-    public final void setWorkingCeiling(int ceiling){
+    public final void setWorkingCeiling(int ceiling) {
         this.workingCeiling = ceiling;
     }
 
-    public final void setWorkingFloor(int floor){
+    public final void setWorkingFloor(int floor) {
         this.workingFloor = floor;
     }
 
     /**
      * Saves Polygon
      */
-    public final void save(){
+    public final void save() {
         if (workingVertices.isEmpty()) {
             vertices = new LinkedList<Point>();
             floor = 0;
@@ -169,7 +169,7 @@ public final class PolygonArea{
         zone.save();
     }
 
-    private final Point calculateCentroid(List<Point> points){
+    private final Point calculateCentroid(List<Point> points) {
         double x = 0;
         double z = 0;
         for (Point p : points) {
@@ -179,7 +179,7 @@ public final class PolygonArea{
         return new Point((int) Math.floor(x / points.size()), (int) Math.floor(ceiling - (ceiling - floor) / 2), (int) Math.floor(z / points.size()));
     }
 
-    private final double calculateRadius(List<Point> points, Point c){
+    private final double calculateRadius(List<Point> points, Point c) {
         double max = 0;
         for (Point p : points) {
             double distance = c.distance2D(p);
@@ -190,7 +190,7 @@ public final class PolygonArea{
         return max;
     }
 
-    public final List<Point> edit(){
+    public final List<Point> edit() {
         this.mode = Mode.EDIT;
         workingFloor = floor;
         workingCeiling = ceiling;
@@ -199,12 +199,12 @@ public final class PolygonArea{
         return workingVertices;
     }
 
-    public final void cancelEdit(){
+    public final void cancelEdit() {
         this.mode = Mode.SAVED;
         this.workingVertices.clear();
     }
 
-    public final void delete(boolean saveZone){
+    public final void delete(boolean saveZone) {
         this.mode = Mode.DELETED;
         zone.setPolygon(null);
         if (saveZone) {
@@ -213,7 +213,7 @@ public final class PolygonArea{
         this.zone = null;
     }
 
-    public final void removeWorkingVertex(Mod_Block block){
+    public final void removeWorkingVertex(Mod_Block block) {
         Iterator<Point> itr = workingVertices.iterator();
         while (itr.hasNext()) {
             Point p = itr.next();
@@ -223,17 +223,17 @@ public final class PolygonArea{
         }
     }
 
-    public final boolean contains(Mod_Entity entity){
+    public final boolean contains(Mod_Entity entity) {
         Point p = new Point((int) Math.floor(entity.getX()), (int) Math.floor(entity.getY()), (int) Math.floor(entity.getZ()));
         return this.contains(p, true);
     }
 
-    public final boolean contains(Mod_Block block){
+    public final boolean contains(Mod_Block block) {
         Point p = new Point(block.getX(), block.getY(), block.getZ());
         return this.contains(p, true);
     }
 
-    public final boolean contains(Point point){
+    public final boolean contains(Point point) {
         return this.contains(point, true);
     }
 
@@ -243,7 +243,7 @@ public final class PolygonArea{
      * http://www.visibone.com/inpoly/inpoly.c
      * 6/19/95 - Bob Stein & Craig Yap stein@visibone.com craig@cse.fau.edu
      ***************************************************************************/
-    public final static boolean contains(List<Point> points, Point p, int floor, int ceiling){
+    public final static boolean contains(List<Point> points, Point p, int floor, int ceiling) {
         if (points == null) {
             return false;
         }
@@ -282,7 +282,7 @@ public final class PolygonArea{
                 }
             }
             if (newPoint.x < p.x == p.x <= oldPoint.x /* edge "open" at left end */
-                    && (p.z - z1) * (x2 - x1) < (z2 - z1) * (p.x - x1)) {
+                && (p.z - z1) * (x2 - x1) < (z2 - z1) * (p.x - x1)) {
                 inside = !inside;
             }
             oldPoint = newPoint;
@@ -291,7 +291,7 @@ public final class PolygonArea{
         /* End INPOLY.C */
     }
 
-    public final boolean contains(Point p, boolean checkRadius){
+    public final boolean contains(Point p, boolean checkRadius) {
         if (this.centroid == null) {
             return false;
         }
@@ -301,7 +301,7 @@ public final class PolygonArea{
         return contains(vertices, p, this.floor, this.ceiling);
     }
 
-    public final boolean workingVerticesContain(PolygonArea polygonArea){
+    public final boolean workingVerticesContain(PolygonArea polygonArea) {
         for (Point p : polygonArea.getVertices()) {
             if (!contains(workingVertices, p, this.workingFloor, this.workingCeiling)) {
                 return false;
@@ -310,7 +310,7 @@ public final class PolygonArea{
         return true;
     }
 
-    public final boolean containsWorkingVertex(Mod_Block block){
+    public final boolean containsWorkingVertex(Mod_Block block) {
         for (Point p : workingVertices) {
             if (p.x == block.getX() && p.z == block.getZ()) {
                 return true;
@@ -319,7 +319,7 @@ public final class PolygonArea{
         return false;
     }
 
-    public final boolean verticesContain(PolygonArea polygonArea){
+    public final boolean verticesContain(PolygonArea polygonArea) {
         for (Point p : polygonArea.getVertices()) {
             if (contains(this.vertices, p, this.floor, this.ceiling)) {
                 return true;
@@ -330,7 +330,7 @@ public final class PolygonArea{
 
     // Adds the vertex to the working list
     // Returns a list of removed vertices
-    public final List<Point> addVertex(Mod_User player, Mod_Block block){
+    public final List<Point> addVertex(Mod_User player, Mod_Block block) {
         List<Point> removed = new LinkedList<Point>();
         Point newVertex = new Point(block.getX(), block.getY(), block.getZ());
         // Case #1: The vertex list has less than three points
@@ -352,7 +352,7 @@ public final class PolygonArea{
      * @param player
      * @return whether the vertex is valid
      */
-    public final boolean validVertex(Mod_User user, Mod_Block block){
+    public final boolean validVertex(Mod_User user, Mod_Block block) {
         // The vertex must be contained by the parent zone
         if (!zone.getParent().contains(block)) {
             user.sendError(RealmsTranslate.transformMessage("polygon.not.contain", zone.getParent().getName()));
@@ -380,7 +380,7 @@ public final class PolygonArea{
      * @param player
      * @return whether the polygon makes a valid polygon
      */
-    public final boolean validPolygon(Mod_User user){
+    public final boolean validPolygon(Mod_User user) {
         // A polygon must have a least three sides
         if (workingVertices.size() < 3) {
             user.sendError("A polygon must have a least three vertices");
@@ -422,7 +422,7 @@ public final class PolygonArea{
         return true;
     }
 
-    public final Point getClosestPoint(Point temp){
+    public final Point getClosestPoint(Point temp) {
         Iterator<Point> pointIt = vertices.iterator();
         Point closest = null;
         while (pointIt.hasNext()) {
@@ -437,31 +437,31 @@ public final class PolygonArea{
         return closest;
     }
 
-    private final void reorganize(LinkedList<Point> points){
+    private final void reorganize(LinkedList<Point> points) {
         Point centroid = calculateCentroid(points);
         Collections.sort(points, new PointComparator(centroid));
     }
 
-    private final int calculateArea(){
+    private final long calculateArea() {
         if (vertices.size() < 3) {
             return 0;
         }
-        int areaCalc = 0;
+        double areaCalc = 0;
         Point last = vertices.get(vertices.size() - 1);
         for (Point p : vertices) {
             areaCalc += Math.abs(p.x * last.z) - Math.abs(last.x * p.z);
             last = p;
         }
         areaCalc = Math.abs(areaCalc / 2);
-        return areaCalc;
+        return (int) Math.floor(areaCalc);
     }
 
-    private final int calculateVolume(){
+    private final long calculateVolume() {
         int height = ceiling - floor;
-        return calculateArea() * height;
+        return (int) Math.floor(calculateArea() * height);
     }
 
-    private static final boolean intersects(List<Point> list1, List<Point> list2){
+    private static final boolean intersects(List<Point> list1, List<Point> list2) {
         List<Line> lines1 = getLines(list1);
         List<Line> lines2 = getLines(list2);
         for (Line line1 : lines1) {
@@ -474,7 +474,7 @@ public final class PolygonArea{
         return false;
     }
 
-    private static final List<Line> getLines(List<Point> points){
+    private static final List<Line> getLines(List<Point> points) {
         List<Line> results = new LinkedList<Line>();
         if (points.size() < 2) {
             return results;
@@ -488,23 +488,19 @@ public final class PolygonArea{
     }
 
     @Override
-    public final String toString(){
+    public final String toString() {
         StringBuffer builder = new StringBuffer();
         builder.append(ceiling);
         builder.append(",");
         builder.append(floor);
         for (Point vertex : vertices) {
             builder.append(",");
-            builder.append(vertex.x);
-            builder.append(",");
-            builder.append(vertex.y);
-            builder.append(",");
-            builder.append(vertex.z);
+            builder.append(vertex.asString());
         }
         return builder.toString();
     }
 
-    public final int getHeight(){
+    public final int getHeight() {
         return ceiling - floor;
     }
 }

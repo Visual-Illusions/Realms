@@ -16,6 +16,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
@@ -34,16 +35,16 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsL
  * 
  * @author Jason (darkdiplomat)
  */
-public final class CanaryClassic_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
+public final class CanaryClassic_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server {
 
     private final Server server;
 
-    public CanaryClassic_Server(Server server){
+    public CanaryClassic_Server(Server server) {
         this.server = server;
     }
 
     @Override
-    public final List<Mod_Entity> getAnimals(){
+    public final List<Mod_Entity> getAnimals() {
         List<Mod_Entity> animals = new ArrayList<Mod_Entity>();
         Set<World[]> worlds = new HashSet<World[]>(server.getLoadedWorld());
         for (World[] world : worlds) {
@@ -73,7 +74,7 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
     }
 
     @Override
-    public final List<Mod_Entity> getMobs(){
+    public final List<Mod_Entity> getMobs() {
         List<Mod_Entity> mobs = new ArrayList<Mod_Entity>();
         Set<World[]> worlds = Collections.synchronizedSet(server.getLoadedWorld());
         synchronized (worlds) {
@@ -120,7 +121,7 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
     }
 
     @Override
-    public final List<Mod_User> getUsers(){
+    public final List<Mod_User> getUsers() {
         Player[] current = etc.getServer().getPlayerList().toArray(new Player[0]);
         List<Mod_User> users = new ArrayList<Mod_User>();
         for (Player player : current) {
@@ -130,7 +131,7 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
     }
 
     @Override
-    public final Mod_User getUser(String name){
+    public final Mod_User getUser(String name) {
         Player player = server.getPlayer(name);
         if (player != null) {
             return new CanaryClassic_User(player);
@@ -139,19 +140,19 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
     }
 
     @Override
-    public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world){
+    public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world) {
         Block block = new Block(type, x, y, z, data);
         server.getWorld(world)[dimension].setBlock(block);
     }
 
     @Override
-    public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world){
+    public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world) {
         Block block = etc.getServer().getWorld(world)[dimension].getBlockAt(x, y, z);
         return new CanaryClassic_Block(block);
     }
 
     @Override
-    public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchs, String[] lore){
+    public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchs, String[] lore) {
         Item item = new Item(type, amount, damage);
         if (enchs != null) {
             for (Mod_ItemEnchantment ench : enchs) {
@@ -168,17 +169,17 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
     }
 
     @Override
-    public final Mod_ItemEnchantment constructEnchantment(int id, int level){
+    public final Mod_ItemEnchantment constructEnchantment(int id, int level) {
         return new CanaryClassic_ItemEnchantment(new Enchantment(Enchantment.Type.fromId(id), level));
     }
 
     @Override
-    public final String getDefaultWorldName(){
+    public final String getDefaultWorldName() {
         return etc.getServer().getDefaultWorld().getName();
     }
 
     @Override
-    public final List<String> getAdminGroups(){
+    public final List<String> getAdminGroups() {
         List<String> adminGroups = new ArrayList<String>();
         for (Group group : (List<Group>) etc.getDataSource().getGroupList()) {
             if (group.Administrator) {
@@ -188,44 +189,44 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
         return adminGroups;
     }
 
-    public final String getDefaultGroupName(){
+    public final String getDefaultGroupName() {
         return etc.getDataSource().getDefaultGroup().Name;
     }
 
     @Override
-    public final int getHighestY(int x, int z, String world, int dimension){
+    public final int getHighestY(int x, int z, String world, int dimension) {
         return etc.getServer().getWorld(world)[dimension].getHighestBlockY(x, z);
     }
 
     @Override
-    public boolean isCanaryClassic(){
+    public boolean isCanaryClassic() {
         return true;
     }
 
     @Override
-    public boolean isCanary(){
+    public boolean isCanary() {
         return false;
     }
 
     @Override
-    public boolean isBukkit(){
+    public boolean isBukkit() {
         return false;
     }
 
     @Override
-    public Logger getLogger(){
+    public Logger getLogger() {
         return Main.log;
     }
 
     @Override
-    public SynchronizedTask addTaskToServer(Runnable runnable, long delay){
-        CanaryClassicSyncRealmsTask ccsrt = new CanaryClassicSyncRealmsTask(runnable, delay);
+    public SynchronizedTask addTaskToServer(Runnable runnable, long delay) {
+        CanaryClassicSyncRealmsTask ccsrt = new CanaryClassicSyncRealmsTask(runnable, TimeUnit.SECONDS.toMillis(delay));
         ccsrt.start();
         return ccsrt;
     }
 
     @Override
-    public void removeTask(SynchronizedTask task){
+    public void removeTask(SynchronizedTask task) {
         ((CanaryClassicSyncRealmsTask) task).kill();
     }
 }

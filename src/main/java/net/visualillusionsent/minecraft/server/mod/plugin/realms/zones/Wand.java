@@ -24,14 +24,13 @@ import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.P
 import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.PolygonArea;
 
 /**
- * This file is part of Realms.
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * Wand
  * 
+ * @author impact
+ * @author durron597
  * @author Jason (darkdiplomat)
  */
-public final class Wand{
+public final class Wand {
 
     private enum Mode {
         DEFAULT,
@@ -41,8 +40,7 @@ public final class Wand{
     }
 
     private final String verts = MCChatForm.ORANGE + "# VERTICIES: " + MCChatForm.BLUE + "%d";
-    private final String floor_ceiling_height = MCChatForm.ORANGE + "FLOOR: " + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + "  CEILING: " + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + "  HEIGHT: " + MCChatForm.BLUE + "%d";
-    private final String area_volume = MCChatForm.ORANGE + "AREA: " + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + "  VOLUME: " + MCChatForm.BLUE + "%d";
+    private final String floor_ceiling_height = MCChatForm.ORANGE + "FLOOR:" + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + " CEILING:" + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + " HEIGHT:" + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + " AREA:" + MCChatForm.BLUE + "%.1f" + MCChatForm.ORANGE + " VOLUME:" + MCChatForm.BLUE + "%.1f";
 
     private final int pylonType;
     private final int pylonHeight;
@@ -51,14 +49,14 @@ public final class Wand{
     private PolygonArea workingPolygon;
     private List<Mod_Block> savedBlocks = new ArrayList<Mod_Block>();
 
-    public Wand(Mod_User user){
+    public Wand(Mod_User user) {
         this.pylonType = RealmsBase.getProperties().getIntVal("pylon.type");
         this.pylonHeight = RealmsBase.getProperties().getIntVal("pylon.height");
         this.user = user;
     }
 
     // Reset wand to default mode
-    public final void reset(){
+    public final void reset() {
         if (mode != Mode.DEFAULT) {
             workingPolygon.cancelEdit();
             workingPolygon = null;
@@ -68,7 +66,7 @@ public final class Wand{
         }
     }
 
-    public final void softReset(){
+    public final void softReset() {
         if (mode != Mode.DEFAULT) {
             workingPolygon.cancelEdit();
             workingPolygon = null;
@@ -78,7 +76,7 @@ public final class Wand{
     }
 
     // Reset all saved blocks in the column x,z
-    private final void removePylon(int x, int z){
+    private final void removePylon(int x, int z) {
         Iterator<Mod_Block> itr = savedBlocks.iterator();
         while (itr.hasNext()) {
             Mod_Block block = itr.next();
@@ -90,7 +88,7 @@ public final class Wand{
     }
 
     // Resets all saved blocks
-    private final void resetAllSavedBlocks(){
+    private final void resetAllSavedBlocks() {
         for (Mod_Block block : savedBlocks) {
             RealmsBase.getServer().setBlock(block.getX(), block.getY(), block.getZ(), block.getType(), block.getData(), block.getDimension(), block.getWorld());
         }
@@ -98,13 +96,13 @@ public final class Wand{
     }
 
     // Add saved block
-    private final void addSavedBlock(Mod_Block block){
+    private final void addSavedBlock(Mod_Block block) {
         savedBlocks.add(block);
     }
 
     // Creates a pylon above the specified block.
     // Saves the original blocks into wand's savedBlocks list
-    private final void createPylon(Mod_Block block){
+    private final void createPylon(Mod_Block block) {
         for (int y = 1; y < pylonHeight; y++) {
             Mod_Block storeblock = RealmsBase.getServer().getBlockAt(block.getX(), block.getY() + y, block.getZ(), block.getDimension(), block.getWorld());
             addSavedBlock(storeblock);
@@ -112,7 +110,7 @@ public final class Wand{
         }
     }
 
-    private final void createPylon(Point point, int dim, String world){
+    private final void createPylon(Point point, int dim, String world) {
         for (int y = 1; y < pylonHeight; y++) {
             Mod_Block storeblock = RealmsBase.getServer().getBlockAt(point.x, point.y + y, point.z, dim, world);
             addSavedBlock(storeblock);
@@ -121,7 +119,7 @@ public final class Wand{
     }
 
     // WAND COMMANDS
-    public final boolean wandCommand(String[] command){
+    public final boolean wandCommand(String[] command) {
         if (command.length < 1) {
             user.sendError("wand.sub.missing1");
             user.sendError("wand.sub.missing2");
@@ -409,7 +407,7 @@ public final class Wand{
         }
         // setCeiling
         if (command[0].equalsIgnoreCase("setceiling") && mode == Mode.POLYGON) {
-            if (command.length == 3) {
+            if (command.length == 2) {
                 try {
                     int ceiling = Integer.parseInt(command[1]);
                     workingPolygon.setWorkingCeiling(ceiling);
@@ -433,7 +431,7 @@ public final class Wand{
     }
 
     // WAND CLICK
-    public final boolean wandClick(Mod_Block block){
+    public final boolean wandClick(Mod_Block block) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -445,18 +443,15 @@ public final class Wand{
             user.sendMessage(MCChatForm.CYAN + "--- ZONE: " + MCChatForm.YELLOW + zone.getName() + MCChatForm.CYAN + " ---");
             if (!zone.isEmpty()) {
                 user.sendMessage(String.format(verts, zone.getPolygon().getVertices().size()));
-                user.sendMessage(String.format(floor_ceiling_height, zone.getPolygon().getFloor(), zone.getPolygon().getCeiling(), zone.getPolygon().getHeight()));
-                user.sendMessage(String.format(area_volume, zone.getPolygon().getArea(), zone.getPolygon().getVolume()));
+                user.sendMessage(String.format(floor_ceiling_height, zone.getPolygon().getFloor(), zone.getPolygon().getCeiling(), zone.getPolygon().getHeight(), (double) zone.getPolygon().getArea(), (double) zone.getPolygon().getVolume()));
             }
             else if (zone.getName().startsWith("EVERYWHERE")) {
                 user.sendMessage(String.format(verts, 0));
-                user.sendMessage(String.format(floor_ceiling_height, 0, 256, 256));
-                user.sendMessage(String.format(area_volume, Integer.MAX_VALUE, Integer.MAX_VALUE));
+                user.sendMessage(String.format(floor_ceiling_height, 0, 256, 256, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
             }
             else {
                 user.sendMessage(String.format(verts, 0));
-                user.sendMessage(String.format(floor_ceiling_height, 0, 0, 0));
-                user.sendMessage(String.format(area_volume, 0, 0));
+                user.sendMessage(String.format(floor_ceiling_height, 0, 0, 0, 0, 0));
             }
 
             String[] flags = zone.getFlags(true, true);

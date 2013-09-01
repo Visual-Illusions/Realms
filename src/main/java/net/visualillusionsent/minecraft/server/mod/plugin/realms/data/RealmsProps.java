@@ -37,7 +37,6 @@ public class RealmsProps {
     private static ArrayList<Integer> interact_Block = new ArrayList<Integer>();
     private static ArrayList<Integer> interact_Item = new ArrayList<Integer>();
     private static ArrayList<String> commandOverride = new ArrayList<String>();
-    private boolean isInitialized = false;
 
     /**
      * class constructor
@@ -48,7 +47,7 @@ public class RealmsProps {
 
     public synchronized boolean initialize() {
         RealmsLogMan.info("Initializing properties...");
-        if (isInitialized) {
+        if (props_File != null) {
             RealmsLogMan.severe("HERP DERP...");
             return false;
         }
@@ -108,6 +107,8 @@ public class RealmsProps {
             props_File.getString("sql.inventories.table");
             props_File.getString("lang.locale");
             props_File.getBoolean("check.unstable");
+            props_File.getInt("default.zone.ceiling", 256);
+            props_File.getInt("default.zone.floor", 0);
             RealmsLogMan.info("Properties tests passed!");
         }
         catch (UtilityException uex) {

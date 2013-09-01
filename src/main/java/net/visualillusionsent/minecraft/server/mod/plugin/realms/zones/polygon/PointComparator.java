@@ -22,28 +22,25 @@ package net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon;
 import java.util.Comparator;
 
 /**
- * This file is part of Realms.
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * Point Comparator
  * 
  * @author Jason (darkdiplomat)
  */
-public class PointComparator implements Comparator<Point>{
+public class PointComparator implements Comparator<Point> {
 
     private Point origin;
 
-    public PointComparator(Point origin){
+    public PointComparator(Point origin) {
         this.origin = origin;
     }
 
-    public int compare(Point p1, Point p2){
+    public int compare(Point p1, Point p2) {
         double angle1 = Math.atan2(p1.x - origin.x, p1.z - origin.z);
         double angle2 = Math.atan2(p2.x - origin.x, p2.z - origin.z);
-        if(angle1 < angle2){
+        if (angle1 < angle2) {
             return 1;
         }
-        else if(angle2 > angle1){
+        else if (angle2 > angle1) {
             return -1;
         }
         return 0;

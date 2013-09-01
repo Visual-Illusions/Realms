@@ -43,20 +43,20 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * @author Jason (darkdiplomat)
  */
-public final class Bukkit_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server{
+public final class Bukkit_Server implements net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server {
 
     private final Server server;
     private final Logger system_logger;
     private final JavaPlugin realms;
 
-    public Bukkit_Server(JavaPlugin realms, Server server, Logger system_logger){
+    public Bukkit_Server(JavaPlugin realms, Server server, Logger system_logger) {
         this.server = server;
         this.system_logger = system_logger;
         this.realms = realms;
     }
 
     @Override
-    public final List<Mod_Entity> getAnimals(){
+    public final List<Mod_Entity> getAnimals() {
         List<World> worlds = new ArrayList<World>(server.getWorlds());
         List<Mod_Entity> animals = new ArrayList<Mod_Entity>();
         for (World world : worlds) {
@@ -69,7 +69,7 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     }
 
     @Override
-    public final List<Mod_Entity> getMobs(){
+    public final List<Mod_Entity> getMobs() {
         List<World> worlds = new ArrayList<World>(server.getWorlds());
         List<Mod_Entity> mobs = new ArrayList<Mod_Entity>();
         for (World world : worlds) {
@@ -82,7 +82,7 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     }
 
     @Override
-    public final List<Mod_User> getUsers(){
+    public final List<Mod_User> getUsers() {
         List<Mod_User> users = new ArrayList<Mod_User>();
         for (Player player : server.getOnlinePlayers()) {
             users.add(new Bukkit_User(player));
@@ -91,7 +91,7 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     }
 
     @Override
-    public final Mod_User getUser(String name){
+    public final Mod_User getUser(String name) {
         Player player = server.getPlayer(name);
         if (player != null) {
             return new Bukkit_User(player);
@@ -100,20 +100,20 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     }
 
     @Override
-    public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world){
+    public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world) {
         Block block = server.getWorld(world).getBlockAt(x, y, z);
         block.setTypeId(type);
         block.setData((byte) data);
     }
 
     @Override
-    public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world){
+    public final Mod_Block getBlockAt(int x, int y, int z, int dimension, String world) {
         Block block = server.getWorld(world).getBlockAt(x, y, z);
         return new Bukkit_Block(block);
     }
 
     @Override
-    public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchants, String[] lore){
+    public final Mod_Item constructItem(int type, int amount, int damage, String name, Mod_ItemEnchantment[] enchants, String[] lore) {
         ItemStack item = new ItemStack(type, amount, (short) damage);
         if (enchants != null) {
             for (Mod_ItemEnchantment ench : enchants) {
@@ -132,58 +132,58 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
     }
 
     @Override
-    public final Mod_ItemEnchantment constructEnchantment(int id, int level){
+    public final Mod_ItemEnchantment constructEnchantment(int id, int level) {
         return new Bukkit_ItemEnchantment(Enchantment.getById(id), level);
     }
 
     @Override
-    public final String getDefaultWorldName(){
+    public final String getDefaultWorldName() {
         return server.getServerName();
     }
 
     @Override
-    public final List<String> getAdminGroups(){
+    public final List<String> getAdminGroups() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public final String getDefaultGroupName(){
+    public final String getDefaultGroupName() {
         return "NO_GROUP";
     }
 
     @Override
-    public final int getHighestY(int x, int z, String world, int dimension){
+    public final int getHighestY(int x, int z, String world, int dimension) {
         return server.getWorld(world).getHighestBlockYAt(x, z);
     }
 
     @Override
-    public boolean isCanaryClassic(){
+    public boolean isCanaryClassic() {
         return false;
     }
 
     @Override
-    public final boolean isCanary(){
+    public final boolean isCanary() {
         return false;
     }
 
     @Override
-    public final boolean isBukkit(){
+    public final boolean isBukkit() {
         return true;
     }
 
     @Override
-    public Logger getLogger(){
+    public Logger getLogger() {
         return system_logger;
     }
 
     @Override
-    public SynchronizedTask addTaskToServer(Runnable runnable, long delay){
-        return new BukkitSyncRealmsTask(Bukkit.getScheduler().scheduleSyncRepeatingTask(realms, runnable, delay, delay));
+    public SynchronizedTask addTaskToServer(Runnable runnable, long delay) {
+        return new BukkitSyncRealmsTask(Bukkit.getScheduler().scheduleSyncRepeatingTask(realms, runnable, delay * 20, delay * 20));
     }
 
     @Override
-    public void removeTask(SynchronizedTask task){
+    public void removeTask(SynchronizedTask task) {
         Bukkit.getScheduler().cancelTask(((BukkitSyncRealmsTask) task).getTaskId());
     }
 }

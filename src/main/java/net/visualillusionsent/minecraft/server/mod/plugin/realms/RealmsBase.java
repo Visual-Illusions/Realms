@@ -43,10 +43,7 @@ import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
 
 /**
- * This file is part of Realms.
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * Realms base class
  * 
  * @author Jason (darkdiplomat)
  */

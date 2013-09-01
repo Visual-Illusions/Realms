@@ -20,46 +20,78 @@
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon;
 
 /**
- * This file is part of Realms.
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * Polygon Point
  * 
+ * @author impact
+ * @author durron597
  * @author Jason (darkdiplomat)
  */
-public final class Point implements Cloneable{
+public final class Point implements Cloneable {
 
-    public int x;
-    public int y;
-    public int z;
+    public int x, y, z;
 
-    public Point(int x, int y, int z){
+    /**
+     * Constructs a new Point
+     * 
+     * @param x
+     *            the X coordinate
+     * @param y
+     *            the Y coordinate
+     * @param z
+     *            the Z coordinate
+     */
+    public Point(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public final boolean equals(Point p){
-        return x == p.x && y == p.y && z == p.z;
+    /**
+     * Checks if a Point is equal to this Point
+     * 
+     * @param p
+     *            the Point to check
+     * @return {@code true} if equal; {@code false} if not
+     */
+    public final boolean equals(Point point) {
+        return this == point || (x == point.x && y == point.y && z == point.z);
     }
 
-    public final boolean equals2D(Point p){
-        return x == p.x && z == p.z;
+    /**
+     * Checks if a Point is 2D (X/Z) equal to this Point
+     * 
+     * @param point
+     *            the Point to check
+     * @return {@code true} if equal; {@code false} if not
+     */
+    public final boolean equals2D(Point point) {
+        return x == point.x && z == point.z;
     }
 
-    public final double distance2D(Point p){
+    public final double distance2D(Point p) {
         return Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(z - p.z, 2));
     }
 
-    public final static int isLeft2D(Point p1, Point p2, Point p3){
+    public final static long isLeft2D(Point p1, Point p2, Point p3) {
         return (p2.x - p1.x) * (p3.z - p1.z) - (p3.x - p1.x) * (p2.z - p1.z);
     }
 
-    public final Point clone(){
-        try{
-            return (Point)super.clone();
-        }
-        catch(CloneNotSupportedException e){}
-        return null;
+    /**
+     * Creates and returns a new instance of this Point.
+     */
+    public final Point clone() {
+        return new Point(x, y, z);
+    }
+
+    public final String asString() {
+        return String.format("%d,%d,%d", x, y, z);
+    }
+
+    public final int[] asIntArray() {
+        return new int[] { x, y, z };
+    }
+
+    public final String toString() {
+        return String.format("Point[X:%d Y:%d Z:%d", x, y, z);
     }
 }
