@@ -65,50 +65,42 @@
     <groupId>org.bukkit</groupId>
     <artifactId>bukkit</artifactId>
     <version>1.6.2-R0.1</version>
-    <scope>compile</scope>
    </dependency>
    <dependency>
     <groupId>net.canarymod</groupId>
     <artifactId>CanaryClassic</artifactId>
     <version>crow-6.3.12</version>
-    <scope>compile</scope>
    </dependency>
    <dependency>
     <groupId>net.minecraft</groupId>
     <artifactId>minecraft_servero</artifactId>
     <version>1.6.2</version>
-    <scope>compile</scope>
    </dependency>
    <!-- End: CanaryClassic -->
    <dependency>
     <groupId>net.canarymod</groupId>
     <artifactId>CanaryLib</artifactId>
     <version>1.0-RC-1</version>
-    <scope>compile</scope>
    </dependency>
    <dependency>
     <groupId>org.jdom</groupId>
     <artifactId>jdom2</artifactId>
     <version>2.0.4</version>
-    <scope>compile</scope>
    </dependency>
    <dependency>
-     <groupId>net.visualillusionsent</groupId>
-     <artifactId>viutils</artifactId>
-     <version>1.1.1</version>
-     <scope>compile</scope>
+    <groupId>net.visualillusionsent</groupId>
+    <artifactId>viutils</artifactId>
+    <version>1.1.1</version>
    </dependency>
    <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
     <version>3.7.2</version>
-    <scope>runtime</scope>
    </dependency>
    <dependency>
     <groupId>postgresql</groupId>
     <artifactId>postgresql</artifactId>
     <version>9.1-901-1.jdbc4</version>
-    <scope>runtime</scope>
    </dependency>
   </dependencies>
   <build>
