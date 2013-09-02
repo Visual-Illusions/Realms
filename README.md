@@ -1,4 +1,4 @@
-﻿# Realms 7 #
+﻿# Realms #
 ### Polygonal Hierarchical Area Ownership Plugin for the CanaryMod and Bukkit Minecraft Server Modifications ###
 #### &copy; Copyright 2012 - 2013 Visual Illusions Entertainment ####
 #### Licensed under the GNU General Public License v3 ####
