@@ -63,12 +63,14 @@
    <dependency>
     <groupId>org.bukkit</groupId>
     <artifactId>bukkit</artifactId>
-    <version>1.4.7-R1.0</version>
+    <version>1.5.2-R1.0</version>
+    <scope>compile</scope>
    </dependency>
    <dependency>
     <groupId>org.jdom</groupId>
     <artifactId>jdom2</artifactId>
     <version>2.0.4</version>
+    <scope>compile</scope>
    </dependency>
    <!-- CanaryClassic isn't a Maven project so System Scope the dependancies -->
    <dependency>
@@ -90,16 +92,19 @@
     <groupId>net.canarymod</groupId>
     <artifactId>CanaryLib</artifactId>
     <version>0.9</version>
+    <scope>compile</scope>
    </dependency>
    <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
     <version>3.7.2</version>
+    <scope>optional</scope>
    </dependency>
    <dependency>
     <groupId>postgresql</groupId>
     <artifactId>postgresql</artifactId>
     <version>9.1-901-1.jdbc4</version>
+    <scope>optional</scope>
    </dependency>
   </dependencies>
   <build>

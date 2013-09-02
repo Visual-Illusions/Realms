@@ -13,6 +13,7 @@
 package net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,25 @@ public final class PolygonArea {
         EDIT, //
         SAVED; //
     }
+
+    private static final Comparator<Point> leftCompare = new Comparator<Point>() {
+
+        public int compare(Point p1, Point p2) {
+            if (p1.z > p2.z) {
+                return -1;
+            }
+            return 1;
+        }
+    };
+    private static final Comparator<Point> rightCompare = new Comparator<Point>() {
+
+        public int compare(Point p1, Point p2) {
+            if (p1.z > p2.z) {
+                return 1;
+            }
+            return -1;
+        }
+    };
 
     private Zone zone;
     private LinkedList<Point> vertices = new LinkedList<Point>();
@@ -335,13 +355,11 @@ public final class PolygonArea {
         Point newVertex = new Point(block.getX(), block.getY(), block.getZ());
         // Case #1: The vertex list has less than three points
         // Just add the point to the end of the working vertices list
+        workingVertices.add(newVertex);
         if (workingVertices.size() < 3) {
-            workingVertices.add(newVertex);
             return removed;
         }
-        // Case #2: Reorder the points to make the polygon right
-        workingVertices.add(newVertex);
-        reorganize(workingVertices);
+        reorganize();
         return removed;
     }
 
@@ -412,11 +430,7 @@ public final class PolygonArea {
         // The polygon must not contain intersecting lines
         if (intersects(workingVertices, workingVertices)) {
             user.sendError(RealmsTranslate.transMessage("line.intersect"));
-            reorganize(workingVertices);
-            if (intersects(workingVertices, workingVertices)) {
-                user.sendError(RealmsTranslate.transMessage("reorg.fail"));
-                return false;
-            }
+            return false;
         }
         // All checks passed: vertex is valid
         return true;
@@ -437,9 +451,24 @@ public final class PolygonArea {
         return closest;
     }
 
-    private final void reorganize(LinkedList<Point> points) {
-        Point centroid = calculateCentroid(points);
-        Collections.sort(points, new PointComparator(centroid));
+    private final void reorganize() {
+        Point centroid = calculateCentroid(workingVertices);
+        //Sort into Left and Right Lists
+        LinkedList<Point> leftSide = new LinkedList<Point>();
+        LinkedList<Point> rightSide = new LinkedList<Point>();
+        for (Point point : workingVertices) {
+            if (centroid.x >= point.x) {
+                rightSide.add(point);
+            }
+            else {
+                leftSide.add(point);
+            }
+        }
+        Collections.sort(leftSide, leftCompare);
+        Collections.sort(rightSide, rightCompare);
+        workingVertices.clear();
+        workingVertices.addAll(leftSide);
+        workingVertices.addAll(rightSide);
     }
 
     private final long calculateArea() {
