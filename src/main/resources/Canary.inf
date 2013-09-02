@@ -1,4 +1,4 @@
-main-class=net.visualillusionsent.minecraft.server.mod.canary.plugin.realms.Realms
+main-class=net.visualillusionsent.realms.canary.CanaryRealms
 name=Realms
 author=Visual Illusions Entertainment
-version=7.1 ALPHA
+version=7.1 BETA 1

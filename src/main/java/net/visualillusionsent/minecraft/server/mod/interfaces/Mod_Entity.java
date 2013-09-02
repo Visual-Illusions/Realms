@@ -15,7 +15,7 @@
  */
 package net.visualillusionsent.minecraft.server.mod.interfaces;
 
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
+import net.visualillusionsent.realms.zones.polygon.Point;
 
 /**
  * Copyright 2012 - 2013 Visual Illusions Entertainment.

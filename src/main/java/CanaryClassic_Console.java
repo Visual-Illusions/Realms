@@ -11,7 +11,7 @@
  * If not, see http://www.gnu.org/licenses/gpl.html
  * Source Code availible @ https://github.com/Visual-Illusions/Realms */
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsTranslate;
+import net.visualillusionsent.realms.RealmsTranslate;
 
 /**
  * This file is part of Realms.

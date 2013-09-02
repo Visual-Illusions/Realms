@@ -18,7 +18,7 @@
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
  */
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
+import net.visualillusionsent.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.

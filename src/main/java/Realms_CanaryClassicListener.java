@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsBase;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.commands.RealmsCommandHandler;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneLists;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.permission.PermissionType;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.polygon.Point;
+import net.visualillusionsent.realms.RealmsBase;
+import net.visualillusionsent.realms.commands.RealmsCommandHandler;
+import net.visualillusionsent.realms.logging.RLevel;
+import net.visualillusionsent.realms.logging.RealmsLogMan;
+import net.visualillusionsent.realms.zones.Zone;
+import net.visualillusionsent.realms.zones.ZoneLists;
+import net.visualillusionsent.realms.zones.permission.PermissionType;
+import net.visualillusionsent.realms.zones.polygon.Point;
 
 /**
  * This file is part of Realms.
@@ -282,7 +282,7 @@ public final class Realms_CanaryClassicListener extends PluginListener {
                 if (args.length == 2) {
                     Warp warp = etc.getDataSource().getWarp(args[1]);
                     if (warp != null) {
-                        CanaryClassic_Block block = new CanaryClassic_Block(new Block(0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
+                        CanaryClassic_Block block = new CanaryClassic_Block(new Block(warp.Location.getWorld(), 0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
                         zone = ZoneLists.getInZone(block);
                         if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                             player.notify("You do not have permission to enter that zone!");
@@ -300,7 +300,7 @@ public final class Realms_CanaryClassicListener extends PluginListener {
                         CanaryClassic_User teleUser = new CanaryClassic_User(telep);
                         Warp warp = etc.getDataSource().getWarp(args[1]);
                         if (warp != null) {
-                            CanaryClassic_Block block = new CanaryClassic_Block(new Block(0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
+                            CanaryClassic_Block block = new CanaryClassic_Block(new Block(warp.Location.getWorld(), 0, (int) Math.floor(warp.Location.x), (int) Math.floor(warp.Location.y), (int) Math.floor(warp.Location.z)));
                             zone = ZoneLists.getInZone(block);
                             if (!zone.permissionCheck(teleUser, PermissionType.ENTER)) {
                                 player.notify(telep.getName() + " does not have permission to enter that zone!");

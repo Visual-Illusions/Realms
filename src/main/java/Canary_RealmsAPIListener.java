@@ -19,9 +19,9 @@
  */
 import java.util.List;
 
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.RealmsPluginAPI;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.Zone;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.zones.ZoneFlag;
+import net.visualillusionsent.realms.RealmsPluginAPI;
+import net.visualillusionsent.realms.zones.Zone;
+import net.visualillusionsent.realms.zones.ZoneFlag;
 
 /**
  * This file is part of Realms.
@@ -92,7 +92,7 @@ public final class Canary_RealmsAPIListener{
      * @param flag
      *            the name of the {@link ZoneFlag} to be checked
      * @param absolute
-     *            wether to check the absolute setting for a flag (inheritance checks true/false)
+     *            whether to check the absolute setting for a flag (inheritance checks true/false)
      * @return {@code true} is ON, {@code false} if OFF or INHERIT, {@code null} if error
      */
     public final static Boolean checkZoneFlag(String zoneName, String flag, boolean absolute){
@@ -167,7 +167,7 @@ public final class Canary_RealmsAPIListener{
      * @param player
      *            the {@link Player} to check permission for
      * @param block
-     *            the {@link block} to get the {@link Zone} for
+     *            the {@link Block} to get the {@link Zone} for
      * @param permType
      *            the type of permission to check
      * @return {@code true} if allowed, {@code false} if denied, {@code null} if error

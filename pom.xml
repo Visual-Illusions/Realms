@@ -1,15 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.visualillusionsent.mcplugin</groupId>
-  <artifactId>realms</artifactId>
-  <version>7.1-SNAPSHOT</version>
+  <groupId>net.visualillusionsent</groupId>
+  <artifactId>Realms</artifactId>
+  <version>7.1-BETA-1-SNAPSHOT</version>
   <name>Realms</name>
   <description>Polygonal Heirarchy Area Ownership</description>
   <url>http://wiki.visualillusionsent.net/Realms</url>
   <inceptionYear>2012</inceptionYear>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <ProgramStatus>ALPHA</ProgramStatus>
+    <maven.build.timestamp.format>ddMMMMyyyyHHmm z</maven.build.timestamp.format>
+    <ProgramStatus>BETA</ProgramStatus>
   </properties>
   <organization>
    <name>Visual Illusions Entertainment</name>
@@ -63,7 +64,26 @@
    <dependency>
     <groupId>org.bukkit</groupId>
     <artifactId>bukkit</artifactId>
-    <version>1.5.2-R1.0</version>
+    <version>1.6.2-R0.1</version>
+    <scope>compile</scope>
+   </dependency>
+   <dependency>
+    <groupId>net.canarymod</groupId>
+    <artifactId>CanaryClassic</artifactId>
+    <version>crow-6.3.12</version>
+    <scope>compile</scope>
+   </dependency>
+   <dependency>
+    <groupId>net.minecraft</groupId>
+    <artifactId>minecraft_servero</artifactId>
+    <version>1.6.2</version>
+    <scope>compile</scope>
+   </dependency>
+   <!-- End: CanaryClassic -->
+   <dependency>
+    <groupId>net.canarymod</groupId>
+    <artifactId>CanaryLib</artifactId>
+    <version>1.0-RC-1</version>
     <scope>compile</scope>
    </dependency>
    <dependency>
@@ -72,73 +92,63 @@
     <version>2.0.4</version>
     <scope>compile</scope>
    </dependency>
-   <!-- CanaryClassic isn't a Maven project so System Scope the dependancies -->
    <dependency>
-    <groupId>net.canarymod</groupId>
-    <artifactId>build</artifactId>
-    <version>11.0</version>
-    <scope>system</scope>
-    <systemPath>${basedir}/lib/CanaryMod.jar</systemPath>
-   </dependency>
-   <dependency>
-    <groupId>net.canarymod</groupId>
-    <artifactId>minecraft_servero</artifactId>
-    <version>1.5.1</version>
-    <scope>system</scope>
-    <systemPath>${basedir}/lib/minecraft_servero.jar</systemPath>
-   </dependency>
-   <!-- End: CanaryClassic -->
-   <dependency>
-    <groupId>net.canarymod</groupId>
-    <artifactId>CanaryLib</artifactId>
-    <version>0.9</version>
-    <scope>compile</scope>
+     <groupId>net.visualillusionsent</groupId>
+     <artifactId>viutils</artifactId>
+     <version>1.1.1</version>
+     <scope>compile</scope>
    </dependency>
    <dependency>
     <groupId>org.xerial</groupId>
     <artifactId>sqlite-jdbc</artifactId>
     <version>3.7.2</version>
-    <scope>optional</scope>
+    <scope>runtime</scope>
    </dependency>
    <dependency>
     <groupId>postgresql</groupId>
     <artifactId>postgresql</artifactId>
     <version>9.1-901-1.jdbc4</version>
-    <scope>optional</scope>
+    <scope>runtime</scope>
    </dependency>
   </dependencies>
   <build>
     <plugins>
-      <!-- Start: Generate Timestamp -->
+      <!-- Compile plugin -->
       <plugin>
-        <groupId>com.github.goldin</groupId>
-        <artifactId>timestamp-maven-plugin</artifactId>
-        <version>0.2.5</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.2</version>
         <executions>
           <execution>
-            <id>set-build-timestamp</id>
-            <goals>
-              <goal>timestamp</goal>
-            </goals>
             <phase>validate</phase>
-              <configuration>
-                <timestamp>
-                  <property>timestamp</property>
-                  <pattern>yyyyMMddHHmm</pattern>
-                  <timezone>GMT-6</timezone>
-                  <locale>US</locale>
-                </timestamp>
-              </configuration>
+            <goals>
+              <goal>create</goal>
+            </goals>
           </execution>
         </executions>
+        <configuration>
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+          <format>{0,number}</format>
+          <items>
+            <item>buildNumber0</item>
+          </items>
+        </configuration>
       </plugin>
-      <!-- End: Generate Timestamp -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-          <finalName>${project.build.finalName}</finalName>
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
             <manifest>
@@ -147,45 +157,17 @@
             <manifestEntries>
                 <Title>Realms</Title>
                 <Version>${project.version}</Version>
-                <Build>${timestamp}</Build>
+                <Build>${buildNumber}</Build>
+                <BuiltOn>${maven.build.timestamp}</BuiltOn>
                 <ProgramStatus>${ProgramStatus}</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
                 <Built-By>${user.name}</Built-By>
-                <Class-Path>../lib/viutils.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
+                <Class-Path>../lib/viutils-1.1.1.jar ../lib/jdom2.jar ../lib/sqlite.jar ../lib/postgresql.jar</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>
       </plugin>
     </plugins>
-    <pluginManagement>
-     <plugins>
-      <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-      <plugin>
-       <groupId>org.eclipse.m2e</groupId>
-       <artifactId>lifecycle-mapping</artifactId>
-       <version>1.0.0</version>
-       <configuration>
-        <lifecycleMappingMetadata>
-         <pluginExecutions>
-          <pluginExecution>
-           <pluginExecutionFilter>
-            <groupId>com.github.goldin</groupId>
-            <artifactId>timestamp-maven-plugin</artifactId>
-            <versionRange>[0.2.5,)</versionRange>
-            <goals>
-             <goal>timestamp</goal>
-            </goals>
-           </pluginExecutionFilter>
-           <action>
-            <ignore></ignore>
-           </action>
-          </pluginExecution>
-         </pluginExecutions>
-        </lifecycleMappingMetadata>
-       </configuration>
-      </plugin>
-     </plugins>
-    </pluginManagement>
     <extensions>
       <!-- FTP Extension to upload to repo.visualillusionsent.net -->
       <extension>

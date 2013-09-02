@@ -24,8 +24,8 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantment;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.minecraft.server.mod.interfaces.SynchronizedTask;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RLevel;
-import net.visualillusionsent.minecraft.server.mod.plugin.realms.logging.RealmsLogMan;
+import net.visualillusionsent.realms.logging.RLevel;
+import net.visualillusionsent.realms.logging.RealmsLogMan;
 
 /**
  * This file is part of Realms.
@@ -141,8 +141,8 @@ public final class CanaryClassic_Server implements net.visualillusionsent.minecr
 
     @Override
     public final void setBlock(int x, int y, int z, int type, int data, int dimension, String world) {
-        Block block = new Block(type, x, y, z, data);
-        server.getWorld(world)[dimension].setBlock(block);
+        Block block = new Block(server.getWorld(world)[dimension], type, x, y, z, data);
+        block.update();
     }
 
     @Override
