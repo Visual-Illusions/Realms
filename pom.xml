@@ -11,6 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>ddMMMMyyyyHHmm z</maven.build.timestamp.format>
     <ProgramStatus>BETA</ProgramStatus>
+    <build.number>0</build.number>
   </properties>
   <organization>
    <name>Visual Illusions Entertainment</name>
@@ -116,27 +117,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.2</version>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-          <format>{0,number}</format>
-          <items>
-            <item>buildNumber0</item>
-          </items>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
@@ -149,7 +129,7 @@
             <manifestEntries>
                 <Title>Realms</Title>
                 <Version>${project.version}</Version>
-                <Build>${buildNumber}</Build>
+                <Build>${build.number}</Build>
                 <BuiltOn>${maven.build.timestamp}</BuiltOn>
                 <ProgramStatus>${ProgramStatus}</ProgramStatus>
                 <Vendor>Visual Illusions Entertainment</Vendor>
