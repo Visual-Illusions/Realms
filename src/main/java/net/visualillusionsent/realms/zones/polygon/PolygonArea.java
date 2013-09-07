@@ -26,7 +26,7 @@ import net.visualillusionsent.realms.zones.Zone;
 
 /**
  * Polygon Area
- * 
+ *
  * @author impact
  * @author durron597
  * @author Jason (darkdiplomat)
@@ -240,8 +240,8 @@ public final class PolygonArea {
             if (p.x == block.getX() && p.z == block.getZ()) {
                 itr.remove();
             }
-            reorganize();
         }
+        reorganize();
     }
 
     public final boolean contains(Mod_Entity entity) {
@@ -361,7 +361,7 @@ public final class PolygonArea {
 
     /**
      * Tests if the vertex is valid
-     * 
+     *
      * @param user
      * @param block
      * @return whether the vertex is valid
@@ -390,7 +390,7 @@ public final class PolygonArea {
 
     /**
      * Checks whether the working vertices make a valid polygon
-     * 
+     *
      * @param user
      * @return whether the polygon makes a valid polygon
      */
