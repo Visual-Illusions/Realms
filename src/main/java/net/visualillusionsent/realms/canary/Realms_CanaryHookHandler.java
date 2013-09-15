@@ -20,6 +20,7 @@ import net.canarymod.api.DamageType;
 import net.canarymod.api.GameMode;
 import net.canarymod.api.entity.Entity;
 import net.canarymod.api.entity.living.EntityLiving;
+import net.canarymod.api.entity.living.LivingBase;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.api.world.blocks.Block;
 import net.canarymod.api.world.blocks.BlockType;
@@ -56,7 +57,7 @@ import net.visualillusionsent.realms.zones.polygon.Point;
  * Copyright 2012 - 2013 Visual Illusions Entertainment.
  * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
  * Source Code availible @ https://github.com/Visual-Illusions/Realms
- * 
+ *
  * @author Jason (darkdiplomat)
  */
 public final class Realms_CanaryHookHandler implements PluginListener {
@@ -863,7 +864,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             return;
         }
         try {
-            if (hook.getVehicle().getPassenger() != null && ((EntityLiving) hook.getVehicle().getPassenger()).isPlayer()) {
+            if (hook.getVehicle().getPassenger() != null && hook.getVehicle().getPassenger().isPlayer()) {
                 Player player = (Player) hook.getVehicle().getPassenger();
                 Canary_User user = new Canary_User(player);
                 Zone zone = ZoneLists.getInZone(user);
@@ -871,12 +872,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
                 if (!zone.permissionCheck(user, PermissionType.ENTER)) {
                     Point thrown = RealmsBase.throwBack(zone, user.getLocationPoint());
                     player.teleportTo(thrown.x, thrown.y, thrown.z, player.getRotation(), player.getPitch());
-                    if (hook.getVehicle().getName().equals("Boat")) {
-                        player.message("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your boat! Need some help?");
-                    }
-                    else {
-                        player.message("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your minecart! Need some help?");
-                    }
+                    player.message(String.format("[\u00A77Clippy\u00A7F]\u00A7C Looks like you fell out of your %s! Need some help?", hook.getVehicle().getName()));
                     return;
                 }
                 // End Enter Zone Checks
