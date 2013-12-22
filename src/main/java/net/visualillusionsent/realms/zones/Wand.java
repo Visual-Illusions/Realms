@@ -1,21 +1,27 @@
-/* Copyright 2012 - 2013 Visual Illusions Entertainment.
+/*
  * This file is part of Realms.
- * This program is free software: you can redistribute it and/or modify
+ *
+ * Copyright © 2012-2013 Visual Illusions Entertainment
+ *
+ * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see http://www.gnu.org/licenses/gpl.html
- * Source Code availible @ https://github.com/Visual-Illusions/Realms */
+ *
+ * You should have received a copy of the GNU General Public License along with Realms.
+ * If not, see http://www.gnu.org/licenses/gpl.html.
+ */
 package net.visualillusionsent.realms.zones;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+
+import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsBase;
@@ -39,8 +45,8 @@ public final class Wand {
         SET_FLOOR;
     }
 
-    private final String verts = MCChatForm.ORANGE + "# VERTICIES: " + MCChatForm.BLUE + "%d";
-    private final String floor_ceiling_height = MCChatForm.ORANGE + "FLOOR:" + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + " CEILING:" + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + " HEIGHT:" + MCChatForm.BLUE + "%d" + MCChatForm.ORANGE + " AREA:" + MCChatForm.BLUE + "%.1f" + MCChatForm.ORANGE + " VOLUME:" + MCChatForm.BLUE + "%.1f";
+    private final String verts = ChatFormat.ORANGE + "# VERTICIES: " + ChatFormat.BLUE + "%d";
+    private final String floor_ceiling_height = ChatFormat.ORANGE + "FLOOR:" + ChatFormat.BLUE + "%d" + ChatFormat.ORANGE + " CEILING:" + ChatFormat.BLUE + "%d" + ChatFormat.ORANGE + " HEIGHT:" + ChatFormat.BLUE + "%d" + ChatFormat.ORANGE + " AREA:" + ChatFormat.BLUE + "%.1f" + ChatFormat.ORANGE + " VOLUME:" + ChatFormat.BLUE + "%.1f";
 
     private final int pylonType;
     private final int pylonHeight;
@@ -186,11 +192,11 @@ public final class Wand {
             PolygonArea thePolygon = null;
             switch (command.length) {
                 case 1:
-                    user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                    user.sendMessage(ChatFormat.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                     return true;
                 case 2:
                     if (mode != Mode.POLYGON) {
-                        user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                        user.sendMessage(ChatFormat.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     else {
@@ -229,11 +235,11 @@ public final class Wand {
                             z2 = p.z;
                         }
                     }
-                    user.sendMessage(MCChatForm.CYAN + "Using bounding coords of: (" + MCChatForm.ORANGE + x1 + MCChatForm.CYAN + "," + MCChatForm.ORANGE + z1 + MCChatForm.CYAN + ") (" + MCChatForm.ORANGE + x2 + MCChatForm.CYAN + "," + MCChatForm.ORANGE + z2 + MCChatForm.CYAN + ")");
+                    user.sendMessage(ChatFormat.CYAN + "Using bounding coords of: (" + ChatFormat.ORANGE + x1 + ChatFormat.CYAN + "," + ChatFormat.ORANGE + z1 + ChatFormat.CYAN + ") (" + ChatFormat.ORANGE + x2 + ChatFormat.CYAN + "," + ChatFormat.ORANGE + z2 + ChatFormat.CYAN + ")");
                     break;
                 case 4:
                     if (mode != Mode.DEFAULT) {
-                        user.sendMessage(MCChatForm.CYAN.concat("Wand not in default mode"));
+                        user.sendMessage(ChatFormat.CYAN.concat("Wand not in default mode"));
                         return true;
                     }
                     else {
@@ -244,7 +250,7 @@ public final class Wand {
                         String[] coord1 = command[1].split(",");
                         String[] coord2 = command[2].split(",");
                         if (coord1.length < 2 || coord2.length < 2) {
-                            user.sendMessage(MCChatForm.CYAN.concat("Usage: / realms wand show <x1,z1 x2,z2> <zone>"));
+                            user.sendMessage(ChatFormat.CYAN.concat("Usage: / realms wand show <x1,z1 x2,z2> <zone>"));
                             return true;
                         }
                         x1 = Integer.parseInt(coord1[0]);
@@ -253,7 +259,7 @@ public final class Wand {
                         z2 = Integer.parseInt(coord2[1]);
                     }
                     catch (NumberFormatException e) {
-                        user.sendMessage(MCChatForm.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
+                        user.sendMessage(ChatFormat.CYAN.concat("Usage: /realms wand show <x1,z1 x2,z2> <zone>"));
                         return true;
                     }
                     if (thePolygon == null) {
@@ -285,17 +291,17 @@ public final class Wand {
                 z2 = z2 + scalez;
             }
             if (scalex > 1) {
-                user.sendMessage(MCChatForm.CYAN + "Using x scaling factor of " + MCChatForm.YELLOW + scalex);
+                user.sendMessage(ChatFormat.CYAN + "Using x scaling factor of " + ChatFormat.YELLOW + scalex);
             }
             if (scalez > 1) {
-                user.sendMessage(MCChatForm.CYAN + "Using z scaling factor of " + MCChatForm.YELLOW + scalez);
+                user.sendMessage(ChatFormat.CYAN + "Using z scaling factor of " + ChatFormat.YELLOW + scalez);
             }
             int i, j = 0;
             for (i = -1; i < countz; i++) {
                 boolean color = false;
                 boolean first = false;
                 int zcoord = i * scalez + z1 + (int) Math.floor(scalez / 2);
-                StringBuilder messageString = new StringBuilder(MCChatForm.GREEN.toString());
+                StringBuilder messageString = new StringBuilder(ChatFormat.GREEN.toString());
                 if (i == -1) {
                     messageString.append(" ");
                 }
@@ -310,7 +316,7 @@ public final class Wand {
                     }
                     if (PolygonArea.contains(thePolygon.getVertices(), new Point(xcoord, 64, zcoord), 0, 256)) {
                         if (!color || !first) {
-                            messageString.append(MCChatForm.BLUE);
+                            messageString.append(ChatFormat.BLUE);
                             color = true;
                             first = true;
                         }
@@ -318,7 +324,7 @@ public final class Wand {
                     }
                     else {
                         if (color || !first) {
-                            messageString.append(MCChatForm.GRAY);
+                            messageString.append(ChatFormat.GRAY);
                             color = false;
                             first = true;
                         }
@@ -440,7 +446,7 @@ public final class Wand {
         // By default wand is in get info mode
         if (mode == Mode.DEFAULT) {
             Zone zone = ZoneLists.getInZone(block);
-            user.sendMessage(MCChatForm.CYAN + "--- ZONE: " + MCChatForm.YELLOW + zone.getName() + MCChatForm.CYAN + " ---");
+            user.sendMessage(ChatFormat.CYAN + "--- ZONE: " + ChatFormat.YELLOW + zone.getName() + ChatFormat.CYAN + " ---");
             if (!zone.isEmpty()) {
                 user.sendMessage(String.format(verts, zone.getPolygon().getVertices().size()));
                 user.sendMessage(String.format(floor_ceiling_height, zone.getPolygon().getFloor(), zone.getPolygon().getCeiling(), zone.getPolygon().getHeight(), (double) zone.getPolygon().getArea(), (double) zone.getPolygon().getVolume()));

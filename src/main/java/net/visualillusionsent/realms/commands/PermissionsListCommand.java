@@ -1,28 +1,26 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/*
  * This file is part of Realms.
  *
- * This program is free software: you can redistribute it and/or modify
+ * Copyright © 2012-2013 Visual Illusions Entertainment
+ *
+ * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * You should have received a copy of the GNU General Public License along with Realms.
+ * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.commands;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsTranslate;
@@ -42,9 +40,9 @@ import net.visualillusionsent.realms.zones.permission.Permission;
 @RCommand(desc = "Gets the List of Permissions for a Zone", name = "permlist", usage = "<zone|*> [page#|all]", minParam = 1, maxParam = 2)
 final class PermissionsListCommand extends RealmsCommand{
 
-    private final String LIST = MCChatForm.CYAN.concat("List all Permissions attached to Zone: ").concat(MCChatForm.BLUE.toString()).concat("%s");
-    private final String PAGE = MCChatForm.CYAN.concat(" Page ").concat(MCChatForm.PINK.toString()).concat("%d").concat(MCChatForm.CYAN.toString()).concat(" of ").concat(MCChatForm.PURPLE.toString()).concat("%d");
-    private final String INFO_LINE = MCChatForm.ORANGE.concat("PLAYER/GROUP ").concat(MCChatForm.YELLOW.toString()).concat("PERMISSION").concat(MCChatForm.GREEN.toString()).concat(" GRANTED").concat(MCChatForm.CYAN.toString()).concat("/").concat(MCChatForm.RED.toString()).concat("DENIED ").concat(MCChatForm.TURQUOISE.toString()).concat("OVERRIDDEN");
+    private final String LIST = ChatFormat.CYAN.concat("List all Permissions attached to Zone: ").concat(ChatFormat.BLUE.toString()).concat("%s");
+    private final String PAGE = ChatFormat.CYAN.concat(" Page ").concat(ChatFormat.PINK.toString()).concat("%d").concat(ChatFormat.CYAN.toString()).concat(" of ").concat(ChatFormat.PURPLE.toString()).concat("%d");
+    private final String INFO_LINE = ChatFormat.ORANGE.concat("PLAYER/GROUP ").concat(ChatFormat.YELLOW.toString()).concat("PERMISSION").concat(ChatFormat.GREEN.toString()).concat(" GRANTED").concat(ChatFormat.CYAN.toString()).concat("/").concat(ChatFormat.RED.toString()).concat("DENIED ").concat(ChatFormat.TURQUOISE.toString()).concat("OVERRIDDEN");
 
     final void execute(Mod_Caller caller, String[] args){
         Mod_User user = caller.isConsole() ? null : (Mod_User)caller;
@@ -66,22 +64,22 @@ final class PermissionsListCommand extends RealmsCommand{
                 for(int index = 0; index < permsplit.length; index++){
                     StringBuilder toSend = new StringBuilder();
                     String[] permission = permsplit[index].split(",");
-                    toSend.append(MCChatForm.ORANGE).append(permission[0]).append(MCChatForm.YELLOW).append(permission[1].toUpperCase());
+                    toSend.append(ChatFormat.ORANGE).append(permission[0]).append(ChatFormat.YELLOW).append(permission[1].toUpperCase());
                     if(permission[3].equals("0")){
-                        toSend.append(MCChatForm.LIGHT_RED).append(" DENIED ");
+                        toSend.append(ChatFormat.LIGHT_RED).append(" DENIED ");
                     }
                     else{
-                        toSend.append(MCChatForm.GREEN).append(" GRANTED ");
+                        toSend.append(ChatFormat.GREEN).append(" GRANTED ");
                     }
                     if(permission[4].equals("1")){
-                        toSend.append(MCChatForm.TURQUOISE).append(" TRUE");
+                        toSend.append(ChatFormat.TURQUOISE).append(" TRUE");
                     }
                     caller.sendMessage(toSend.toString());
                 }
             }
             else{
                 int total = (int)Math.ceil(permsplit.length / 5.0F);
-                int show = 1;
+                int show;
                 if(total < 1){
                     total = 1;
                 }
@@ -101,15 +99,15 @@ final class PermissionsListCommand extends RealmsCommand{
                 for(int index = start; index < page && index < permsplit.length; index++){
                     StringBuilder toSend = new StringBuilder();
                     String[] permission = permsplit[index].split(",");
-                    toSend.append(MCChatForm.ORANGE).append(permission[0]).append(" ").append(MCChatForm.YELLOW).append(permission[1].toUpperCase());
+                    toSend.append(ChatFormat.ORANGE).append(permission[0]).append(" ").append(ChatFormat.YELLOW).append(permission[1].toUpperCase());
                     if(permission[2].equals("false")){
-                        toSend.append(MCChatForm.RED).append(" DENIED ");
+                        toSend.append(ChatFormat.RED).append(" DENIED ");
                     }
                     else{
-                        toSend.append(MCChatForm.GREEN).append(" GRANTED ");
+                        toSend.append(ChatFormat.GREEN).append(" GRANTED ");
                     }
                     if(permission[3].equals("true")){
-                        toSend.append(MCChatForm.TURQUOISE).append(" TRUE");
+                        toSend.append(ChatFormat.TURQUOISE).append(" TRUE");
                     }
                     caller.sendMessage(toSend.toString());
                 }

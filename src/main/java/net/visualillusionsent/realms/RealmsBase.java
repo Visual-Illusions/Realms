@@ -1,15 +1,20 @@
-/* Copyright 2012 - 2013 Visual Illusions Entertainment.
+/*
  * This file is part of Realms.
- * This program is free software: you can redistribute it and/or modify
+ *
+ * Copyright © 2012-2013 Visual Illusions Entertainment
+ *
+ * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see http://www.gnu.org/licenses/gpl.html
- * Source Code availible @ https://github.com/Visual-Illusions/Realms */
+ *
+ * You should have received a copy of the GNU General Public License along with Realms.
+ * If not, see http://www.gnu.org/licenses/gpl.html.
+ */
 package net.visualillusionsent.realms;
 
 import java.io.IOException;
@@ -25,15 +30,15 @@ import net.visualillusionsent.realms.lang.InitializationError;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
-import net.visualillusionsent.minecraft.server.mod.interfaces.SynchronizedTask;
 import net.visualillusionsent.realms.data.DataSourceHandler;
 import net.visualillusionsent.realms.data.OutputAction;
 import net.visualillusionsent.realms.data.RealmsProps;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
-import net.visualillusionsent.realms.runnable.AnimalRemover;
-import net.visualillusionsent.realms.runnable.Healer;
-import net.visualillusionsent.realms.runnable.MobRemover;
-import net.visualillusionsent.realms.runnable.RestrictionDamager;
+import net.visualillusionsent.realms.tasks.AnimalRemover;
+import net.visualillusionsent.realms.tasks.Healer;
+import net.visualillusionsent.realms.tasks.MobRemover;
+import net.visualillusionsent.realms.tasks.RestrictionDamager;
+import net.visualillusionsent.realms.tasks.SynchronizedTask;
 import net.visualillusionsent.realms.zones.Wand;
 import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.realms.zones.ZoneLists;
@@ -56,7 +61,6 @@ public final class RealmsBase {
     private final String jar_Path = genJarPath();
     private final DataSourceHandler source_handler;
     private final RealmsProps props;
-    private final VersionChecker vc;
     private SynchronizedTask mobdes, animaldes, healer, restrictdam;
     private final HashMap<Mod_User, Wand> wands = new HashMap<Mod_User, Wand>();
     private final HashMap<String, Mod_Item[]> inventories = new HashMap<String, Mod_Item[]>();
@@ -70,32 +74,11 @@ public final class RealmsBase {
             $ = this;
             this.server = server;
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(status != ProgramStatus.STABLE ? " " + status.toString() : "").concat(" initializing..."));
-            if (status == ProgramStatus.UNKNOWN) {
-                RealmsLogMan.severe("Realms has declared itself as an 'UNKNOWN STATUS' build. Use is not advised and could cause damage to your system!");
-            }
-            else if (status == ProgramStatus.ALPHA) {
-                RealmsLogMan.warning("Realms has declared itself as a 'ALPHA' build. Production use is not advised!");
-            }
-            else if (status == ProgramStatus.BETA) {
-                RealmsLogMan.warning("Realms has declared itself as a 'BETA' build. Production use is not advised!");
-            }
-            else if (status == ProgramStatus.RELEASE_CANDIDATE) {
-                RealmsLogMan.info("Realms has declared itself as a 'Release Candidate' build. Expect some bugs.");
-            }
             props = new RealmsProps();
             if (!props.initialize()) {
                 throw new InitializationError("Properties failed to initialize...");
             }
             source_handler = new DataSourceHandler(DataSourceType.valueOf(props.getStringVal("datasource").toUpperCase()));
-            vc = new VersionChecker(name, getRawVersion(), build, version_check_URL, status, props.getBooleanVal("check.unstable"));
-            Boolean islatest = vc.isLatest();
-            if (islatest == null) {
-                RealmsLogMan.warning("VersionCheckerError: " + vc.getErrorMessage());
-            }
-            else if (!vc.isLatest()) {
-                RealmsLogMan.warning(vc.getUpdateAvailibleMessage());
-                RealmsLogMan.warning("You can view update info @ http://wiki.visualillusionsent.net/Realms#ChangeLog");
-            }
             initializeThreads();
             RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initialized."));
             loaded = true;
@@ -225,14 +208,6 @@ public final class RealmsBase {
         if (!$.inventories.containsKey(name)) {
             $.inventories.put(name, items);
         }
-    }
-
-    public final static boolean isLatest() {
-        return $.vc.isLatest();
-    }
-
-    public final static String getCurrent() {
-        return $.vc.getCurrentVersion();
     }
 
     public final static String getVersion() {

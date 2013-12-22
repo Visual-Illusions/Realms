@@ -15,23 +15,7 @@
  * You should have received a copy of the GNU General Public License along with Realms.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
-package net.visualillusionsent.realms.canary;
+package net.visualillusionsent.realms.tasks;
 
-import net.canarymod.plugin.Plugin;
-import net.canarymod.tasks.ServerTask;
-import net.visualillusionsent.realms.tasks.SynchronizedTask;
-
-public final class CanarySyncRealmsTask extends ServerTask implements SynchronizedTask {
-
-    private final Runnable runnable;
-
-    public CanarySyncRealmsTask(Plugin realms, Runnable runnable, long delay) {
-        super(realms, delay * 20 /* Bring up delay by 20TPS*/, true);
-        this.runnable = runnable;
-    }
-
-    @Override
-    public void run() {
-        this.runnable.run();
-    }
+public interface SynchronizedTask{
 }

@@ -1,21 +1,27 @@
-/* Copyright 2012 - 2013 Visual Illusions Entertainment.
+/*
  * This file is part of Realms.
- * This program is free software: you can redistribute it and/or modify
+ *
+ * Copyright © 2012-2013 Visual Illusions Entertainment
+ *
+ * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see http://www.gnu.org/licenses/gpl.html
- * Source Code availible @ https://github.com/Visual-Illusions/Realms */
+ *
+ * You should have received a copy of the GNU General Public License along with Realms.
+ * If not, see http://www.gnu.org/licenses/gpl.html.
+ */
 package net.visualillusionsent.realms.commands;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+
+import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.logging.RLevel;
@@ -64,7 +70,7 @@ public class RealmsCommandHandler{
         new SetSanctuaryFlagCommand();
         new SetStarveFlagCommand();
         new SetSuffocateFlagCommand();
-        new VersionCommand();
+        //new VersionCommand();
         new WandCommand();
         new ZoneListCommand();
     }
@@ -100,7 +106,7 @@ public class RealmsCommandHandler{
     private static String getRealmsCommandsList(){
         StringBuilder builder = new StringBuilder();
         for (String rc : commands.keySet()) {
-            builder.append(MCChatForm.BLUE);
+            builder.append(ChatFormat.BLUE);
             builder.append(rc);
             builder.append(" ");
         }

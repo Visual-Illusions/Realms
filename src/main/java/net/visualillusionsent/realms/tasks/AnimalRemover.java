@@ -1,23 +1,21 @@
-/* 
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- *  
+/*
  * This file is part of Realms.
  *
- * This program is free software: you can redistribute it and/or modify
+ * Copyright © 2012-2013 Visual Illusions Entertainment
+ *
+ * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see http://www.gnu.org/licenses/gpl.html
- * 
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
+ * You should have received a copy of the GNU General Public License along with Realms.
+ * If not, see http://www.gnu.org/licenses/gpl.html.
  */
-package net.visualillusionsent.realms.runnable;
+package net.visualillusionsent.realms.tasks;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -42,6 +40,7 @@ public final class AnimalRemover implements Runnable{
 
     private final String debugDestroy = "Killed Animal - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
     private final String debugMove = "Moved Animal - Name: '%s' in Zone: '%s' (World: '%s' Dimension: '%d' X: '%.2f' Y: '%.2f' Z: '%.2f')";
+    private final boolean destroy = RealmsBase.getProperties().getBooleanVal("sanctuary.animals.die");
 
     public AnimalRemover(RealmsBase base){}
 
@@ -57,7 +56,7 @@ public final class AnimalRemover implements Runnable{
                     Zone theZone = ZoneLists.getInZone(theAnimal);
                     //Check if Animal is in a Animal Disabled Zone
                     if(!theZone.getAnimals()){
-                        if(RealmsBase.getProperties().getBooleanVal("sanctuary.animals.die")){
+                        if(destroy){
                             //Destroy Animal
                             theAnimal.destroy();
                             RealmsLogMan.log(RLevel.ANIMAL_DESTROY, String.format(debugDestroy, theAnimal.getName(), theZone.getName(), theAnimal.getWorld(), theAnimal.getDimension(), theAnimal.getX(), theAnimal.getY(), theAnimal.getZ()));

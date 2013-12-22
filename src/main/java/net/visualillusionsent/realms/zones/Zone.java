@@ -1,28 +1,34 @@
-/* Copyright 2012 - 2013 Visual Illusions Entertainment.
+/*
  * This file is part of Realms.
- * This program is free software: you can redistribute it and/or modify
+ *
+ * Copyright © 2012-2013 Visual Illusions Entertainment
+ *
+ * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see http://www.gnu.org/licenses/gpl.html
- * Source Code availible @ https://github.com/Visual-Illusions/Realms */
+ *
+ * You should have received a copy of the GNU General Public License along with Realms.
+ * If not, see http://www.gnu.org/licenses/gpl.html.
+ */
 package net.visualillusionsent.realms.zones;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.visualillusionsent.minecraft.server.mod.interfaces.MCChatForm;
+
+import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.data.OutputAction;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
-import net.visualillusionsent.realms.runnable.RealmsDefaultPermsSet;
+import net.visualillusionsent.realms.tasks.RealmsDefaultPermsSet;
 import net.visualillusionsent.realms.zones.permission.Permission;
 import net.visualillusionsent.realms.zones.permission.PermissionType;
 import net.visualillusionsent.realms.zones.polygon.PolygonArea;
@@ -712,8 +718,7 @@ public final class Zone{
 
     /**
      * Gets a zone's flags
-     * 
-     * @param zone
+     *
      * @param showComb
      * @param showEnviro
      * @return flags
@@ -777,11 +782,11 @@ public final class Zone{
     }
 
     private String formatFlag(String flag, boolean absolute, boolean on, boolean pad){
-        StringBuffer tempRet = new StringBuffer(MCChatForm.ORANGE.toString());
+        StringBuffer tempRet = new StringBuffer(ChatFormat.ORANGE.toString());
         tempRet.append(flag);
         tempRet.append(": ");
         if (absolute) {
-            tempRet.append(MCChatForm.PINK);
+            tempRet.append(ChatFormat.PINK);
             if (on) {
                 tempRet.append("ON");
             }
@@ -790,11 +795,11 @@ public final class Zone{
             }
         }
         else if (on) {
-            tempRet.append(MCChatForm.GREEN);
+            tempRet.append(ChatFormat.GREEN);
             tempRet.append("ON");
         }
         else {
-            tempRet.append(MCChatForm.RED);
+            tempRet.append(ChatFormat.RED);
             tempRet.append("OFF");
         }
         String toRet = tempRet.toString();
@@ -810,16 +815,10 @@ public final class Zone{
      * Overrides previous permission if it existed Otherwise creates new
      * permission
      * 
-     * @param String
-     *            ownerName
-     * @param PermType
-     *            type
-     * @param Zone
-     *            zone
-     * @param Boolean
-     *            allowed
-     * @param Boolean
-     *            override
+     * @param ownerName
+     * @param type
+     * @param allowed
+     * @param override
      */
     public final void setPermission(String ownerName, PermissionType type, boolean allowed, boolean override){
         Permission previous = getSpecificPermission(ownerName, type);
@@ -856,7 +855,6 @@ public final class Zone{
      * 
      * @param ownerName
      * @param type
-     * @param zone
      */
     public final void deletePermission(String ownerName, PermissionType type){
         Permission permission = getSpecificPermission(ownerName, type);
@@ -871,7 +869,6 @@ public final class Zone{
      * 
      * @param player
      * @param type
-     * @param zone
      * @return boolean check result
      */
     public final boolean delegateCheck(Mod_User player, PermissionType type){
