@@ -62,14 +62,13 @@ public final class RealmsBase {
     private final HashMap<String, Mod_Item[]> inventories = new HashMap<String, Mod_Item[]>();
     private String version;
     private String build;
-    private ProgramStatus status;
     private static boolean loaded;
 
     public RealmsBase(Mod_Server server) {
         if ($ == null) {
             $ = this;
             this.server = server;
-            RealmsLogMan.info("Realms v".concat(getVersion()).concat(status != ProgramStatus.STABLE ? " " + status.toString() : "").concat(" initializing..."));
+            RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initializing..."));
             props = new RealmsProps();
             if (!props.initialize()) {
                 throw new InitializationError("Properties failed to initialize...");
@@ -220,26 +219,12 @@ public final class RealmsBase {
         return $.version;
     }
 
-    public final static boolean isBeta() {
-        return $.status == ProgramStatus.BETA;
-    }
-
-    public final static boolean isReleaseCandidate() {
-        return $.status == ProgramStatus.RELEASE_CANDIDATE;
-    }
-
     private void generateVersion() {
         try {
             Manifest manifest = getManifest();
             Attributes mainAttribs = manifest.getMainAttributes();
             version = mainAttribs.getValue("Version");
             build = mainAttribs.getValue("Build");
-            try {
-                status = ProgramStatus.valueOf(mainAttribs.getValue("ProgramStatus"));
-            }
-            catch (IllegalArgumentException iaex) {
-                status = ProgramStatus.UNKNOWN;
-            }
         }
         catch (Exception e) {
             RealmsLogMan.warning(e.getMessage());
