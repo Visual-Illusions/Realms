@@ -203,40 +203,6 @@
                     <regex>false</regex>
                 </configuration>
             </plugin>
-            <!-- Compile plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <addClasspath>false</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Title>${project.name}</Title>
-                            <Version>${project.version}</Version>
-                            <Build>${build.number}</Build>
-                            <Vendor>Visual Illusions Entertainment</Vendor>
-                            <Built-By>${user.name}</Built-By>
-                            <Build-Time>${maven.build.timestamp}</Build-Time>
-                            <VIUtils-Version>${viutils.version}</VIUtils-Version>
-                            <JDOM2-Version>${jdom2.version}</JDOM2-Version>
-                            <Class-Path>../lib/viutils-${viutils.version}.jar ../lib/jdom2-${jdom2.version}.jar</Class-Path>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
             <!-- License Header -->
             <plugin>
                 <groupId>com.mycila</groupId>
@@ -273,72 +239,324 @@
                     </includes>
                 </configuration>
             </plugin>
-            <!-- Need to shade in the needed classes from Visual Illusions Minecraft Plugin -->
+            <!-- Compile plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <!-- Only need to shade the VIMCPlugin stuff -->
-                                    <include>net.visualillusionsent:vimcplugin</include>
-                                </includes>
-                            </artifactSet>
-                            <filters>
-                                <filter>
-                                    <artifact>net.visualillusionsent:vimcplugin</artifact>
-                                    <includes>
-                                        <!-- Always include the license stuff -->
-                                        <include>META-INF/license/**</include>
-                                        <!-- Always include base VIMCPlugin stuff -->
-                                        <include>net/visualillusionsent/minecraft/plugin/**</include>
-                                    </includes>
-                                    <excludes>
-                                        <!-- Don't Exclude Bukkit/Canary
-                                        <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
-                                        <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
-                                        -->
-                                        <!-- Spout is unused at this time -->
-                                        <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <!-- Relocate the classes to appropriate packages -->
-                            <relocations>
-                                <!-- Relocate base VIMCPlugin stuff to base of plugin -->
-                                <relocation>
-                                    <pattern>net.visualillusionsent.minecraft.plugin</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}</shadedPattern>
-                                </relocation>
-                                <!-- Canary -->
-                                <relocation>
-                                    <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
-                                </relocation>
-                                <!-- don't need Spout at this time
-                                <relocation>
-                                    <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
-                                </relocation>
-                                -->
-                            </relocations>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>jnks-${build.number}</shadedClassifierName>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>universal</id>
+            <build>
+                <plugins>
+                    <!-- Need to shade in the needed classes from Visual Illusions Minecraft Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactSet>
+                                        <includes>
+                                            <!-- Only need to shade the VIMCPlugin stuff -->
+                                            <include>net.visualillusionsent:vimcplugin</include>
+                                        </includes>
+                                    </artifactSet>
+                                    <filters>
+                                        <filter>
+                                            <artifact>net.visualillusionsent:vimcplugin</artifact>
+                                            <includes>
+                                                <!-- Always include the license stuff -->
+                                                <include>META-INF/license/**</include>
+                                                <!-- Always include base VIMCPlugin stuff -->
+                                                <include>net/visualillusionsent/minecraft/plugin/**</include>
+                                            </includes>
+                                            <excludes>
+                                                <!-- Don't Exclude Bukkit/Canary
+                                                <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
+                                                <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
+                                                -->
+                                                <!-- Spout is unused at this time -->
+                                                <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                    <!-- Relocate the classes to appropriate packages -->
+                                    <relocations>
+                                        <!-- Relocate base VIMCPlugin stuff to base of plugin -->
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}</shadedPattern>
+                                        </relocation>
+                                        <!-- Canary -->
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
+                                        </relocation>
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
+                                        </relocation>
+                                        <!-- don't need Spout at this time
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
+                                        </relocation>
+                                        -->
+                                    </relocations>
+                                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                                    <shadedClassifierName>jnks${build.number}-universal</shadedClassifierName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Jar a Universal -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <archive>
+                                <addMavenDescriptor>false</addMavenDescriptor>
+                                <manifest>
+                                    <addClasspath>false</addClasspath>
+                                </manifest>
+                                <manifestEntries>
+                                    <Title>${project.name}</Title>
+                                    <Version>${project.version}</Version>
+                                    <Build>${build.number}</Build>
+                                    <Vendor>Visual Illusions Entertainment</Vendor>
+                                    <Built-By>${user.name}</Built-By>
+                                    <Build-Time>${maven.build.timestamp}</Build-Time>
+                                    <VIUtils-Version>${viutils.version}</VIUtils-Version>
+                                    <JDOM2-Version>${jdom2.version}</JDOM2-Version>
+                                    <Class-Path>../lib/viutils-${viutils.version}.jar ../lib/jdom2-${jdom2.version}.jar</Class-Path>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>bukkit</id>
+            <build>
+                <finalName>dummyload</finalName>
+                <plugins>
+                    <!-- Need to shade in the needed classes from Visual Illusions Minecraft Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactSet>
+                                        <includes>
+                                            <!-- Only need to shade the VIMCPlugin stuff -->
+                                            <include>net.visualillusionsent:vimcplugin</include>
+                                        </includes>
+                                    </artifactSet>
+                                    <filters>
+                                        <filter>
+                                            <artifact>net.visualillusionsent:vimcplugin</artifact>
+                                            <includes>
+                                                <!-- Always include the license stuff -->
+                                                <include>META-INF/license/**</include>
+                                                <!-- Always include base VIMCPlugin stuff -->
+                                                <include>net/visualillusionsent/minecraft/plugin/**</include>
+                                            </includes>
+                                            <excludes>
+                                                <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
+                                                <!-- Don't Exclude Bukkit
+                                                <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
+                                                -->
+                                                <!-- Spout is unused at this time -->
+                                                <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                    <!-- Relocate the classes to appropriate packages -->
+                                    <relocations>
+                                        <!-- Relocate base VIMCPlugin stuff to base of plugin -->
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}</shadedPattern>
+                                        </relocation>
+                                        <!-- Don't need Canary in the Bukkit-Specific Jar-->
+                                        <!--
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
+                                        </relocation>
+                                        -->
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
+                                        </relocation>
+                                        <!-- don't need Spout at this time
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
+                                        </relocation>
+                                        -->
+                                    </relocations>
+                                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                                    <shadedClassifierName>jnks${build.number}-bukkit</shadedClassifierName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Jar a Bukkit-Specific -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <!-- Don't include Canary specific things in a Bukkit Jar -->
+                            <excludes>
+                                <exclude>net/visualillusionsent/realms/canary/</exclude>
+                                <exclude>Canary.inf</exclude>
+                            </excludes>
+                            <archive>
+                                <addMavenDescriptor>false</addMavenDescriptor>
+                                <manifest>
+                                    <addClasspath>false</addClasspath>
+                                </manifest>
+                                <manifestEntries>
+                                    <Title>${project.name}</Title>
+                                    <Version>${project.version}</Version>
+                                    <Build>${build.number}</Build>
+                                    <Vendor>Visual Illusions Entertainment</Vendor>
+                                    <Built-By>${user.name}</Built-By>
+                                    <Build-Time>${maven.build.timestamp}</Build-Time>
+                                    <VIUtils-Version>${viutils.version}</VIUtils-Version>
+                                    <JDOM2-Version>${jdom2.version}</JDOM2-Version>
+                                    <Class-Path>../lib/viutils-${viutils.version}.jar ../lib/jdom2-${jdom2.version}.jar</Class-Path>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>canary</id>
+            <build>
+                <finalName>dummyload</finalName>
+                <plugins>
+                    <!-- Need to shade in the needed classes from Visual Illusions Minecraft Plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactSet>
+                                        <includes>
+                                            <!-- Only need to shade the VIMCPlugin stuff -->
+                                            <include>net.visualillusionsent:vimcplugin</include>
+                                        </includes>
+                                    </artifactSet>
+                                    <filters>
+                                        <filter>
+                                            <artifact>net.visualillusionsent:vimcplugin</artifact>
+                                            <includes>
+                                                <!-- Always include the license stuff -->
+                                                <include>META-INF/license/**</include>
+                                                <!-- Always include base VIMCPlugin stuff -->
+                                                <include>net/visualillusionsent/minecraft/plugin/**</include>
+                                            </includes>
+                                            <excludes>
+                                                <!-- Don't Exclude Canary
+                                                <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
+                                                -->
+                                                <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
+                                                <!-- Spout is unused at this time -->
+                                                <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
+                                            </excludes>
+                                        </filter>
+                                    </filters>
+                                    <!-- Relocate the classes to appropriate packages -->
+                                    <relocations>
+                                        <!-- Relocate base VIMCPlugin stuff to base of plugin -->
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}</shadedPattern>
+                                        </relocation>
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
+                                        </relocation>
+                                        <!-- Don't need Canary in the Bukkit-Specific Jar
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
+                                        </relocation>
+                                        -->
+                                        <!-- don't need Spout at this time
+                                        <relocation>
+                                            <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
+                                            <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
+                                        </relocation>
+                                        -->
+                                    </relocations>
+                                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                                    <shadedClassifierName>jnks${build.number}-canary</shadedClassifierName>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Jar a Canary-Specific -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <!-- Don't include Bukkit specific things in a Canary Jar -->
+                            <excludes>
+                                <exclude>net/visualillusionsent/realms/bukkit/</exclude>
+                                <exclude>plugin.yml</exclude>
+                            </excludes>
+                            <archive>
+                                <addMavenDescriptor>false</addMavenDescriptor>
+                                <manifest>
+                                    <addClasspath>false</addClasspath>
+                                </manifest>
+                                <manifestEntries>
+                                    <Title>${project.name}</Title>
+                                    <Version>${project.version}</Version>
+                                    <Build>${build.number}</Build>
+                                    <Vendor>Visual Illusions Entertainment</Vendor>
+                                    <Built-By>${user.name}</Built-By>
+                                    <Build-Time>${maven.build.timestamp}</Build-Time>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
