@@ -11,7 +11,7 @@ developers: {devs}
 build.number: {build}
 build.time: {build.time}
 program.status: {program.status}
-check.url: {version.check.url}
+status.url: {status.url}
 issues.url: {issues}
 copyright.years: {copyright.years}
 #|-

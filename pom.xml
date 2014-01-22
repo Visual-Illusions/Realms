@@ -18,7 +18,7 @@
         <jdom2.version>2.0.5</jdom2.version>
         <vault.version>1.2.30</vault.version>
         <build.number>0-dev</build.number>
-        <version.check.url>http://status.visualillusionsent.net/</version.check.url>
+        <status.url>http://status.visualillusionsent.net/</status.url>
         <devs>darkdiplomat</devs>
     </properties>
     <organization>
@@ -168,8 +168,8 @@
                             <value>${project.issueManagement.url}</value>
                         </replacement>
                         <replace>
-                            <token>{version.check.url}</token>
-                            <value>${version.check.url}</value>
+                            <token>{status.url}</token>
+                            <value>${status.url}</value>
                         </replace>
                         <replace>
                             <token>{build}</token>
