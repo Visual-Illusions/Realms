@@ -1,7 +1,7 @@
 /*
  * This file is part of Realms.
  *
- * Copyright © 2012-2013 Visual Illusions Entertainment
+ * Copyright © 2012-2014 Visual Illusions Entertainment
  *
  * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,9 @@ import net.canarymod.plugin.Plugin;
 import net.canarymod.tasks.ServerTask;
 import net.visualillusionsent.realms.tasks.SynchronizedTask;
 
+/**
+ * @author Jason (darkdiplomat)
+ */
 public final class CanarySyncRealmsTask extends ServerTask implements SynchronizedTask {
 
     private final Runnable runnable;

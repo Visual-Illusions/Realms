@@ -1,7 +1,7 @@
 /*
  * This file is part of Realms.
  *
- * Copyright © 2012-2013 Visual Illusions Entertainment
+ * Copyright © 2012-2014 Visual Illusions Entertainment
  *
  * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,11 +43,6 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.tasks.SynchronizedTask;
 
 /**
- * This file is part of Realms.
- * Copyright 2012 - 2013 Visual Illusions Entertainment.
- * Licensed under the terms of the GNU General Public License Version 3 as published by the Free Software Foundation.
- * Source Code availible @ https://github.com/Visual-Illusions/Realms
- * 
  * @author Jason (darkdiplomat)
  */
 public class Canary_Server implements Mod_Server{

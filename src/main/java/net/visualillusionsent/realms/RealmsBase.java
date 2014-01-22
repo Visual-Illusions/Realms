@@ -1,7 +1,7 @@
 /*
  * This file is part of Realms.
  *
- * Copyright © 2012-2013 Visual Illusions Entertainment
+ * Copyright © 2012-2014 Visual Illusions Entertainment
  *
  * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,16 +48,12 @@ import net.visualillusionsent.utils.ProgramStatus;
 import net.visualillusionsent.utils.VersionChecker;
 
 /**
- * Realms base class
- * 
  * @author Jason (darkdiplomat)
  */
 public final class RealmsBase {
 
     private static RealmsBase $;
     private final Mod_Server server;
-    private final String name = "Realms";
-    private final String version_check_URL = "http://visualillusionsent.net/minecraft/plugins/";
     private final String jar_Path = genJarPath();
     private final DataSourceHandler source_handler;
     private final RealmsProps props;

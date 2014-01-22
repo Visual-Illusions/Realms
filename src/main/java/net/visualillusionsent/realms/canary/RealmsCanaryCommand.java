@@ -1,7 +1,7 @@
 /*
  * This file is part of Realms.
  *
- * Copyright © 2012-2013 Visual Illusions Entertainment
+ * Copyright © 2012-2014 Visual Illusions Entertainment
  *
  * Realms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,9 @@ import net.visualillusionsent.realms.commands.RealmsCommandHandler;
 import net.visualillusionsent.realms.logging.RLevel;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 
+/**
+ * @author Jason (darkdiplomat)
+ */
 public final class RealmsCanaryCommand implements CommandListener{
 
     @Command(aliases = { "realms" },

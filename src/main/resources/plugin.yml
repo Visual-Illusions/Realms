@@ -4,7 +4,7 @@ version: {plugin.version}
 main: {bukkit.main.class}
 author: Visual Illusions Entertainment
 website: {wiki}
-soft-depend: [Vault]
+depend: [Vault]
 
 # Visual Illusions Specific Stuff
 developers: {devs}
