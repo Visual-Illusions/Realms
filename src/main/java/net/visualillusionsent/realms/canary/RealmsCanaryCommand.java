@@ -21,6 +21,8 @@ import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.chat.MessageReceiver;
 import net.canarymod.commandsys.Command;
 import net.canarymod.commandsys.CommandListener;
+import net.visualillusionsent.minecraft.plugin.canary.VisualIllusionsCanaryPlugin;
+import net.visualillusionsent.minecraft.plugin.canary.VisualIllusionsCanaryPluginInformationCommand;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
@@ -30,7 +32,11 @@ import net.visualillusionsent.realms.logging.RealmsLogMan;
 /**
  * @author Jason (darkdiplomat)
  */
-public final class RealmsCanaryCommand implements CommandListener{
+public final class RealmsCanaryCommand extends VisualIllusionsCanaryPluginInformationCommand{
+
+    RealmsCanaryCommand(CanaryRealms plugin) {
+        super(plugin);
+    }
 
     @Command(aliases = { "realms" },
             description = "Realms base command. Use /realms help for sub command help.",
@@ -38,14 +44,19 @@ public final class RealmsCanaryCommand implements CommandListener{
             toolTip = "/realms <subcommand> <subargs>")
     public void realmsExecute(MessageReceiver msgrec, String[] args){
         try {
-            Mod_Caller caller = null;
-            if (msgrec instanceof Player) {
-                caller = new Canary_User((Player) msgrec);
+            if(args[0].equals("info")){
+                sendInformation(msgrec);
             }
             else {
-                caller = new Canary_Console();
+                Mod_Caller caller = null;
+                if (msgrec instanceof Player) {
+                    caller = new Canary_User((Player) msgrec);
+                }
+                else {
+                    caller = new Canary_Console();
+                }
+                RealmsCommandHandler.parseRealmsCommand(caller, args.length > 1 ? args[1] : "INVALID", RealmsBase.commandAdjustment(args, 2));
             }
-            RealmsCommandHandler.parseRealmsCommand(caller, args.length > 1 ? args[1] : "INVALID", RealmsBase.commandAdjustment(args, 2));
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ COMMAND...");

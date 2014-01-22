@@ -18,7 +18,9 @@
 package net.visualillusionsent.realms.bukkit;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
+import net.visualillusionsent.minecraft.plugin.bukkit.BukkitMessageReciever;
 import net.visualillusionsent.minecraft.plugin.bukkit.VisualIllusionsBukkitPlugin;
+import net.visualillusionsent.minecraft.plugin.bukkit.VisualIllusionsBukkitPluginInformationCommand;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.RealmsTranslate;
@@ -78,6 +80,7 @@ public class BukkitRealms extends VisualIllusionsBukkitPlugin{
         RealmsCommandHandler.initialize();
         RealmsTranslate.initialize();
         new Realms_BukkitListener(this);
+        getCommand("realms").setExecutor(new RealmsBukkitCommandExecutor(this));
     }
 
     @Override
@@ -86,28 +89,6 @@ public class BukkitRealms extends VisualIllusionsBukkitPlugin{
         if (RealmsBase.isLoaded()) {
             base.terminate();
         }
-    }
-
-    @Override
-    public final boolean onCommand(CommandSender sender, Command cmd, String mainCmd, String[] args){
-        try {
-            if (cmd.getName().equals("realms")) {
-                Mod_Caller caller;
-                if (sender instanceof Player) {
-                    caller = new Bukkit_User((Player) sender);
-                }
-                else {
-                    caller = new Bukkit_Console();
-                }
-                RealmsCommandHandler.parseRealmsCommand(caller, args.length > 0 ? args[0] : "INVALID", RealmsBase.commandAdjustment(args, 1));
-                return true;
-            }
-        }
-        catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occurred @ COMMAND...");
-            RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
-        }
-        return false;
     }
 
     /* VIMCPlugin */

@@ -55,7 +55,7 @@ public final class CanaryRealms extends VisualIllusionsCanaryPlugin{
         RealmsCommandHandler.initialize();
         new Realms_CanaryHookHandler(this);
         try {
-            Canary.commands().registerCommands(new RealmsCanaryCommand(), this, false);
+            Canary.commands().registerCommands(new RealmsCanaryCommand(this), this, false);
         }
         catch (CommandDependencyException ex) {
             RealmsLogMan.stacktrace(ex);
