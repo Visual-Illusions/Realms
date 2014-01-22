@@ -18,7 +18,6 @@
         <jdom2.version>2.0.5</jdom2.version>
         <vault.version>1.2.30</vault.version>
         <canarylib.version>1.0-RC-4-SNAPSHOT</canarylib.version>
-        <build.number>0-dev</build.number>
         <status.url>http://status.visualillusionsent.net/</status.url>
         <devs>darkdiplomat</devs>
     </properties>
@@ -284,11 +283,7 @@
                                                 <include>net/visualillusionsent/minecraft/plugin/**</include>
                                             </includes>
                                             <excludes>
-                                                <!-- Don't Exclude Bukkit/Canary
-                                                <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
-                                                <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
-                                                -->
-                                                <!-- Spout is unused at this time -->
+                                                <!-- Spout is unused in this artifact -->
                                                 <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
                                             </excludes>
                                         </filter>
@@ -305,16 +300,11 @@
                                             <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
                                             <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
                                         </relocation>
+                                        <!-- Bukkit -->
                                         <relocation>
                                             <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
                                             <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
                                         </relocation>
-                                        <!-- don't need Spout at this time
-                                        <relocation>
-                                            <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
-                                            <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
-                                        </relocation>
-                                        -->
                                     </relocations>
                                     <shadedArtifactAttached>true</shadedArtifactAttached>
                                     <shadedClassifierName>jnks${build.number}-universal</shadedClassifierName>
@@ -353,6 +343,7 @@
         <profile>
             <id>bukkit</id>
             <build>
+                <!-- throw away artifact name -->
                 <finalName>dummyload</finalName>
                 <plugins>
                     <!-- Need to shade in the needed classes from Visual Illusions Minecraft Plugin -->
@@ -383,11 +374,8 @@
                                                 <include>net/visualillusionsent/minecraft/plugin/**</include>
                                             </includes>
                                             <excludes>
+                                                <!-- Canary and Spout are not used in this artifact -->
                                                 <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
-                                                <!-- Don't Exclude Bukkit
-                                                <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
-                                                -->
-                                                <!-- Spout is unused at this time -->
                                                 <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
                                             </excludes>
                                         </filter>
@@ -399,23 +387,10 @@
                                             <pattern>net.visualillusionsent.minecraft.plugin</pattern>
                                             <shadedPattern>${project.groupId}.${project.artifactId}</shadedPattern>
                                         </relocation>
-                                        <!-- Don't need Canary in the Bukkit-Specific Jar-->
-                                        <!--
-                                        <relocation>
-                                            <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
-                                            <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
-                                        </relocation>
-                                        -->
                                         <relocation>
                                             <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
                                             <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
                                         </relocation>
-                                        <!-- don't need Spout at this time
-                                        <relocation>
-                                            <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
-                                            <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
-                                        </relocation>
-                                        -->
                                     </relocations>
                                     <shadedArtifactAttached>true</shadedArtifactAttached>
                                     <shadedClassifierName>jnks${build.number}-bukkit</shadedClassifierName>
@@ -459,6 +434,7 @@
         <profile>
             <id>canary</id>
             <build>
+                <!-- throw away artifact name -->
                 <finalName>dummyload</finalName>
                 <plugins>
                     <!-- Need to shade in the needed classes from Visual Illusions Minecraft Plugin -->
@@ -489,11 +465,8 @@
                                                 <include>net/visualillusionsent/minecraft/plugin/**</include>
                                             </includes>
                                             <excludes>
-                                                <!-- Don't Exclude Canary
-                                                <exclude>net/visualillusionsent/minecraft/plugin/canary/**</exclude>
-                                                -->
+                                                <!-- Bukkit and Spout are not used in this artifact -->
                                                 <exclude>net/visualillusionsent/minecraft/plugin/bukkit/**</exclude>
-                                                <!-- Spout is unused at this time -->
                                                 <exclude>net/visualillusionsent/minecraft/plugin/spout/**</exclude>
                                             </excludes>
                                         </filter>
@@ -509,18 +482,6 @@
                                             <pattern>net.visualillusionsent.minecraft.plugin.canary</pattern>
                                             <shadedPattern>${project.groupId}.${project.artifactId}.canary</shadedPattern>
                                         </relocation>
-                                        <!-- Don't need Canary in the Bukkit-Specific Jar
-                                        <relocation>
-                                            <pattern>net.visualillusionsent.minecraft.plugin.bukkit</pattern>
-                                            <shadedPattern>${project.groupId}.${project.artifactId}.bukkit</shadedPattern>
-                                        </relocation>
-                                        -->
-                                        <!-- don't need Spout at this time
-                                        <relocation>
-                                            <pattern>net.visualillusionsent.minecraft.plugin.spout</pattern>
-                                            <shadedPattern>${project.groupId}.${project.artifactId}.spout</shadedPattern>
-                                        </relocation>
-                                        -->
                                     </relocations>
                                     <shadedArtifactAttached>true</shadedArtifactAttached>
                                     <shadedClassifierName>jnks${build.number}-canary</shadedClassifierName>
@@ -551,6 +512,7 @@
                                     <Vendor>Visual Illusions Entertainment</Vendor>
                                     <Built-By>${user.name}</Built-By>
                                     <Build-Time>${maven.build.timestamp}</Build-Time>
+                                    <!-- NOTE: the class path is unnecessary for a Canary-Specific artifact -->
                                 </manifestEntries>
                             </archive>
                         </configuration>

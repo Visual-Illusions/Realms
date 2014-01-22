@@ -209,10 +209,10 @@ public final class RealmsBase {
         if ($.version == null) {
             $.generateVersion();
         }
-        return $.version.concat(".").concat($.build);
+        return $.version.concat("-jnks").concat($.build);
     }
 
-    private final String getRawVersion() {
+    public final static String getRawVersion() {
         if ($.version == null) {
             $.generateVersion();
         }
