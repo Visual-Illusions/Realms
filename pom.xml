@@ -92,7 +92,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>${project.name}-${project.version}-jnks${build.number}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -334,6 +333,8 @@
                                 </relocation>
                                 -->
                             </relocations>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>jnks-${build.number}</shadedClassifierName>
                         </configuration>
                     </execution>
                 </executions>

@@ -57,7 +57,7 @@ public class BukkitRealms extends VisualIllusionsBukkitPlugin{
             // NullPointerException will happen anyways
         }
         String viutils_version = mf.getMainAttributes().getValue("VIUtils-Version");
-        String vi_url = MessageFormat.format("http://repo.visualillusionsent.net/net/visualillusionsent/viutils/{0}/viutils-{0}.jar", viutils_version);
+        String vi_url = MessageFormat.format("http://repo2.visualillusionsent.net/repository/public/net/visualillusionsent/viutils/{0}/viutils-{0}.jar", viutils_version);
         String jdom_version = mf.getMainAttributes().getValue("JDOM2-Version");
         String jdom_url = MessageFormat.format("http://repo1.maven.org/maven2/org/jdom/jdom2/{0}/jdom2-{0}.jar", jdom_version);
         try {
