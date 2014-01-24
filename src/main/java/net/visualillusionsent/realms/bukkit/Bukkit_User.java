@@ -17,9 +17,6 @@
  */
 package net.visualillusionsent.realms.bukkit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.milkbowl.vault.permission.Permission;
 import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
@@ -27,8 +24,12 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsTranslate;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jason (darkdiplomat)
@@ -75,7 +76,8 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     @Override
     public final boolean isInGroup(String group){
         try{
-            return permission.playerInGroup(player, group);
+            boolean preRet = permission.playerInGroup(player, group);
+            return preRet ? preRet : permission.playerInGroup((World) null, player.getName(), group);
         }
         catch (UnsupportedOperationException uoex){
             return player.isOp();
