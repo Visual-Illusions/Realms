@@ -20,14 +20,19 @@ package net.visualillusionsent.realms.canary;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.chat.MessageReceiver;
 import net.canarymod.commandsys.Command;
-import net.canarymod.commandsys.CommandListener;
-import net.visualillusionsent.minecraft.plugin.canary.VisualIllusionsCanaryPlugin;
+import net.canarymod.commandsys.TabComplete;
 import net.visualillusionsent.minecraft.plugin.canary.VisualIllusionsCanaryPluginInformationCommand;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
 import net.visualillusionsent.realms.logging.RLevel;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
+import net.visualillusionsent.utils.ArrayUtils;
+
+import java.util.List;
+
+import static net.canarymod.commandsys.TabCompleteHelper.matchToKnownPlayer;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.*;
 
 /**
  * @author Jason (darkdiplomat)
@@ -41,7 +46,9 @@ public final class RealmsCanaryCommand extends VisualIllusionsCanaryPluginInform
     @Command(aliases = { "realms" },
             description = "Realms base command. Use /realms help for sub command help.",
             permissions = { "realms" },
-            toolTip = "/realms <subcommand> <subargs>")
+            toolTip = "/realms <subcommand> <subargs>",
+            tabCompleteMethod = "realmsTabComplete"
+    )
     public void realmsExecute(MessageReceiver msgrec, String[] args){
         try {
             if(args[0].equals("info")){
@@ -59,8 +66,39 @@ public final class RealmsCanaryCommand extends VisualIllusionsCanaryPluginInform
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ COMMAND...");
+            RealmsLogMan.severe("An unexpected exception occurred @ COMMAND...");
             RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
+        }
+    }
+    
+    @TabComplete
+    public final List<String> realmsTabComplete(MessageReceiver msgrec, String[] args){
+        switch(args.length){
+            case 1:
+                return msgrec.hasPermission("realms.admin") ? matchTo(args, ArrayUtils.arrayMerge(adminSubs1, subs1)) : matchTo(args, subs1);
+            case 2:
+                if(flagCmdPattern.matcher(args[0]).matches() || greetingCmdPattern.matcher(args[0]).matches() || stranglersPattern.matcher(args[0]).matches()){
+                    return matchTo(args, zoneNameOrStar());
+                }
+                else if(permCmdPattern.matcher(args[0]).matches()){
+                    return matchToKnownPlayer(args);
+                }
+                return null;
+            case 3:
+                if(flagCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, flagVal);
+                }
+                else if (permCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, permTypes());
+                }
+                return null;
+            case 4:
+                if (permCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, zoneNameOrStar());
+                }
+                return null;
+            default:
+                return null;
         }
     }
 }

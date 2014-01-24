@@ -23,9 +23,26 @@ import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
 import net.visualillusionsent.realms.logging.RLevel;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
+import net.visualillusionsent.utils.ArrayUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.adminSubs1;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.flagCmdPattern;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.flagVal;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.greetingCmdPattern;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.matchTo;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.permCmdPattern;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.permTypes;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.stranglersPattern;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.subs1;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.zoneNameOrStar;
 
 /**
  * @author Jason (darkdiplomat)
@@ -61,5 +78,44 @@ public class RealmsBukkitCommandExecutor extends VisualIllusionsBukkitPluginInfo
             RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String mainCmd, String[] args) {
+        switch(args.length){
+            case 1:
+                return sender.hasPermission("realms.admin") ? matchTo(args, ArrayUtils.arrayMerge(adminSubs1, subs1)) : matchTo(args, subs1);
+            case 2:
+                if(flagCmdPattern.matcher(args[0]).matches() || greetingCmdPattern.matcher(args[0]).matches() || stranglersPattern.matcher(args[0]).matches()){
+                    return matchTo(args, zoneNameOrStar());
+                }
+                else if(permCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, knownPlayerNames());
+                }
+                return null;
+            case 3:
+                if(flagCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, flagVal);
+                }
+                else if (permCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, permTypes());
+                }
+                return null;
+            case 4:
+                if (permCmdPattern.matcher(args[0]).matches()){
+                    return matchTo(args, zoneNameOrStar());
+                }
+                return null;
+            default:
+                return null;
+        }
+    }
+    
+    private String[] knownPlayerNames(){
+        ArrayList<String> playerNames = new ArrayList<String>();
+        for(OfflinePlayer offlinePlayer :  Bukkit.getServer().getOfflinePlayers()){
+            playerNames.add(offlinePlayer.getName());
+        }
+        return playerNames.toArray(new String[playerNames.size()]);
     }
 }

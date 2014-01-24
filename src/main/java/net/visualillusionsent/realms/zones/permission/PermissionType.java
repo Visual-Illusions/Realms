@@ -36,7 +36,7 @@ public enum PermissionType{
     MESSAGE, //
     TELEPORT, //
     ZONING, //
-    NULL;
+    ;
 
     @Override
     public final String toString(){

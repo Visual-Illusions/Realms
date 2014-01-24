@@ -70,19 +70,19 @@ public final class Permission{
     }
 
     public final boolean applicableToPlayer(Mod_User user){
-        if(owner.startsWith("p-")){
-            return owner.replaceAll("p\\-", "").equalsIgnoreCase(user.getName());
+        if(owner.equalsIgnoreCase("everyone")){
+            return true;
+        }
+        else if(owner.startsWith("p-")){
+            return owner.replace("p-", "").equalsIgnoreCase(user.getName());
         }
         else if(owner.startsWith("g-")){
-            return user.isInGroup(owner.replaceAll("g\\-", ""));
+            return user.isInGroup(owner.replace("g-", ""));
         }
         else if(owner.equalsIgnoreCase(user.getName())){
             return true;
         }
         else if(user.isInGroup(owner)){
-            return true;
-        }
-        else if(owner.equalsIgnoreCase("everyone")){
             return true;
         }
         return false;
