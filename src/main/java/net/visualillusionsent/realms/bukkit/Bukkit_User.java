@@ -76,8 +76,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     @Override
     public final boolean isInGroup(String group){
         try{
-            boolean preRet = permission.playerInGroup(player, group);
-            return preRet ? preRet : permission.playerInGroup((World) null, player.getName(), group);
+            return permission.playerInGroup(player, group) || permission.playerInGroup((World) null, player.getName(), group);
         }
         catch (UnsupportedOperationException uoex){
             return player.isOp();
@@ -130,7 +129,12 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
 
     @Override
     public final boolean hasPermission(String perm){
-        return player.hasPermission(perm);
+        try {
+            return permission.has(player, perm) || permission.has((World) null, player.getName(), perm);
+        }
+        catch (UnsupportedOperationException uoex) {
+            return player.hasPermission(perm);
+        }
     }
 
     @Override
