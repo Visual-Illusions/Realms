@@ -36,7 +36,7 @@ public final class Bukkit_Block implements Mod_Block{
         this.x = block.getX();
         this.y = block.getY();
         this.z = block.getZ();
-        this.dimension = block.getWorld().getEnvironment().getId();
+        this.dimension = block.getWorld().getEnvironment().ordinal();
         this.world = block.getWorld().getName();
     }
 

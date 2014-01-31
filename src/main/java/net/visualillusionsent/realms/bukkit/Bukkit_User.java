@@ -34,27 +34,28 @@ import java.util.List;
 /**
  * @author Jason (darkdiplomat)
  */
-public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
+public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
     private static final Permission permission = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
 
     private final Player player;
-    private final net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] {};
+    private final net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[]{ };
 
-    public Bukkit_User(Player player){
+    public Bukkit_User(Player player) {
         super(player);
         this.player = player;
     }
 
     @Override
-    public final String getName(){
+    public final String getName() {
         return player.getName();
     }
 
     @Override
-    public final void destroy(){}
+    public final void destroy() {
+    }
 
     @Override
-    public final void sendError(String transKey, Object... args){
+    public final void sendError(String transKey, Object... args) {
         if (args == null) {
             player.sendMessage(ChatFormat.LIGHT_RED.concat(RealmsTranslate.transMessage(transKey)));
         }
@@ -64,7 +65,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     }
 
     @Override
-    public final void sendMessage(String transKey, Object... args){
+    public final void sendMessage(String transKey, Object... args) {
         if (args == null) {
             player.sendMessage(RealmsTranslate.transMessage(transKey));
         }
@@ -74,61 +75,59 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     }
 
     @Override
-    public final boolean isInGroup(String group){
-        try{
+    public final boolean isInGroup(String group) {
+        if (permission.hasGroupSupport()) {
             return permission.playerInGroup(player, group) || permission.playerInGroup((World) null, player.getName(), group);
         }
-        catch (UnsupportedOperationException uoex){
-            return player.isOp();
-        }
+        return player.isOp();
     }
 
     @Override
-    public final int getHealth(){
-        return (int)player.getHealth();
+    public final int getHealth() {
+        return (int) player.getHealth();
     }
 
     @Override
-    public final int getMaxHealth(){
-        return (int)player.getMaxHealth();
+    public final int getMaxHealth() {
+        return (int) player.getMaxHealth();
     }
 
     @Override
-    public final void heal(int amount){
+    public final void heal(int amount) {
         int newHealth = getHealth() + amount;
-        if (newHealth > (int)player.getMaxHealth()) {
-            newHealth = (int)player.getMaxHealth();
+        if (newHealth > (int) player.getMaxHealth()) {
+            newHealth = (int) player.getMaxHealth();
         }
         player.setHealth(newHealth);
     }
 
     @Override
-    public final void causeDamage(int amount){
+    public final void causeDamage(int amount) {
         player.damage(amount);
     }
 
     @Override
-    public final boolean isDead(){
+    public final boolean isDead() {
         return player.isDead() || player.getHealth() <= 0;
     }
 
     @Override
-    public final boolean isCreative(){
+    public final boolean isCreative() {
         return player.getGameMode() == GameMode.CREATIVE;
     }
 
     @Override
-    public final boolean isAdventure(){
+    public final boolean isAdventure() {
         return player.getGameMode() == GameMode.ADVENTURE;
     }
 
     @Override
-    public final boolean isDamageDisabled(){
+    public final boolean isDamageDisabled() {
         return false;
     }
 
     @Override
-    public final boolean hasPermission(String perm){
+    public final boolean hasPermission(String perm) {
         try {
             return permission.has(player, perm) || permission.has((World) null, player.getName(), perm);
         }
@@ -138,7 +137,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     }
 
     @Override
-    public final Mod_Item[] getInventoryContents(){
+    public final Mod_Item[] getInventoryContents() {
         List<Mod_Item> items = new ArrayList<Mod_Item>();
         for (ItemStack item : player.getInventory().getContents()) {
             items.add(new Bukkit_Item(item));
@@ -147,44 +146,44 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User{
     }
 
     @Override
-    public final void setInventoryContents(Mod_Item[] items){
+    public final void setInventoryContents(Mod_Item[] items) {
         for (Mod_Item item : items) {
             player.getInventory().addItem(((Bukkit_Item) item).getBaseItem());
         }
     }
 
     @Override
-    public final void clearInventoryContents(){
+    public final void clearInventoryContents() {
         player.getInventory().clear();
     }
 
     @Override
-    public final boolean isConsole(){
+    public final boolean isConsole() {
         return false;
     }
 
     @Override
-    public final boolean isBukkit(){
+    public final boolean isBukkit() {
         return true;
     }
 
     @Override
-    public final boolean isCanary(){
+    public final boolean isCanary() {
         return false;
     }
 
     @Override
-    public final Player getPlayer(){
+    public final Player getPlayer() {
         return player;
     }
 
     @Override
-    public final int hashCode(){
+    public final int hashCode() {
         return player.hashCode();
     }
 
     @Override
-    public final boolean equals(Object obj){
+    public final boolean equals(Object obj) {
         if (obj instanceof Bukkit_User) {
             return player.equals(((Bukkit_User) obj).getPlayer());
         }
