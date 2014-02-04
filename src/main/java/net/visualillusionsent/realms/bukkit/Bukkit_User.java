@@ -35,10 +35,21 @@ import java.util.List;
  * @author Jason (darkdiplomat)
  */
 public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
-    private static final Permission permission = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
+    private static final Permission permission;
 
     private final Player player;
     private final net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[] itemArray = new net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item[]{ };
+
+    static {
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("Vault")) {
+            // We have Vault
+            permission = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class).getProvider();
+        }
+        else {
+            // We are running blind!
+            permission = null;
+        }
+    }
 
     public Bukkit_User(Player player) {
         super(player);
@@ -76,7 +87,7 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
 
     @Override
     public final boolean isInGroup(String group) {
-        if (permission.hasGroupSupport()) {
+        if (permission != null && permission.hasGroupSupport()) {
             return permission.playerInGroup(player, group) || permission.playerInGroup((World) null, player.getName(), group);
         }
         return player.isOp();
@@ -128,12 +139,12 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
 
     @Override
     public final boolean hasPermission(String perm) {
-        try {
+        if (permission != null) {
+            // Vault Enabled
             return permission.has(player, perm) || permission.has((World) null, player.getName(), perm);
         }
-        catch (UnsupportedOperationException uoex) {
-            return player.hasPermission(perm);
-        }
+        // No Vault, default to SuperPerms
+        return player.hasPermission(perm);
     }
 
     @Override

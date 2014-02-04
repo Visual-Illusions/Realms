@@ -144,13 +144,12 @@ public final class Bukkit_Server implements net.visualillusionsent.minecraft.ser
 
     @Override
     public final List<String> getAdminGroups() {
-        // TODO Auto-generated method stub
-        return null;
+        return Arrays.asList(new String[]{ "ops" });
     }
 
     @Override
     public final String getDefaultGroupName() {
-        return "NO_GROUP";
+        return "default";
     }
 
     @Override
