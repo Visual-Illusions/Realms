@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.commands;
@@ -28,10 +28,10 @@ import net.visualillusionsent.realms.zones.permission.PermissionType;
  * @author Jason (darkdiplomat)
  */
 @RCommand(desc = "Deletes a zone", name = "deletezone", usage = "<zone|*>", minParam = 1, maxParam = 1)
-final class DeleteZoneCommand extends RealmsCommand{
+final class DeleteZoneCommand extends RealmsCommand {
 
     @Override
-    final void execute(Mod_Caller caller, String[] args){
+    final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
         try {
             if (args[0].equals("*") && user == null) {

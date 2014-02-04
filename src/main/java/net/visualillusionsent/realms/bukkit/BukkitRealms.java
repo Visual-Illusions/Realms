@@ -8,31 +8,22 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.bukkit;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
-import net.visualillusionsent.minecraft.plugin.bukkit.BukkitMessageReciever;
 import net.visualillusionsent.minecraft.plugin.bukkit.VisualIllusionsBukkitPlugin;
-import net.visualillusionsent.minecraft.plugin.bukkit.VisualIllusionsBukkitPluginInformationCommand;
-import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.RealmsTranslate;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
-import net.visualillusionsent.realms.logging.RLevel;
-import net.visualillusionsent.realms.logging.RealmsLogMan;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -45,7 +36,7 @@ import java.util.logging.Logger;
 /**
  * @author Jason (darkdiplomat)
  */
-public class BukkitRealms extends VisualIllusionsBukkitPlugin{
+public class BukkitRealms extends VisualIllusionsBukkitPlugin {
 
     private RealmsBase base;
 
@@ -73,7 +64,7 @@ public class BukkitRealms extends VisualIllusionsBukkitPlugin{
     }
 
     @Override
-    public final void onEnable(){
+    public final void onEnable() {
         super.onEnable();
 
         base = new RealmsBase(new Bukkit_Server(this, getServer(), getLogger()));
@@ -84,7 +75,7 @@ public class BukkitRealms extends VisualIllusionsBukkitPlugin{
     }
 
     @Override
-    public final void onDisable(){
+    public final void onDisable() {
         HandlerList.unregisterAll(this);
         if (RealmsBase.isLoaded()) {
             base.terminate();

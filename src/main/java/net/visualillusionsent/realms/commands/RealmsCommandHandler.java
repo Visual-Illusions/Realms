@@ -8,18 +8,14 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.commands;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 
 import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
@@ -27,12 +23,17 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.logging.RLevel;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+
 /**
  * @author Jason (darkdiplomat)
  */
-public class RealmsCommandHandler{
+public class RealmsCommandHandler {
 
     private final static LinkedHashMap<String, RealmsCommand> commands = new LinkedHashMap<String, RealmsCommand>();
+
     static {
         new ConfigReloadCommand();
         new CreateZoneCommand();
@@ -70,17 +71,18 @@ public class RealmsCommandHandler{
         new ZoneListCommand();
     }
 
-    private RealmsCommandHandler(){}
+    private RealmsCommandHandler() {
+    }
 
-    static RealmsCommand getCommand(String cmd){
+    static RealmsCommand getCommand(String cmd) {
         return commands.get(cmd);
     }
 
-    static Collection<RealmsCommand> getRealmsSubCommands(){
+    static Collection<RealmsCommand> getRealmsSubCommands() {
         return Collections.unmodifiableCollection(commands.values());
     }
 
-    static void register(RealmsCommand cmd){
+    static void register(RealmsCommand cmd) {
         if (cmd != null) {
             try {
                 RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
@@ -98,7 +100,7 @@ public class RealmsCommandHandler{
         }
     }
 
-    private static String getRealmsCommandsList(){
+    private static String getRealmsCommandsList() {
         StringBuilder builder = new StringBuilder();
         for (String rc : commands.keySet()) {
             builder.append(ChatFormat.BLUE);
@@ -108,7 +110,7 @@ public class RealmsCommandHandler{
         return builder.toString();
     }
 
-    public static final void parseRealmsCommand(Mod_Caller caller, String command, String[] args){
+    public static final void parseRealmsCommand(Mod_Caller caller, String command, String[] args) {
         RealmsCommand cmd = commands.get(command);
         if (cmd != null) {
             RCommand rcmd = cmd.getClass().getAnnotation(RCommand.class);
@@ -135,7 +137,7 @@ public class RealmsCommandHandler{
         caller.sendError("cmd.specify", getRealmsCommandsList());
     }
 
-    public static void initialize(){
+    public static void initialize() {
         ;
     }
 }

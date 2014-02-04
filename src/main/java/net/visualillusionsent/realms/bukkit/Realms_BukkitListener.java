@@ -8,17 +8,14 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.bukkit;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.realms.RealmsBase;
@@ -63,6 +60,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author Jason (darkdiplomat)
@@ -161,7 +161,7 @@ public final class Realms_BukkitListener implements Listener {
             zone = ZoneLists.getInZone(block);
             deny = !zone.permissionCheck(user, PermissionType.CREATE);
             RealmsLogMan.log(RLevel.BLOCK_PLACE, "Player: '" + event.getPlayer().getName() + "'" + " BlockPlaced: '" + (blockP != null ? blockP.toString() : "NULL") + "'" + " BlockClicked: '" + (blockC != null ? blockC.toString() : "NULL") + "'" + " ItemInHand: '" + (event.getItemInHand() != null ? event.getItemInHand().toString() : "NULL") + "'"
-                + " Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
+                    + " Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
             event.setCancelled(deny);
         }
         catch (Exception ex) {

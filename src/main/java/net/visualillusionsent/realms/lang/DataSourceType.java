@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 /* 
@@ -39,7 +39,7 @@ import java.util.Enumeration;
 /**
  * @author Jason (darkdiplomat)
  */
-public enum DataSourceType{
+public enum DataSourceType {
     XML("org.jdom2.JDOMException"), //
     MYSQL("com.mysql.jdbc.Driver"), //
     SQLITE("org.sqlite.JDBC"), //
@@ -47,31 +47,31 @@ public enum DataSourceType{
 
     private final String driverClass;
 
-    private DataSourceType(String driverClass){
+    private DataSourceType(String driverClass) {
         this.driverClass = driverClass;
     }
 
-    private final boolean canFindSQLDriver(String driver){
+    private final boolean canFindSQLDriver(String driver) {
         Enumeration<Driver> en = DriverManager.getDrivers();
-        while(en.hasMoreElements()){
+        while (en.hasMoreElements()) {
             Driver drive = en.nextElement();
-            if(drive.getClass().getName().equals(driver)){
+            if (drive.getClass().getName().equals(driver)) {
                 return true;
             }
         }
         return false;
     }
 
-    public final void testDriver(){
-        if(this != XML){
-            if(canFindSQLDriver(driverClass)){
+    public final void testDriver() {
+        if (this != XML) {
+            if (canFindSQLDriver(driverClass)) {
                 return;
             }
         }
-        try{
+        try {
             Class.forName(driverClass);
         }
-        catch(ClassNotFoundException cnfe){
+        catch (ClassNotFoundException cnfe) {
             throw new DataSourceError(cnfe, this);
         }
     }

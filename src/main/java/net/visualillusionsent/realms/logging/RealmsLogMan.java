@@ -8,41 +8,43 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.logging;
 
+import net.visualillusionsent.realms.RealmsBase;
+import net.visualillusionsent.realms.data.RealmsProps;
+
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import net.visualillusionsent.realms.RealmsBase;
-import net.visualillusionsent.realms.data.RealmsProps;
 
 /**
  * @author Jason (darkdiplomat)
  */
-public final class RealmsLogMan{
+public final class RealmsLogMan {
 
     private static Logger logger;
+
     static {
         logger = new RLogger();
         logger.setParent(RealmsBase.getServer().getLogger());
         logger.setLevel(Level.ALL);
     }
 
-    private static class RLogger extends Logger{
+    private static class RLogger extends Logger {
 
-        RLogger(){
+        RLogger() {
             super("Realms-Log", null);
         }
 
         @Override
-        public void log(LogRecord logRecord){
+        public void log(LogRecord logRecord) {
             Level lvl = logRecord.getLevel();
             String message = logRecord.getMessage();
             RealmsProps rprop = RealmsBase.getProperties();
@@ -70,45 +72,46 @@ public final class RealmsLogMan{
         }
     }
 
-    private RealmsLogMan(){}
+    private RealmsLogMan() {
+    }
 
-    public static void info(String msg){
+    public static void info(String msg) {
         if (logger == null)
             return;
         logger.info(msg);
     }
 
-    public static void info(String msg, Throwable thrown){
+    public static void info(String msg, Throwable thrown) {
         if (logger == null)
             return;
         logger.log(Level.INFO, msg, thrown);
     }
 
-    public static void warning(String msg){
+    public static void warning(String msg) {
         if (logger == null)
             return;
         logger.warning(msg);
     }
 
-    public static void warning(String msg, Throwable thrown){
+    public static void warning(String msg, Throwable thrown) {
         if (logger == null)
             return;
         logger.log(Level.WARNING, msg, thrown);
     }
 
-    public static void severe(String msg){
+    public static void severe(String msg) {
         if (logger == null)
             return;
         logger.severe(msg);
     }
 
-    public static void severe(String msg, Throwable thrown){
+    public static void severe(String msg, Throwable thrown) {
         if (logger == null)
             return;
         logger.log(Level.SEVERE, msg, thrown);
     }
 
-    public static void stacktrace(Throwable thrown){
+    public static void stacktrace(Throwable thrown) {
         if (logger == null)
             return;
         if (RealmsBase.getProperties().getBooleanVal("debug.stacktrace") || RealmsBase.getProperties().getBooleanVal("debug.all")) {
@@ -119,19 +122,19 @@ public final class RealmsLogMan{
         }
     }
 
-    public static void log(RLevel lvl, String msg){
+    public static void log(RLevel lvl, String msg) {
         if (logger == null)
             return;
         logger.log(lvl, msg);
     }
 
-    public static void log(RLevel lvl, String msg, Throwable thrown){
+    public static void log(RLevel lvl, String msg, Throwable thrown) {
         if (logger == null)
             return;
         logger.log(lvl, msg, thrown);
     }
 
-    public static void killLogger(){
+    public static void killLogger() {
         if (logger == null)
             return;
         logger.setLevel(Level.OFF);

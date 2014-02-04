@@ -8,24 +8,21 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.canary;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import net.canarymod.Canary;
 import net.canarymod.ToolBox;
 import net.canarymod.api.DamageType;
 import net.canarymod.api.GameMode;
 import net.canarymod.api.entity.Entity;
 import net.canarymod.api.entity.living.EntityLiving;
-import net.canarymod.api.entity.living.LivingBase;
 import net.canarymod.api.entity.living.humanoid.Player;
 import net.canarymod.api.world.blocks.Block;
 import net.canarymod.api.world.blocks.BlockType;
@@ -56,6 +53,9 @@ import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.realms.zones.ZoneLists;
 import net.visualillusionsent.realms.zones.permission.PermissionType;
 import net.visualillusionsent.realms.zones.polygon.Point;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * @author Jason (darkdiplomat)
@@ -162,7 +162,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
                 deny = !zone.permissionCheck(user, PermissionType.CREATE);
             }
             RealmsLogMan.log(RLevel.BLOCK_PLACE, "Player: '" + hook.getPlayer().getName() + "'" + " BlockPlaced: '" + (hook.getBlockPlaced() != null ? hook.getBlockPlaced().toString() : "NULL") + "'" + " BlockClicked: '" + (hook.getBlockClicked() != null ? hook.getBlockClicked().toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: "
-                + (deny ? "'Denied'" : "'Allowed'"));
+                    + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
             RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PLACE. Caused by: " + ex.getClass().getName());
@@ -200,7 +200,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
                     }
                 }
                 RealmsLogMan.log(RLevel.BLOCK_RIGHTCLICK, "Player: '" + hook.getPlayer().getName() + "'" + " BlockClicked: '" + (hook.getBlockClicked() != null ? hook.getBlockClicked().toString() : "NULL") + "'" + " ItemInHand: '" + (hook.getPlayer().getItemHeld() != null ? hook.getPlayer().getItemHeld().toString() : "NULL") + "'" + " Zone: '"
-                    + (zone == null ? "Not Checked" : zone.getName()) + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
+                        + (zone == null ? "Not Checked" : zone.getName()) + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
             }
         }
         catch (Exception ex) {

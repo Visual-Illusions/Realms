@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.zones.polygon;
@@ -28,13 +28,13 @@ public final class Point implements Cloneable {
 
     /**
      * Constructs a new Point
-     * 
+     *
      * @param x
-     *            the X coordinate
+     *         the X coordinate
      * @param y
-     *            the Y coordinate
+     *         the Y coordinate
      * @param z
-     *            the Z coordinate
+     *         the Z coordinate
      */
     public Point(int x, int y, int z) {
         this.x = x;
@@ -44,9 +44,10 @@ public final class Point implements Cloneable {
 
     /**
      * Checks if a Point is equal to this Point
-     * 
+     *
      * @param p
-     *            the Point to check
+     *         the Point to check
+     *
      * @return {@code true} if equal; {@code false} if not
      */
     public final boolean equals(Point point) {
@@ -55,9 +56,10 @@ public final class Point implements Cloneable {
 
     /**
      * Checks if a Point is 2D (X/Z) equal to this Point
-     * 
+     *
      * @param point
-     *            the Point to check
+     *         the Point to check
+     *
      * @return {@code true} if equal; {@code false} if not
      */
     public final boolean equals2D(Point point) {
@@ -84,7 +86,7 @@ public final class Point implements Cloneable {
     }
 
     public final int[] asIntArray() {
-        return new int[] { x, y, z };
+        return new int[]{ x, y, z };
     }
 
     public final String toString() {

@@ -8,65 +8,65 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.data;
 
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-
 import net.visualillusionsent.realms.logging.RLevel;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * @author Jason (darkdiplomat)
  */
-final class OutputQueue{
+final class OutputQueue {
 
     private LinkedList<DataSourceActionContainer> queue;
 
-    public OutputQueue(){
+    public OutputQueue() {
         queue = new LinkedList<DataSourceActionContainer>();
     }
 
-    public final void add(DataSourceActionContainer dsac){
-        synchronized(queue){
+    public final void add(DataSourceActionContainer dsac) {
+        synchronized (queue) {
             queue.add(dsac);
             queue.notify();
         }
     }
 
-    public final DataSourceActionContainer next(){
+    public final DataSourceActionContainer next() {
         DataSourceActionContainer dsac = null;
-        if(queue.isEmpty()){
-            synchronized(queue){
-                try{
+        if (queue.isEmpty()) {
+            synchronized (queue) {
+                try {
                     queue.wait();
                 }
-                catch(InterruptedException iex){
+                catch (InterruptedException iex) {
                     // Interrupted
                     RealmsLogMan.log(RLevel.GENERAL, "InterruptedException occured in OutputQueue");
                     return null;
                 }
             }
         }
-        try{
+        try {
             dsac = queue.getFirst();
             queue.removeFirst();
         }
-        catch(NoSuchElementException nseex){
+        catch (NoSuchElementException nseex) {
             throw new InternalError("Race hazard in LinkedList object.");
         }
         return dsac;
     }
 
-    public final void clear(){
-        synchronized(queue){
+    public final void clear() {
+        synchronized (queue) {
             queue.clear();
         }
     }

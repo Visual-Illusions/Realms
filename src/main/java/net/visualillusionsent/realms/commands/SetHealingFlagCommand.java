@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.commands;
@@ -31,10 +31,10 @@ import net.visualillusionsent.realms.zones.permission.PermissionType;
  * @author Jason (darkdiplomat)
  */
 @RCommand(desc = "Sets a zones Healing Flag", name = "healing", usage = "<zone|*> <on|off|inherit>", minParam = 2, maxParam = 2)
-final class SetHealingFlagCommand extends RealmsCommand{
+final class SetHealingFlagCommand extends RealmsCommand {
 
     @Override
-    final void execute(Mod_Caller caller, String[] args){
+    final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
         try {
             ZoneFlag theFlag = ZoneFlag.getZoneFlag(args[1]);

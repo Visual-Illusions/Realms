@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.commands;
@@ -30,10 +30,10 @@ import net.visualillusionsent.utils.TaskManager;
  * @author Jason (darkdiplomat)
  */
 @RCommand(desc = "Creates a new zone", name = "createzone", usage = "<zone> [parent]", minParam = 1, maxParam = 2)
-final class CreateZoneCommand extends RealmsCommand{
+final class CreateZoneCommand extends RealmsCommand {
 
     @Override
-    final void execute(Mod_Caller caller, String[] args){
+    final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
         if (args.length < 2 && user == null) {
             caller.sendError("parent.nospecify");
@@ -47,7 +47,8 @@ final class CreateZoneCommand extends RealmsCommand{
             try {
                 zone = ZoneLists.getZoneByName(args[0]);
             }
-            catch (ZoneNotFoundException znfe) {} // It's good to not be found
+            catch (ZoneNotFoundException znfe) {
+            } // It's good to not be found
             if (zone != null) {
                 caller.sendError("already.exists", args[0]);
                 return;

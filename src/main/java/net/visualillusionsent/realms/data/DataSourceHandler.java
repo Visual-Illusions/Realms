@@ -8,33 +8,33 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.data;
 
-import net.visualillusionsent.realms.lang.DataSourceError;
-import net.visualillusionsent.realms.lang.DataSourceType;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Caller;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsTranslate;
+import net.visualillusionsent.realms.lang.DataSourceError;
+import net.visualillusionsent.realms.lang.DataSourceType;
 import net.visualillusionsent.realms.zones.Zone;
 
 /**
  * @author Jason (darkdiplomat)
  */
-public class DataSourceHandler{
+public class DataSourceHandler {
 
     private final OutputQueue queue;
     private final DataSource source;
     private final OutputThread outThread;
 
-    public DataSourceHandler(DataSourceType type){
+    public DataSourceHandler(DataSourceType type) {
         type.testDriver();
         if (type == DataSourceType.XML) {
             source = new XML_Source();
@@ -58,27 +58,27 @@ public class DataSourceHandler{
         outThread.start();
     }
 
-    public void addToQueue(OutputAction action, Zone zone){
+    public void addToQueue(OutputAction action, Zone zone) {
         queue.add(new DataSourceActionContainer(action, zone, null, null));
     }
 
-    public void addToQueue(OutputAction action, Mod_User user){
+    public void addToQueue(OutputAction action, Mod_User user) {
         queue.add(new DataSourceActionContainer(action, null, user, null));
     }
 
-    public void addToQueue(OutputAction action, Mod_User user, Mod_Item[] items){
+    public void addToQueue(OutputAction action, Mod_User user, Mod_Item[] items) {
         queue.add(new DataSourceActionContainer(action, null, user, items));
     }
 
-    OutputQueue getQueue(){
+    OutputQueue getQueue() {
         return queue;
     }
 
-    private void clearQueue(){
+    private void clearQueue() {
         queue.clear();
     }
 
-    public void killOutput(){
+    public void killOutput() {
         clearQueue();
         outThread.terminate();
         if (source.getType() == DataSourceType.SQLITE) {
@@ -86,7 +86,7 @@ public class DataSourceHandler{
         }
     }
 
-    public void reloadZone(Mod_Caller caller, Zone zone){
+    public void reloadZone(Mod_Caller caller, Zone zone) {
         if (source.reloadZone(zone)) {
             caller.sendMessage(RealmsTranslate.transformMessage("zone.reload.sucess", zone.getName()));
         }

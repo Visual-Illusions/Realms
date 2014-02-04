@@ -8,31 +8,23 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
-import net.visualillusionsent.realms.lang.DataSourceType;
-import net.visualillusionsent.realms.lang.InitializationError;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Server;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.data.DataSourceHandler;
 import net.visualillusionsent.realms.data.OutputAction;
 import net.visualillusionsent.realms.data.RealmsProps;
+import net.visualillusionsent.realms.lang.DataSourceType;
+import net.visualillusionsent.realms.lang.InitializationError;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 import net.visualillusionsent.realms.tasks.AnimalRemover;
 import net.visualillusionsent.realms.tasks.Healer;
@@ -44,8 +36,15 @@ import net.visualillusionsent.realms.zones.Zone;
 import net.visualillusionsent.realms.zones.ZoneLists;
 import net.visualillusionsent.realms.zones.polygon.Point;
 import net.visualillusionsent.realms.zones.polygon.PolygonArea;
-import net.visualillusionsent.utils.ProgramStatus;
-import net.visualillusionsent.utils.VersionChecker;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.CodeSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 /**
  * @author Jason (darkdiplomat)
@@ -88,7 +87,8 @@ public final class RealmsBase {
             CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
             return codeSource.getLocation().toURI().getPath();
         }
-        catch (URISyntaxException ex) {}
+        catch (URISyntaxException ex) {
+        }
         return "plugins/Realms.jar";
     }
 
@@ -253,7 +253,8 @@ public final class RealmsBase {
                 try {
                     jar.close();
                 }
-                catch (IOException e) {}
+                catch (IOException e) {
+                }
             }
             if (ex != null) {
                 throw ex;

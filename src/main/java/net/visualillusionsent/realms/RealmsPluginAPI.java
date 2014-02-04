@@ -8,19 +8,14 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
@@ -36,40 +31,46 @@ import net.visualillusionsent.realms.zones.permission.PermissionType;
 import net.visualillusionsent.realms.zones.polygon.PolygonArea;
 import net.visualillusionsent.realms.zones.polygon.PolygonConstructException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author Jason (darkdiplomat)
  */
-public final class RealmsPluginAPI{
+public final class RealmsPluginAPI {
 
-    public final boolean nameCheck(String zoneName){
-        try{
+    public final boolean nameCheck(String zoneName) {
+        try {
             ZoneLists.getZoneByName(zoneName);
             return true;
         }
-        catch(ZoneNotFoundException ZNFE){}
+        catch (ZoneNotFoundException ZNFE) {
+        }
         return false;
     }
 
-    public final String[] getPlayerZoneNames(Mod_User user){
+    public final String[] getPlayerZoneNames(Mod_User user) {
         String[] herp = new String[]{ "none" };
         List<Zone> zones = ZoneLists.getplayerZones(user);
         List<String> names = new ArrayList<String>();
         Iterator<Zone> zoneIter = zones.iterator();
-        while(zoneIter.hasNext()){
+        while (zoneIter.hasNext()) {
             names.add(zoneIter.next().getName());
         }
         return names.toArray(herp);
     }
 
-    public final boolean changeZoneFlag(String zoneName, String flag, String setting){
-        try{
+    public final boolean changeZoneFlag(String zoneName, String flag, String setting) {
+        try {
             Zone zone = ZoneLists.getZoneByName(zoneName);
             ZoneFlag theSetting = ZoneFlag.getZoneFlag(setting.toUpperCase());
             ZoneFlagTypes theType = ZoneFlagTypes.valueOf(flag.toUpperCase());
-            if(zone.getName().startsWith("EVERYWHERE") && theSetting.equals(ZoneFlag.INHERIT)){
+            if (zone.getName().startsWith("EVERYWHERE") && theSetting.equals(ZoneFlag.INHERIT)) {
                 return false;
             }
-            switch(theType){
+            switch (theType) {
                 case ADVENTURE:
                     zone.setAdventure(theSetting);
                     return true;
@@ -129,23 +130,23 @@ public final class RealmsPluginAPI{
                     return true;
             }
         }
-        catch(InvaildZoneFlagException izte){
+        catch (InvaildZoneFlagException izte) {
             RealmsLogMan.warning("[API] A Plugin requested a ZoneFlag change that was INVAILD!");
         }
-        catch(ZoneNotFoundException znfe){
+        catch (ZoneNotFoundException znfe) {
             RealmsLogMan.warning("[API] A Plugin gave a Zone name that was INVAILD!");
         }
-        catch(IllegalArgumentException iae){
+        catch (IllegalArgumentException iae) {
             RealmsLogMan.warning("[API] A Plugin requested a ZoneFlagType that was INVAILD!");
         }
         return false;
     }
 
-    public final Boolean checkZoneFlag(String zoneName, String flag, boolean absolute){
-        try{
+    public final Boolean checkZoneFlag(String zoneName, String flag, boolean absolute) {
+        try {
             Zone zone = ZoneLists.getZoneByName(zoneName);
             ZoneFlagTypes theType = ZoneFlagTypes.valueOf(flag.toUpperCase());
-            switch(theType){
+            switch (theType) {
                 case ADVENTURE:
                     return absolute ? zone.getAbsoluteAdventure().getValue() : zone.getAdventure();
                 case ANIMALS:
@@ -186,110 +187,110 @@ public final class RealmsPluginAPI{
                     return absolute ? zone.getAbsoluteSuffocate().getValue() : zone.getSuffocate();
             }
         }
-        catch(IllegalArgumentException iae){
+        catch (IllegalArgumentException iae) {
             RealmsLogMan.warning("[API] A plugin requested a ZoneFlagType that was INVAILD!");
         }
-        catch(ZoneNotFoundException znfe){
+        catch (ZoneNotFoundException znfe) {
             RealmsLogMan.warning("[API] A plugin gave a Zone name that was INVAILD!");
         }
         return null;
     }
 
-    public final boolean createZone(String zoneName, String parentName, String world, int dimension){
-        try{
-            if(!ZoneLists.isZone(zoneName)){
+    public final boolean createZone(String zoneName, String parentName, String world, int dimension) {
+        try {
+            if (!ZoneLists.isZone(zoneName)) {
                 Zone parent = ZoneLists.getZoneByName(parentName);
                 new Zone(zoneName, parent, world, dimension);
                 return true;
             }
-            else{
+            else {
                 RealmsLogMan.warning("[API] A Plugin tried to create a Zone with an already existing name!");
             }
         }
-        catch(ZoneNotFoundException e){
+        catch (ZoneNotFoundException e) {
             RealmsLogMan.warning("[API] A plugin gave a Zone name that was INVAILD!");
         }
         return false;
     }
 
-    public final boolean deleteZone(String zoneName){
-        if(zoneName.startsWith("EVERYWHERE")){
+    public final boolean deleteZone(String zoneName) {
+        if (zoneName.startsWith("EVERYWHERE")) {
             return false;
         }
-        try{
+        try {
             Zone zone = ZoneLists.getZoneByName(zoneName);
             zone.delete();
             return true;
         }
-        catch(ZoneNotFoundException znfe){
+        catch (ZoneNotFoundException znfe) {
             RealmsLogMan.warning("[API] A Plugin gave a Zone name that was INVAILD!");
         }
         return false;
     }
 
-    public final boolean setZonePolygon(String zoneName, int ceiling, int floor, List<Integer[]> verticies){
-        if(zoneName.startsWith(zoneName)){
+    public final boolean setZonePolygon(String zoneName, int ceiling, int floor, List<Integer[]> verticies) {
+        if (zoneName.startsWith(zoneName)) {
             return false;
         }
-        try{
+        try {
             Zone zone = ZoneLists.getZoneByName(zoneName);
             String[] verts = (String.valueOf(ceiling) + "," + String.valueOf(floor) + "," + Arrays.toString(verticies.toArray(new Integer[0])).replace("[", "").replace("]", "")).split(",");
             PolygonArea polygon = new PolygonArea(zone, verts);
-            for(Zone check : zone.getParent().getChildren()){
-                if(check.contains(zone)){
+            for (Zone check : zone.getParent().getChildren()) {
+                if (check.contains(zone)) {
                     return false;
                 }
             }
             zone.setPolygon(polygon);
             return true;
         }
-        catch(ZoneNotFoundException znfe){
+        catch (ZoneNotFoundException znfe) {
             RealmsLogMan.warning("[API] A Plugin gave a Zone name that was INVAILD!");
         }
-        catch(PolygonConstructException e){
+        catch (PolygonConstructException e) {
             RealmsLogMan.warning("[API] A Plugin gave bad arguments to create a PolygonArea!");
         }
         return false;
     }
 
-    public final boolean setZonePermission(String zoneName, String userName, String type, boolean grant){
-        try{
+    public final boolean setZonePermission(String zoneName, String userName, String type, boolean grant) {
+        try {
             Zone zone = ZoneLists.getZoneByName(zoneName);
             PermissionType permtype = PermissionType.getTypeFromString(type);
             zone.setPermission(userName, permtype, grant, false);
             return true;
         }
-        catch(InvaildPermissionTypeException e){
+        catch (InvaildPermissionTypeException e) {
             RealmsLogMan.warning("[API] A Plugin requested a PermType change that was INVAILD!");
         }
-        catch(ZoneNotFoundException e){
+        catch (ZoneNotFoundException e) {
             RealmsLogMan.warning("[API] A Plugin gave a Zone name that was INVAILD!");
         }
         return false;
     }
 
-    public final Boolean checkZonePermission(Mod_User user, Mod_Block block, String permType){
-        try{
+    public final Boolean checkZonePermission(Mod_User user, Mod_Block block, String permType) {
+        try {
             PermissionType type = PermissionType.getTypeFromString(permType.toUpperCase());
             Zone zone = ZoneLists.getInZone(block);
             return Boolean.valueOf(zone.permissionCheck(user, type));
         }
-        catch(InvaildPermissionTypeException ipte){
+        catch (InvaildPermissionTypeException ipte) {
             RealmsLogMan.warning("[API] A Plugin requested a PermType that was INVAILD!");
         }
         return null;
     }
 
-    public final Boolean checkZonePermission(Mod_User user, String zoneName, String permType){
-        try{
+    public final Boolean checkZonePermission(Mod_User user, String zoneName, String permType) {
+        try {
             PermissionType type = PermissionType.getTypeFromString(permType.toUpperCase());
             Zone zone = ZoneLists.getZoneByName(zoneName);
             return Boolean.valueOf(zone.permissionCheck(user, type));
         }
-        catch(InvaildPermissionTypeException ipte){
+        catch (InvaildPermissionTypeException ipte) {
             RealmsLogMan.warning("[API] A Plugin requested a PermType that was INVAILD!");
         }
-        catch(ZoneNotFoundException e){
+        catch (ZoneNotFoundException e) {
             RealmsLogMan.warning("[API] A Plugin gave a Zone name that was INVAILD!");
         }
         return null;

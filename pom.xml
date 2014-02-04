@@ -32,6 +32,22 @@
             <email>darkdiplomat@visualillusionsent.net</email>
         </developer>
     </developers>
+    <licenses>
+        <license>
+            <name>GNU General Public License v3</name>
+            <url>http://www.gnu.org/licenses/gpl.html</url>
+            <comments>
+                Realms is free software: you can redistribute it and/or modify
+                it under the terms of the GNU General Public License as published by
+                the Free Software Foundation, either version 3 of the License, or
+                (at your option) any later version.
+
+                This Program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+                without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+                See the GNU General Public License for more details.
+            </comments>
+        </license>
+    </licenses>
     <scm>
         <connection>scm:git:git@github.com/Visual-Illusions/Realms.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Visual-Illusions/Realms.git</developerConnection>

@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.bukkit;
@@ -33,16 +33,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.adminSubs1;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.flagCmdPattern;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.flagVal;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.greetingCmdPattern;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.matchTo;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.permCmdPattern;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.permTypes;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.stranglersPattern;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.subs1;
-import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.zoneNameOrStar;
+import static net.visualillusionsent.realms.commands.RealmsTabCompleteUtil.*;
 
 /**
  * @author Jason (darkdiplomat)
@@ -54,10 +45,10 @@ public class RealmsBukkitCommandExecutor extends VisualIllusionsBukkitPluginInfo
     }
 
     @Override
-    public final boolean onCommand(CommandSender sender, Command cmd, String mainCmd, String[] args){
+    public final boolean onCommand(CommandSender sender, Command cmd, String mainCmd, String[] args) {
         try {
             if (cmd.getName().equals("realms")) {
-                if(args[0].equals("info")){
+                if (args[0].equals("info")) {
                     this.sendInformation(sender);
                 }
                 else {
@@ -82,27 +73,27 @@ public class RealmsBukkitCommandExecutor extends VisualIllusionsBukkitPluginInfo
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String mainCmd, String[] args) {
-        switch(args.length){
+        switch (args.length) {
             case 1:
                 return sender.hasPermission("realms.admin") ? matchTo(args, ArrayUtils.arrayMerge(adminSubs1, subs1)) : matchTo(args, subs1);
             case 2:
-                if(flagCmdPattern.matcher(args[0]).matches() || greetingCmdPattern.matcher(args[0]).matches() || stranglersPattern.matcher(args[0]).matches()){
+                if (flagCmdPattern.matcher(args[0]).matches() || greetingCmdPattern.matcher(args[0]).matches() || stranglersPattern.matcher(args[0]).matches()) {
                     return matchTo(args, zoneNameOrStar());
                 }
-                else if(permCmdPattern.matcher(args[0]).matches()){
+                else if (permCmdPattern.matcher(args[0]).matches()) {
                     return matchTo(args, knownPlayerNames());
                 }
                 return null;
             case 3:
-                if(flagCmdPattern.matcher(args[0]).matches()){
+                if (flagCmdPattern.matcher(args[0]).matches()) {
                     return matchTo(args, flagVal);
                 }
-                else if (permCmdPattern.matcher(args[0]).matches()){
+                else if (permCmdPattern.matcher(args[0]).matches()) {
                     return matchTo(args, permTypes());
                 }
                 return null;
             case 4:
-                if (permCmdPattern.matcher(args[0]).matches()){
+                if (permCmdPattern.matcher(args[0]).matches()) {
                     return matchTo(args, zoneNameOrStar());
                 }
                 return null;
@@ -110,10 +101,10 @@ public class RealmsBukkitCommandExecutor extends VisualIllusionsBukkitPluginInfo
                 return null;
         }
     }
-    
-    private String[] knownPlayerNames(){
+
+    private String[] knownPlayerNames() {
         ArrayList<String> playerNames = new ArrayList<String>();
-        for(OfflinePlayer offlinePlayer :  Bukkit.getServer().getOfflinePlayers()){
+        for (OfflinePlayer offlinePlayer : Bukkit.getServer().getOfflinePlayers()) {
             playerNames.add(offlinePlayer.getName());
         }
         return playerNames.toArray(new String[playerNames.size()]);

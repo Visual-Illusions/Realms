@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.canary;
@@ -23,31 +23,31 @@ import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_ItemEnchantmen
 /**
  * @author Jason (darkdiplomat)
  */
-public final class Canary_ItemEnchantment implements Mod_ItemEnchantment{
+public final class Canary_ItemEnchantment implements Mod_ItemEnchantment {
 
     private final Enchantment enchantment;
 
-    public Canary_ItemEnchantment(Enchantment enchantment){
+    public Canary_ItemEnchantment(Enchantment enchantment) {
         this.enchantment = enchantment;
     }
 
     @Override
-    public final int getId(){
+    public final int getId() {
         return enchantment.getType().getId();
     }
 
     @Override
-    public final int getLevel(){
+    public final int getLevel() {
         return enchantment.getLevel();
     }
 
     @Override
-    public final Enchantment getBaseEnchantment(){
+    public final Enchantment getBaseEnchantment() {
         return enchantment;
     }
 
     @Override
-    public final boolean equals(Object obj){
+    public final boolean equals(Object obj) {
         if (obj instanceof Canary_ItemEnchantment) {
             return enchantment.equals(((Canary_ItemEnchantment) obj).getBaseEnchantment());
         }
@@ -58,7 +58,7 @@ public final class Canary_ItemEnchantment implements Mod_ItemEnchantment{
     }
 
     @Override
-    public final int hashCode(){
+    public final int hashCode() {
         return enchantment.hashCode();
     }
 }

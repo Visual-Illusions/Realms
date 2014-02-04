@@ -8,23 +8,24 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.data;
 
-import java.io.File;
-import java.util.ArrayList;
-import net.visualillusionsent.realms.lang.DataSourceType;
 import net.visualillusionsent.realms.RealmsBase;
+import net.visualillusionsent.realms.lang.DataSourceType;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 import net.visualillusionsent.utils.FileUtils;
 import net.visualillusionsent.utils.PropertiesFile;
 import net.visualillusionsent.utils.UtilityException;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * @author Jason (darkdiplomat)
@@ -41,7 +42,8 @@ public class RealmsProps {
     /**
      * class constructor
      */
-    public RealmsProps() {}
+    public RealmsProps() {
+    }
 
     public synchronized boolean initialize() {
         RealmsLogMan.info("Initializing properties...");
@@ -122,7 +124,7 @@ public class RealmsProps {
 
     /**
      * Adds operable Blocks to list
-     * 
+     *
      * @param ids
      */
     private void addInteractBlock(String[] ids) {
@@ -143,7 +145,7 @@ public class RealmsProps {
 
     /**
      * Adds operable Items to list
-     * 
+     *
      * @param ids
      */
     private void addInteractItem(String[] ids) {
@@ -164,7 +166,7 @@ public class RealmsProps {
 
     /**
      * Adds Commands to Override Command Blocking list
-     * 
+     *
      * @param cmds
      */
     private void addOverrideCommands(String[] cmds) {

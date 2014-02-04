@@ -8,22 +8,21 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.canary;
 
 import net.canarymod.Canary;
 import net.canarymod.commandsys.CommandDependencyException;
-import net.canarymod.plugin.Plugin;
 import net.visualillusionsent.minecraft.plugin.canary.VisualIllusionsCanaryPlugin;
-import net.visualillusionsent.realms.lang.InitializationError;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
+import net.visualillusionsent.realms.lang.InitializationError;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 
 import java.util.logging.Logger;
@@ -31,18 +30,18 @@ import java.util.logging.Logger;
 /**
  * @author Jason (darkdiplomat)
  */
-public final class CanaryRealms extends VisualIllusionsCanaryPlugin{
+public final class CanaryRealms extends VisualIllusionsCanaryPlugin {
     private RealmsBase base;
 
     @Override
-    public void disable(){
+    public void disable() {
         if (RealmsBase.isLoaded()) {
             base.terminate();
         }
     }
 
     @Override
-    public boolean enable(){
+    public boolean enable() {
         super.enable();
 
         try {

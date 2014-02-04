@@ -8,26 +8,27 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.zones.polygon;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Block;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Entity;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.RealmsTranslate;
 import net.visualillusionsent.realms.zones.Zone;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author impact
@@ -261,12 +262,14 @@ public final class PolygonArea {
         return this.contains(point, true);
     }
 
-    /***************************************************************************
+    /**
+     * ************************************************************************
      * INPOLY.C
      * Copyright (c) 1995-1996 Galacticomm, Inc. Freeware source code.
      * http://www.visibone.com/inpoly/inpoly.c
      * 6/19/95 - Bob Stein & Craig Yap stein@visibone.com craig@cse.fau.edu
-     ***************************************************************************/
+     * *************************************************************************
+     */
     public final static boolean contains(List<Point> points, Point p, int floor, int ceiling) {
         if (points == null) {
             return false;
@@ -306,7 +309,7 @@ public final class PolygonArea {
                 }
             }
             if (newPoint.x < p.x == p.x <= oldPoint.x /* edge "open" at left end */
-                && (p.z - z1) * (x2 - x1) < (z2 - z1) * (p.x - x1)) {
+                    && (p.z - z1) * (x2 - x1) < (z2 - z1) * (p.x - x1)) {
                 inside = !inside;
             }
             oldPoint = newPoint;
@@ -367,6 +370,7 @@ public final class PolygonArea {
      *
      * @param user
      * @param block
+     *
      * @return whether the vertex is valid
      */
     public final boolean validVertex(Mod_User user, Mod_Block block) {
@@ -395,6 +399,7 @@ public final class PolygonArea {
      * Checks whether the working vertices make a valid polygon
      *
      * @param user
+     *
      * @return whether the polygon makes a valid polygon
      */
     public final boolean validPolygon(Mod_User user) {

@@ -8,11 +8,11 @@
  * the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with Realms.
+ * You should have received a copy of the GNU General Public License along with this program.
  * If not, see http://www.gnu.org/licenses/gpl.html.
  */
 package net.visualillusionsent.realms.commands;
@@ -31,9 +31,9 @@ import net.visualillusionsent.realms.zones.permission.PermissionType;
  * @author Jason (darkdiplomat)
  */
 @RCommand(desc = "Denies a player a permission in a zone", name = "denyperm", usage = "<player> <permission> <zone|*> ['OVERRIDE']", minParam = 3, maxParam = 4)
-final class DenyPermissionCommand extends RealmsCommand{
+final class DenyPermissionCommand extends RealmsCommand {
 
-    final void execute(Mod_Caller caller, String[] args){
+    final void execute(Mod_Caller caller, String[] args) {
         Mod_User user = caller.isConsole() ? null : (Mod_User) caller;
         try {
             PermissionType type = PermissionType.getTypeFromString(args[1]);
