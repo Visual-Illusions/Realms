@@ -17,10 +17,10 @@
  */
 package net.visualillusionsent.realms.data;
 
-import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.lang.DataSourceType;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 import net.visualillusionsent.utils.FileUtils;
+import net.visualillusionsent.utils.JarUtils;
 import net.visualillusionsent.utils.PropertiesFile;
 import net.visualillusionsent.utils.UtilityException;
 
@@ -65,7 +65,7 @@ public class RealmsProps {
         if (!props.exists()) { // Create a new one if non-existent
             RealmsLogMan.info("Creating default properties...");
             try {
-                FileUtils.cloneFileFromJar(new File(RealmsBase.getJarPath()).getAbsolutePath(), "resources/default_config.ini", props_Path);
+                FileUtils.cloneFileFromJar(new File(JarUtils.getJarPath(this.getClass())).getAbsolutePath(), "resources/default_config.ini", props_Path);
             }
             catch (UtilityException ue) {
                 RealmsLogMan.severe("Failed to create Properties..." + ue.getMessage());

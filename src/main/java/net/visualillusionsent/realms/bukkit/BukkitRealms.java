@@ -19,6 +19,7 @@ package net.visualillusionsent.realms.bukkit;
 
 import net.visualillusionsent.minecraft.plugin.VisualIllusionsMinecraftPlugin;
 import net.visualillusionsent.minecraft.plugin.bukkit.VisualIllusionsBukkitPlugin;
+import net.visualillusionsent.realms.Realms;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.RealmsTranslate;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
 /**
  * @author Jason (darkdiplomat)
  */
-public class BukkitRealms extends VisualIllusionsBukkitPlugin {
+public class BukkitRealms extends VisualIllusionsBukkitPlugin implements Realms {
 
     private RealmsBase base;
 
@@ -67,7 +68,7 @@ public class BukkitRealms extends VisualIllusionsBukkitPlugin {
     public final void onEnable() {
         super.onEnable();
 
-        base = new RealmsBase(new Bukkit_Server(this, getServer(), getLogger()));
+        base = new RealmsBase(this, new Bukkit_Server(this, getServer(), getLogger()));
         RealmsCommandHandler.initialize();
         RealmsTranslate.initialize();
         new Realms_BukkitListener(this);

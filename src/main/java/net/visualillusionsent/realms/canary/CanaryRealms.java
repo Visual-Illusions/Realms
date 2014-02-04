@@ -20,17 +20,16 @@ package net.visualillusionsent.realms.canary;
 import net.canarymod.Canary;
 import net.canarymod.commandsys.CommandDependencyException;
 import net.visualillusionsent.minecraft.plugin.canary.VisualIllusionsCanaryPlugin;
+import net.visualillusionsent.realms.Realms;
 import net.visualillusionsent.realms.RealmsBase;
 import net.visualillusionsent.realms.commands.RealmsCommandHandler;
 import net.visualillusionsent.realms.lang.InitializationError;
 import net.visualillusionsent.realms.logging.RealmsLogMan;
 
-import java.util.logging.Logger;
-
 /**
  * @author Jason (darkdiplomat)
  */
-public final class CanaryRealms extends VisualIllusionsCanaryPlugin {
+public final class CanaryRealms extends VisualIllusionsCanaryPlugin implements Realms {
     private RealmsBase base;
 
     @Override
@@ -45,7 +44,7 @@ public final class CanaryRealms extends VisualIllusionsCanaryPlugin {
         super.enable();
 
         try {
-            base = new RealmsBase(new Canary_Server(this, Canary.getServer(), logger));
+            base = new RealmsBase(this, new Canary_Server(this, Canary.getServer(), logger));
         }
         catch (InitializationError interr) {
             RealmsLogMan.stacktrace(interr);
@@ -62,11 +61,4 @@ public final class CanaryRealms extends VisualIllusionsCanaryPlugin {
         }
         return true;
     }
-
-    /* VIMCPlugin */
-    @Override
-    public Logger getPluginLogger() {
-        return logger;
-    }
-    //
 }

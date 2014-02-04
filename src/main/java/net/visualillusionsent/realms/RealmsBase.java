@@ -37,14 +37,8 @@ import net.visualillusionsent.realms.zones.ZoneLists;
 import net.visualillusionsent.realms.zones.polygon.Point;
 import net.visualillusionsent.realms.zones.polygon.PolygonArea;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.List;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 /**
  * @author Jason (darkdiplomat)
@@ -53,43 +47,32 @@ public final class RealmsBase {
 
     private static RealmsBase $;
     private final Mod_Server server;
-    private final String jar_Path = genJarPath();
+    private final Realms realms;
     private final DataSourceHandler source_handler;
     private final RealmsProps props;
     private SynchronizedTask mobdes, animaldes, healer, restrictdam;
     private final HashMap<Mod_User, Wand> wands = new HashMap<Mod_User, Wand>();
     private final HashMap<String, Mod_Item[]> inventories = new HashMap<String, Mod_Item[]>();
-    private String version;
-    private String build;
     private static boolean loaded;
 
-    public RealmsBase(Mod_Server server) {
+    public RealmsBase(Realms realms, Mod_Server server) {
         if ($ == null) {
             $ = this;
+            this.realms = realms;
             this.server = server;
-            RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initializing..."));
+            RealmsLogMan.info("Realms v".concat(realms.getPluginVersion()).concat(" initializing..."));
             props = new RealmsProps();
             if (!props.initialize()) {
                 throw new InitializationError("Properties failed to initialize...");
             }
             source_handler = new DataSourceHandler(DataSourceType.valueOf(props.getStringVal("datasource").toUpperCase()));
             initializeThreads();
-            RealmsLogMan.info("Realms v".concat(getVersion()).concat(" initialized."));
+            RealmsLogMan.info("Realms v".concat(realms.getPluginVersion()).concat(" initialized."));
             loaded = true;
         }
         else {
             throw new IllegalStateException("RealmsBase already initialized");
         }
-    }
-
-    private final String genJarPath() { // For when the jar isn't Realms.jar
-        try {
-            CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
-            return codeSource.getLocation().toURI().getPath();
-        }
-        catch (URISyntaxException ex) {
-        }
-        return "plugins/Realms.jar";
     }
 
     private final void initializeThreads() {
@@ -126,23 +109,23 @@ public final class RealmsBase {
         RealmsLogMan.killLogger();
     }
 
-    public final static boolean isLoaded() {
+    public static boolean isLoaded() {
         return loaded;
     }
 
-    public final static DataSourceHandler getDataSourceHandler() {
+    public static DataSourceHandler getDataSourceHandler() {
         return $.source_handler;
     }
 
-    public final static Mod_Server getServer() {
+    public static Mod_Server getServer() {
         return $.server;
     }
 
-    public final static RealmsProps getProperties() {
+    public static RealmsProps getProperties() {
         return $.props;
     }
 
-    public final static Wand getPlayerWand(Mod_User user) {
+    public static Wand getPlayerWand(Mod_User user) {
         if ($.wands.containsKey(user)) {
             return $.wands.get(user);
         }
@@ -151,7 +134,7 @@ public final class RealmsBase {
         return wand;
     }
 
-    public final static void removePlayerWand(Mod_User user) {
+    public static void removePlayerWand(Mod_User user) {
         synchronized ($.wands) {
             if ($.wands.containsKey(user)) {
                 $.wands.get(user).softReset();
@@ -160,13 +143,12 @@ public final class RealmsBase {
         }
     }
 
-    public final static void playerMessage(Mod_User user) {
+    public static void playerMessage(Mod_User user) {
         List<Zone> oldZoneList = ZoneLists.getplayerZones(user);
         Zone everywhere = ZoneLists.getEverywhere(user);
         List<Zone> newZoneList = ZoneLists.getZonesPlayerIsIn(everywhere, user);
         if (oldZoneList.isEmpty()) {
             ZoneLists.addplayerzones(user, newZoneList);
-            return;
         }
         else if (oldZoneList.hashCode() != newZoneList.hashCode()) {
             for (Zone zone : oldZoneList) {
@@ -183,7 +165,7 @@ public final class RealmsBase {
         }
     }
 
-    public final static void handleInventory(Mod_User user, boolean store) {
+    public static void handleInventory(Mod_User user, boolean store) {
         if (store) {
             if (!$.inventories.containsKey(user.getName())) {
                 Mod_Item[] items = user.getInventoryContents();
@@ -199,71 +181,23 @@ public final class RealmsBase {
         }
     }
 
-    public final static void storeInventory(String name, Mod_Item[] items) {
+    public static void storeInventory(String name, Mod_Item[] items) {
         if (!$.inventories.containsKey(name)) {
             $.inventories.put(name, items);
         }
     }
 
-    public final static String getVersion() {
-        if ($.version == null) {
-            $.generateVersion();
-        }
-        return $.version.concat("-jnks").concat($.build);
+    public static String getVersion() {
+        return $.realms.getPluginVersion();
     }
 
-    public final static String getRawVersion() {
-        if ($.version == null) {
-            $.generateVersion();
-        }
-        return $.version;
+    public static String getRawVersion() {
+
+        //TODO
+        return $.realms.getPluginVersion();
     }
 
-    private void generateVersion() {
-        try {
-            Manifest manifest = getManifest();
-            Attributes mainAttribs = manifest.getMainAttributes();
-            version = mainAttribs.getValue("Version");
-            build = mainAttribs.getValue("Build");
-        }
-        catch (Exception e) {
-            RealmsLogMan.warning(e.getMessage());
-        }
-        if (version == null) {
-            version = "UNKNOWN";
-        }
-        else if (build == null) {
-            build = "UNKNOWN";
-        }
-    }
-
-    private final Manifest getManifest() throws Exception {
-        Manifest toRet = null;
-        Exception ex = null;
-        JarFile jar = null;
-        try {
-            jar = new JarFile(jar_Path);
-            toRet = jar.getManifest();
-        }
-        catch (Exception e) {
-            ex = e;
-        }
-        finally {
-            if (jar != null) {
-                try {
-                    jar.close();
-                }
-                catch (IOException e) {
-                }
-            }
-            if (ex != null) {
-                throw ex;
-            }
-        }
-        return toRet;
-    }
-
-    public final static String[] commandAdjustment(String[] args, int adjust) {
+    public static String[] commandAdjustment(String[] args, int adjust) {
         String[] newArgs = new String[0];
         if (args.length > adjust) {
             newArgs = new String[args.length - adjust];
@@ -277,7 +211,7 @@ public final class RealmsBase {
         return newArgs;
     }
 
-    public final static Point throwBack(Zone zone, Point oPoint) {
+    public static Point throwBack(Zone zone, Point oPoint) {
         PolygonArea area = zone.getPolygon();
         Point temp = oPoint.clone();
         if (area != null) {
@@ -296,9 +230,5 @@ public final class RealmsBase {
             temp.y = $.server.getHighestY(temp.x, temp.z, zone.getWorld(), zone.getDimension());
         }
         return temp;
-    }
-
-    public final static String getJarPath() {
-        return $.jar_Path;
     }
 }

@@ -10,7 +10,6 @@
     <inceptionYear>2012</inceptionYear>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <build.number>0</build.number>
         <canary.main.class>${project.groupId}.${project.artifactId}.canary.CanaryRealms</canary.main.class>
         <bukkit.main.class>${project.groupId}.${project.artifactId}.bukkit.BukkitRealms</bukkit.main.class>
         <vimcplugin.version>1.1.0-SNAPSHOT</vimcplugin.version>
@@ -20,6 +19,7 @@
         <canarylib.version>1.0-RC-4-SNAPSHOT</canarylib.version>
         <status.url>http://status.visualillusionsent.net/</status.url>
         <devs>darkdiplomat</devs>
+        <build.number/>
     </properties>
     <organization>
         <name>Visual Illusions Entertainment</name>
