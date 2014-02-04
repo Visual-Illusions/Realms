@@ -23,7 +23,7 @@ import net.visualillusionsent.utils.LocaleHelper;
 /**
  * @author Jason (darkdiplomat)
  */
-public final class RealmsTranslate extends LocaleHelper{
+public final class RealmsTranslate extends LocaleHelper {
 
     private static final RealmsTranslate instance;
 
@@ -31,23 +31,22 @@ public final class RealmsTranslate extends LocaleHelper{
         instance = new RealmsTranslate();
     }
 
-    private RealmsTranslate(){
+    private RealmsTranslate() {
         super(false, null, RealmsBase.getProperties().getStringVal("lang.locale"));
     }
 
-    public final static String transMessage(String key){
+    public final static String transMessage(String key) {
         return colorize(instance.systemTranslate(key));
     }
 
-    public final static String transformMessage(String key, Object... args){
+    public final static String transformMessage(String key, Object... args) {
         return colorize(instance.systemTranslate(key, args));
     }
 
-    private final static String colorize(String msg){
-        return msg.replaceAll("\\$c", ChatFormat.MARKER.stringValue());
+    private final static String colorize(String msg) {
+        return msg.replaceAll("~", ChatFormat.MARKER.stringValue());
     }
 
-    public static void initialize(){ // Just meant to help initialize the class so there isnt a delay later
-        ;
+    public static void initialize() { // Just meant to help initialize the class so there isnt a delay later
     }
 }

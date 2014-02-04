@@ -1,99 +1,87 @@
-# This file NEEDS to be in UTF-8 format!
-# This file is also the default Language file and needs to be included
+;# {name} - English (US) Language File
+;# Copyright © {copyright.years} Visual Illusions Entertainment
+;# Licensed under the {gpl.type}
+;# This file NEEDS to be in UTF-8 format!
+;# This file is also the default Language file and needs to be included
+;# DO NOT MODIFY THIS FILE! clone the file to create new translations.
+;# Saving the new file as <localeCode>.lang
 enter.deny=You do not have permission to enter that zone.
-already.exists=A zone with the name $c9"{0}"$cC already exists.
-zoning.error=You do not have $cEZONING$cC permission within $c9{0}.
+already.exists=A zone with the name ~9"{0}"~C already exists.
+zoning.error=You do not have ~EZONING~C permission within ~9{0}.
 zname.start.every=A new zone cannot start with "EVERYWHERE".
-zname.null=Zones cannot be named $cENULL$cC.
-zname.spec.chars=$c9ZONE NAMES$cC cannot contain $cE"SPECIAL CHARACTERS"$cC.
+zname.null=Zones cannot be named ~ENULL~C.
+zname.spec.chars=~9ZONE NAMES~C cannot contain ~E"SPECIAL CHARACTERS"~C.
 parent.nospecify=You must specify a Parent Zone.
-zone.create=$cBCreated Zone: $c9{0}$cB within Parent: $c9{1}.
-wand.use=$cBUse $c5"/realms wand edit $c9{0}$c5"$cB to edit this zone''s $cAPolygon$cB.
-delegate.fail=You do not have permission to delete $cE{0}$cC permissions in the zone $c9{1}$cC.
-delete.perm.success=$cBDeleted $c6{0}''s$cB permissions to $cE{1}$cB in $c9{2}$cB.
+zone.create=~BCreated Zone: ~9{0}~B within Parent: ~9{1}.
+wand.use=~BUse ~5"/realms wand edit ~9{0}~5"~B to edit this zone''s ~APolygon~B.
+delegate.fail=You do not have permission to delete ~E{0}~C permissions in the zone ~9{1}~C.
+delete.perm.success=~BDeleted ~6{0}''s~B permissions to ~E{1}~B in ~9{2}~B.
 star.invalid=You must be in game to use the * identifier.
-delete.everywhere=You cannot delete any of the $c9"EVERYWHERE"$cC zones.
+delete.everywhere=You cannot delete any of the ~9"EVERYWHERE"~C zones.
 delete.zone.fail=You do not have permission to delete this zone.
-delete.zone=$cBDeleted Zone: "$c9{0}$cB", moved all children to parent zone.
-delegate.perm.fail=You do not have permission to $cADELEGATE $cE{0}$cC permissions in the zone $c9{1}$cC.
+delete.zone=~BDeleted Zone: "~9{0}~B", moved all children to parent zone.
+delegate.perm.fail=You do not have permission to ~ADELEGATE ~E{0}~C permissions in the zone ~9{1}~C.
 player.name.commas=Player names cannot contain commas!
-delegate.warning1=$c4WARNING! $c6EVERYBODY (including admins) $cCis in the default group.
+delegate.warning1=~4WARNING! ~6EVERYBODY (including admins) ~Cis in the default group.
 delegate.warning2=Did you really want to do this?
 delegate.warning3=For exceptions, you probably want to use the OVERRIDE keyword. Example:
-delegate.warning4=$c9/realms {0} <player/group> {1} {2} OVERRIDE
-delegate.perm={0} $c6{1} $cE{2}$cB permission within zone $c9{3}$cB.
+delegate.warning4=~9/realms {0} <player/group> {1} {2} OVERRIDE
+delegate.perm={0} ~6{1} ~E{2}~B permission within zone ~9{3}~B.
 realms.admin.fail=You need to be a Realms Admin to use this command!
-grant.all.perms=$cBGranted you "$cEALL$cB" permission to zone "$c9{0}$cB".
+grant.all.perms=~BGranted you "~EALL~B" permission to zone "~9{0}~B".
 cmd.unknown=Realms command not understood.
 cmd.specify=Please specify one of: {0}
 no.console=You can not use this command from the console.
 no.bukkit=You can only use this command from Bukkit Servers.
 no.canary=You can only use this command from Canary Servers.
-zone.reload.wait=$cBPlease wait while Zone is processed...
-zone.reload.success={0}BZone: "$c9{1}$cB" reloaded successfully.
-zone.reload.fail=Failed to reload Zone: "$c9{0}$cC".
-zone.perm.fail=You do not have permission to set "$cE{0}$cC" within "$c9{1}$cC".
-zoneflag.set=$cBSetting "$cE{0}$cB" to "{1}$cB" in zone: "$c9{2}$cB".
-zoneflag.set.fail=You cannot set "$cE{0}$cC" to "$cDINHERIT$cC" in the "$c9EVERYWHERE$cC" zone.
-zoneflag.invalid=Invaild "$cE{0}$cC" mode.
-creative.adventure.noset=You cannot set $cE{0}$cC on zone already set to $cE{1}$cC.
-msg.rmv=$cE{0}$c4 removed.
-msg.set=$cE{0}$cB set to $cR{1}
+zone.reload.wait=~BPlease wait while Zone is processed...
+zone.reload.success={0}BZone: "~9{1}~B" reloaded successfully.
+zone.reload.fail=Failed to reload Zone: "~9{0}~C".
+zone.perm.fail=You do not have permission to set "~E{0}~C" within "~9{1}~C".
+zoneflag.set=~BSetting "~E{0}~B" to "{1}~B" in zone: "~9{2}~B".
+zoneflag.set.fail=You cannot set "~E{0}~C" to "~DINHERIT~C" in the "~9EVERYWHERE~C" zone.
+zoneflag.invalid=Invaild "~E{0}~C" mode.
+creative.adventure.noset=You cannot set ~E{0}~C on zone already set to ~E{1}~C.
+msg.rmv=~E{0}~4 removed.
+msg.set=~E{0}~B set to ~R{1}
 wand.sub.missing1=No /realms wand subcommand provided.
 wand.sub.missing2=Please specify one of:
-wand.cancel=$cBYour wand has been reset.
-wand.pylons.removed=$cBAll pylons removed.
-wand.save.nopylons=$cBZone saved with no pylons. Wand back in "$cEgetInfo$cB" mode.
+wand.cancel=~BYour wand has been reset.
+wand.pylons.removed=~BAll pylons removed.
+wand.save.nopylons=~BZone saved with no pylons. Wand back in "~EgetInfo~B" mode.
 polygon.bad=Invaild Polygon...
-wand.save=$c6Zone complete!$cB Wand back in "$cEgetInfo$cB" mode.
+wand.save=~6Zone complete!~B Wand back in "~EgetInfo~B" mode.
 wand.not.editing=You are not currently editing a zone.
 zone.no.verticies=The zone does not have any vertices.
 wand.not.default=You must finish what you are doing first (or cancel it).
 wand.no.name=No zone name provided.
-everywhere.noedit=You cannot edit any of the "$c9EVERYWHERE$cC" zones.
+everywhere.noedit=You cannot edit any of the "~9EVERYWHERE~C" zones.
 zone.inedit=That zone is already being edited.
 zone.world.error=You need to be in the same world as the zone.
 zone.dimension.error=You need to be in the same dimension as the zone.
-wand.edit.ready=$cBYour wand is now ready to edit "$c9{0}$cB".
-zone.floor.set=$cBSet zone: "$c9{0}$cB" floor to "$cE{1}$cB".
-zone.ceiling.set=$cBSet zone: "$c9{0}$cB" ceiling to "$cE{1}$cB".
-zone.floor.invalid=Could not understand floor value: $cE{0}
-zone.ceiling.invalid=Could not understand ceiling value: $cE{0}
-wand.setfcmode=$cBYour wand is now in set zone "&cE{0}$cB" mode for zone $c9{1}$cB.
+wand.edit.ready=~BYour wand is now ready to edit "~9{0}~B".
+zone.floor.set=~BSet zone: "~9{0}~B" floor to "~E{1}~B".
+zone.ceiling.set=~BSet zone: "~9{0}~B" ceiling to "~E{1}~B".
+zone.floor.invalid=Could not understand floor value: ~E{0}
+zone.ceiling.invalid=Could not understand ceiling value: ~E{0}
+wand.setfcmode=~BYour wand is now in set zone "&cE{0}~B" mode for zone ~9{1}~B.
 wand.sub.unknown=Realms Wand command not understood.
-wand.define=$cBWand mode set to define $c9{0}
+wand.define=~BWand mode set to define ~9{0}
 wand.nozone=Wand has no zone selected! Resetting wand.
 wand.click.world.invalid=You need to be in the same world as the zone! Resetting wand.
 wand.click.dim.invalid=You need to be in the same dimension as the zone! Resetting wand.
 pylon.chest=You may not place a pylon where there''s a chest! Remove it first.
-vertex.remove=$cBRemoving vertex at $c7{0}$cB,$c7{1}$cB.
-vertex.add=$cBAdded vertex at $c7{0}$cB,$c7{1}$cB.
+vertex.remove=~BRemoving vertex at ~7{0}~B,~7{1}~B.
+vertex.add=~BAdded vertex at ~7{0}~B,~7{1}~B.
 wand.mode.invalid=Wand mode invalid. Reseting wand now.
-polygon.not.contain=Block not contained within $c9{0}$cC.
-polygon.sibling.contain=Block already claimed by a sibling zone: $c9{0}$cC.
+polygon.not.contain=Block not contained within ~9{0}~C.
+polygon.sibling.contain=Block already claimed by a sibling zone: ~9{0}~C.
 vertex.exists=Warning: This column of blocks is already in the vertex list.
-sibling.move=$cBMoving $c9{0}$cB into child list of current working zone.
+sibling.move=~BMoving ~9{0}~B into child list of current working zone.
 line.intersect=Warning: Polygon line intersection! Attempting reorganization...
 reorg.fail=Warning: Reorganization failed...
 polygon.no.contain=New zone boundries do not contain all zone children.
-block.dual.claim=A block enclosed by this polygon is already claimed by $c9{0}$cC.
-invaild.perm.ex=The type $c6"{0}"$cC is not valid.
-zone.nfe=The zone $c6"{0}"$cC could not be found.
+block.dual.claim=A block enclosed by this polygon is already claimed by ~9{0}~C.
+invaild.perm.ex=The type ~6"{0}"~C is not valid.
+zone.nfe=The zone ~6"{0}"~C could not be found.
 not.edit.zone=Not editing a zone.
-##################################################
-# © Copyright 2012-2013 Visual Illusions Entertainment. 
-# 
-# This file is part of Realms.
-#
-# Realms is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# Realms is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with Realms.
-# If not, see http://www.gnu.org/licenses/gpl.html
-####################################################
