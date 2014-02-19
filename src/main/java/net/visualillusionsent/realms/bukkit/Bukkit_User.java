@@ -22,6 +22,8 @@ import net.visualillusionsent.minecraft.plugin.ChatFormat;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_Item;
 import net.visualillusionsent.minecraft.server.mod.interfaces.Mod_User;
 import net.visualillusionsent.realms.RealmsTranslate;
+import net.visualillusionsent.realms.logging.RLevel;
+import net.visualillusionsent.realms.logging.RealmsLogMan;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -87,8 +89,13 @@ public final class Bukkit_User extends Bukkit_Entity implements Mod_User {
 
     @Override
     public final boolean isInGroup(String group) {
-        if (permission != null && permission.hasGroupSupport()) {
-            return permission.playerInGroup(player, group) || permission.playerInGroup((World) null, player.getName(), group);
+        if (permission != null && permission.hasGroupSupport() && group != null && !group.isEmpty()) {
+            try {
+                return permission.playerInGroup(player, group) || permission.playerInGroup((String) null, player.getName(), group);
+            }
+            catch (Exception ex) {
+                RealmsLogMan.log(RLevel.GENERAL, "Bukkit_User#isInGroup Failure. Defaulting to isOp check.", ex);
+            }
         }
         return player.isOp();
     }
