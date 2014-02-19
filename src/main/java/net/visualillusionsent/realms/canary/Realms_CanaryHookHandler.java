@@ -84,8 +84,8 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_DESTROY. Caused by: " + ex.getClass().getName());
-            RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_BREAK. Caused by: " + ex.getMessage());
+            RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
             hook.setCanceled();
@@ -110,7 +110,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_LEFTCLICK. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_LEFTCLICK. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -133,7 +133,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PHYSICS. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_PHYSICS. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -165,7 +165,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
                     + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PLACE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_PLACE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -204,7 +204,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_RIGHTCLICK. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_RIGHTCLICK. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -264,7 +264,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DAMAGE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ DAMAGE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -282,7 +282,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsBase.removePlayerWand(user);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DEATH. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ DEATH. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -297,7 +297,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsBase.removePlayerWand(user);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DISCONNECT. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ DISCONNECT. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -315,7 +315,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.DISPENSE, "Block: '" + hook.getDispenser().toString() + "' Zone: '" + zone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DISPENSE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ DISPENSE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         return deny;
@@ -334,7 +334,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.EAT, "Player: '" + hook.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ EAT. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ EAT. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -355,7 +355,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.ENDERMAN, "'Enderman' attempted to place Block: '" + (hook.getBlock() != null ? hook.getBlock().toString() : "NULL") + "' in Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ENDERMAN_DROP. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ENDERMAN_DROP. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -376,7 +376,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.ENDERMAN, "Block: '" + (hook.getBlock() != null ? hook.getBlock().toString() : "NULL") + "' Zone: '" + zone.getName() + "' Result: '" + (deny ? "Denied'" : "Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ENDERMAN_DROP. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ENDERMAN_DROP. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -399,7 +399,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ENTITY_RIGHTCLICK. Cause by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ENTITY_RIGHTCLICK. Cause by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -425,7 +425,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.EXPLOSION, "BaseBlock: " + hook.getBlock().toString() + " Entity: " + (hook.getEntity() != null ? hook.getEntity().getName() : "UNKNOWN"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ EXPLOSION. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ EXPLOSION. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -450,7 +450,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.FLOW, "Zone1: " + zone1.getName() + " Result: '" + (!zone1.getFlow() ? "Denied'" : "Allowed' Zone2: " + zone2.getName() + " Result: '" + (zone2.getFlow() ? "Allowed'" : "Denied'")));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ FLOW. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ FLOW. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -475,7 +475,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ FOOD_EXHAUSTIONCHANGE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ FOOD_EXHAUSTIONCHANGE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         hook.setNewValue(result);
@@ -497,7 +497,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
                 RealmsLogMan.log(RLevel.STARVATION, "Player: '" + hook.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Result: " + (zone.getStarve() ? "'Allowed'" : "'Denied'"));
             }
             catch (Exception ex) {
-                RealmsLogMan.severe("An unexpected exception occured @ FOOD_EXHAUSTIONCHANGE. Caused by: " + ex.getClass().getName());
+                RealmsLogMan.severe("An unexpected exception occurred @ FOOD_EXHAUSTIONCHANGE. Caused by: " + ex.getClass().getName());
                 RealmsLogMan.stacktrace(ex);
             }
         }
@@ -520,7 +520,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
                 RealmsLogMan.log(RLevel.STARVATION, "Player: '" + hook.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Result: " + (zone.getStarve() ? "'Allowed'" : "'Denied'"));
             }
             catch (Exception ex) {
-                RealmsLogMan.severe("An unexpected exception occured @ FOOD_EXHAUSTIONCHANGE. Caused by: " + ex.getClass().getName());
+                RealmsLogMan.severe("An unexpected exception occurred @ FOOD_EXHAUSTIONCHANGE. Caused by: " + ex.getClass().getName());
                 RealmsLogMan.stacktrace(ex);
             }
         }
@@ -540,7 +540,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             deny = !zone.permissionCheck(user, PermissionType.DESTROY);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ HANGINGENTITY_DESTROY. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ HANGINGENTITY_DESTROY. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -570,7 +570,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ IGNITE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ IGNITE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -591,7 +591,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.ITEM_DROP, "Player: '" + hook.getPlayer().getName() + "' Zone: '" + zone.getName() + "' Drop Result: " + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ITEM_DROP. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ITEM_DROP. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -614,7 +614,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ITEM_USE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ITEM_USE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -642,7 +642,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ MOB_SPAWN. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ MOB_SPAWN. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -665,7 +665,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ MOB_TARGET. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ MOB_TARGET. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -688,7 +688,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.PISTONS, "Zone: '" + piszone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PISTON_EXTEND. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PISTON_EXTEND. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -711,7 +711,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.PISTONS, "Zone: '" + piszone.getName() + "' Result: " + (deny ? "'Denied'" : "'Allowed'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PISTON_RETRACT. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PISTON_RETRACT. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -791,7 +791,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsBase.playerMessage(user);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PLAYER_MOVE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PLAYER_MOVE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -827,7 +827,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             RealmsLogMan.log(RLevel.PORTAL_USE, "Player: '" + hook.getPlayer().getName() + "' Zone From: '" + zFrom.getName() + "' Zone To: '" + zTo.getName() + "' Result: " + (!deny ? "'Allowed'" : "'Denied'"));
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PORTAL_USE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PORTAL_USE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -850,7 +850,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PORTAL_USE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PORTAL_USE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
         if (deny) {
@@ -922,7 +922,7 @@ public final class Realms_CanaryHookHandler implements PluginListener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ VEHICLE_MOVE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ VEHICLE_MOVE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }

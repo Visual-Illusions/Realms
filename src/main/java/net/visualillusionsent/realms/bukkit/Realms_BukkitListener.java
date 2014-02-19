@@ -90,8 +90,8 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_BREAK. Caused by: " + ex.getMessage());
-            RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_BREAK. Caused by: " + ex.getMessage());
+            RealmsLogMan.stacktrace(ex);
         }
     }
 
@@ -114,8 +114,8 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_DESTORY. Caused by: " + ex.getMessage());
-            RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_DESTORY. Caused by: " + ex.getMessage());
+            RealmsLogMan.stacktrace(ex);
         }
     }
 
@@ -135,7 +135,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PHYSICS. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_PHYSICS. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -165,7 +165,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_PLACE. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_PLACE. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -200,8 +200,8 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ BLOCK_RIGHTCLICK. Caused by: " + ex.getMessage());
-            RealmsLogMan.log(RLevel.STACKTRACE, "StackTrace: ", ex);
+            RealmsLogMan.severe("An unexpected exception occurred @ BLOCK_RIGHTCLICK. Caused by: " + ex.getMessage());
+            RealmsLogMan.stacktrace(ex);
         }
     }
 
@@ -230,7 +230,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(!allow);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ COMMAND_CHECK. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ COMMAND_CHECK. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -264,7 +264,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DAMAGE_FROMENTITY. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ DAMAGE_FROMENTITY. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -312,7 +312,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DAMAGE_FROMENVIRONMENT. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ DAMAGE_FROMENVIRONMENT. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -330,7 +330,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DEATH. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ DEATH. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -346,7 +346,7 @@ public final class Realms_BukkitListener implements Listener {
             RealmsBase.handleInventory(user, false);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DISCONNECT. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ DISCONNECT. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -365,7 +365,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ DISPENSE. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ DISPENSE. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -390,7 +390,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ EAT. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ EAT. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -411,7 +411,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ENDERMAN. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ ENDERMAN. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -443,7 +443,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ENTITY_RIGHTCLICK. Cause by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ ENTITY_RIGHTCLICK. Cause by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -466,7 +466,7 @@ public final class Realms_BukkitListener implements Listener {
             RealmsLogMan.log(RLevel.EXPLOSION, "Base Location: " + event.getLocation().toString() + " Entity: " + event.getEntityType().name());
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ EXPLOSION. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ EXPLOSION. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -492,7 +492,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ FLOW. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ FLOW. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -514,7 +514,7 @@ public final class Realms_BukkitListener implements Listener {
                 event.setCancelled(deny);
             }
             catch (Exception ex) {
-                RealmsLogMan.severe("An unexpected exception occured @ FOOD_LEVELCHANGE. Caused by: " + ex.getMessage());
+                RealmsLogMan.severe("An unexpected exception occurred @ FOOD_LEVELCHANGE. Caused by: " + ex.getMessage());
                 RealmsLogMan.stacktrace(ex);
             }
         }
@@ -552,7 +552,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ IGNITE. Caused by: " + ex.getMessage());
+            RealmsLogMan.severe("An unexpected exception occurred @ IGNITE. Caused by: " + ex.getMessage());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -571,7 +571,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ITEM_DROP. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ITEM_DROP. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -600,7 +600,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ ITEM_USE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ ITEM_USE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -624,7 +624,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ MOB_SPAWN. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ MOB_SPAWN. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -645,7 +645,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ MOB_TARGET. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ MOB_TARGET. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -666,7 +666,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PISTON_EXTEND. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PISTON_EXTEND. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -687,7 +687,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PISTON_RETRACT Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PISTON_RETRACT Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -710,7 +710,7 @@ public final class Realms_BukkitListener implements Listener {
             }
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PLAYER_GAMEMODE_CHANGE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PLAYER_GAMEMODE_CHANGE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -793,7 +793,7 @@ public final class Realms_BukkitListener implements Listener {
             RealmsBase.playerMessage(user);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PLAYER_MOVE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PLAYER_MOVE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
@@ -830,7 +830,7 @@ public final class Realms_BukkitListener implements Listener {
             event.setCancelled(deny);
         }
         catch (Exception ex) {
-            RealmsLogMan.severe("An unexpected exception occured @ PORTAL_USE. Caused by: " + ex.getClass().getName());
+            RealmsLogMan.severe("An unexpected exception occurred @ PORTAL_USE. Caused by: " + ex.getClass().getName());
             RealmsLogMan.stacktrace(ex);
         }
     }
